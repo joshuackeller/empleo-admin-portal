@@ -10,16 +10,18 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/src/components/shadcn/Form";
 
 import * as z from "zod";
+import useResetPasswordRequest from "@/src/requests/auth/useResetPasswordRequest";
 
 const formSchema = z.object({
   email: z.string().email(),
 });
 
-const SignIn: PageComponent = () => {
+const ResetPasswordRequest: PageComponent = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -27,8 +29,10 @@ const SignIn: PageComponent = () => {
     },
   });
 
+  const { mutate: resetPasswordRequest } = useResetPasswordRequest();
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    resetPasswordRequest({ body: values });
   }
   return (
     <>
@@ -54,6 +58,7 @@ const SignIn: PageComponent = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input placeholder="bob@email.com" {...field} />
                   </FormControl>
@@ -71,6 +76,6 @@ const SignIn: PageComponent = () => {
   );
 };
 
-SignIn.layout = "auth";
+ResetPasswordRequest.layout = "auth";
 
-export default SignIn;
+export default ResetPasswordRequest;

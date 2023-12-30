@@ -10,14 +10,17 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/src/components/shadcn/Form";
 
 import * as z from "zod";
+import useSignIn from "@/src/requests/auth/useSignIn";
+import { useToast } from "@/src/components/shadcn/use-toast";
 
 const formSchema = z.object({
   email: z.string().email(),
-  password: z.string(),
+  password: z.string().min(8),
 });
 
 const SignIn: PageComponent = () => {
@@ -29,8 +32,23 @@ const SignIn: PageComponent = () => {
     },
   });
 
+  const { mutate: signIn } = useSignIn();
+
+  const { toast } = useToast();
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    signIn(
+      { body: values },
+      {
+        onError: (error) => {
+          toast({
+            variant: "destructive",
+            title: (error as any)?.response?.data || "Unknown Error",
+            description: "If that doesn't sound right, please contact support.",
+          });
+        },
+      }
+    );
   }
   return (
     <>
@@ -54,6 +72,7 @@ const SignIn: PageComponent = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input placeholder="bob@email.com" {...field} />
                   </FormControl>
@@ -66,8 +85,9 @@ const SignIn: PageComponent = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="Password" {...field} />
+                    <Input type="password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -78,12 +98,24 @@ const SignIn: PageComponent = () => {
             </Button>
           </form>
         </Form>
-        <Link
-          className={cn(buttonVariants({ variant: "link" }), "p-0")}
-          href="/auth/reset_password_request"
-        >
-          Forgot Password?
-        </Link>
+        <div className="flex flex-col gap-0 space-y-0">
+          <div>
+            <Link
+              className={cn(buttonVariants({ variant: "link" }), "h-5 p-0")}
+              href="/auth/reset_password_request"
+            >
+              Forgot Password?
+            </Link>
+          </div>
+          <div>
+            <Link
+              className={cn(buttonVariants({ variant: "link" }), "h-5 p-0")}
+              href="/auth/resend_confirmation"
+            >
+              Resend Confirmation?
+            </Link>
+          </div>
+        </div>
       </div>
     </>
   );

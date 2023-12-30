@@ -10,26 +10,45 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/src/components/shadcn/Form";
 
 import * as z from "zod";
+import useResetPassword from "@/src/requests/auth/useResetPassword";
+import { useQueryParam } from "@/src/utilities/useQueryParam";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
 });
 
-const SignIn: PageComponent = () => {
+const ResetPassword: PageComponent = () => {
+  const email = useQueryParam("email");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
+      email,
     },
   });
 
+  useEffect(() => {
+    form.setValue("email", email);
+  }, [email]);
+
+  const { mutate: resetPassword } = useResetPassword();
+
+  const token = useQueryParam("token");
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    const { password } = values;
+    resetPassword({
+      body: {
+        token,
+        password,
+      },
+    });
   }
   return (
     <>
@@ -53,8 +72,9 @@ const SignIn: PageComponent = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="bob@email.com" {...field} />
+                    <Input disabled {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -65,8 +85,9 @@ const SignIn: PageComponent = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="Password" {...field} />
+                    <Input type="password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -82,6 +103,6 @@ const SignIn: PageComponent = () => {
   );
 };
 
-SignIn.layout = "auth";
+ResetPassword.layout = "auth";
 
-export default SignIn;
+export default ResetPassword;

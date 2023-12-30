@@ -10,16 +10,18 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/src/components/shadcn/Form";
 
 import * as z from "zod";
+import useResendEmailConfirmation from "@/src/requests/auth/useResendEmailConfirmation";
 
 const formSchema = z.object({
   email: z.string().email(),
 });
 
-const SignIn: PageComponent = () => {
+const ResendConfirmation: PageComponent = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -27,8 +29,10 @@ const SignIn: PageComponent = () => {
     },
   });
 
+  const { mutate: resendConfirmation } = useResendEmailConfirmation();
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    resendConfirmation({ body: values });
   }
   return (
     <>
@@ -52,6 +56,7 @@ const SignIn: PageComponent = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input placeholder="bob@email.com" {...field} />
                   </FormControl>
@@ -69,6 +74,6 @@ const SignIn: PageComponent = () => {
   );
 };
 
-SignIn.layout = "auth";
+ResendConfirmation.layout = "auth";
 
-export default SignIn;
+export default ResendConfirmation;

@@ -10,12 +10,15 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/src/components/shadcn/Form";
 
 import * as z from "zod";
 import useCreateAccount from "@/src/requests/auth/useCreateAccount";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { Label } from "@/src/components/shadcn/Label";
+import { useToast } from "@/src/components/shadcn/use-toast";
 
 const formSchema = z.object({
   first_name: z.string().min(1),
@@ -24,7 +27,7 @@ const formSchema = z.object({
   password: z.string().min(8),
 });
 
-const SignIn: PageComponent = () => {
+const CreateAccount: PageComponent = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,8 +38,21 @@ const SignIn: PageComponent = () => {
 
   const { mutate: createAccount, isPending, isSuccess } = useCreateAccount();
 
+  const { toast } = useToast();
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    createAccount({ body: values });
+    createAccount(
+      { body: values },
+      {
+        onError: (error) => {
+          toast({
+            variant: "destructive",
+            title: (error as any)?.response?.data || "Unknown Error",
+            description: "If that doesn't sound right, please contact support.",
+          });
+        },
+      }
+    );
   };
   return (
     <>
@@ -58,35 +74,44 @@ const SignIn: PageComponent = () => {
         ) : (
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-              <FormField
-                control={form.control}
-                name="first_name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input placeholder="Bob" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="last_name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input placeholder="Sacamano" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <FormField
+                    control={form.control}
+                    name="first_name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>First Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Bob" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="flex-1">
+                  <FormField
+                    control={form.control}
+                    name="last_name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Last Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Sacamano" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
                       <Input placeholder="bob@email.com" {...field} />
                     </FormControl>
@@ -99,12 +124,9 @@ const SignIn: PageComponent = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Password"
-                        {...field}
-                      />
+                      <Input type="password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -124,6 +146,6 @@ const SignIn: PageComponent = () => {
   );
 };
 
-SignIn.layout = "auth";
+CreateAccount.layout = "auth";
 
-export default SignIn;
+export default CreateAccount;

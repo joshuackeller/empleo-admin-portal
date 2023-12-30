@@ -1,3 +1,4 @@
+import { Toaster } from "@/src/components/shadcn/toaster";
 import AuthContextProvider from "@/src/layout/AuthContextProvider";
 import MainLayout from "@/src/layout/MainLayout";
 import { cn } from "@/src/utilities/cn";
@@ -40,6 +41,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <MainLayout layout={Component?.layout || "normal"}>
             <Component {...pageProps} />
           </MainLayout>
+          <Toaster />
           <ReactQueryDevtools />
         </QueryClientProvider>
       </AuthContextProvider>

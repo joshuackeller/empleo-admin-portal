@@ -10,7 +10,7 @@ interface ResetPasswordRequestProps {
 const ResetPasswordRequest = async ({ body }: ResetPasswordRequestProps) => {
   const api = useEmpleoApi();
 
-  const { data } = await api.post("/auth/sign_in", body);
+  const { data } = await api.post("/auth/reset_password/request", body);
 
   return data;
 };
