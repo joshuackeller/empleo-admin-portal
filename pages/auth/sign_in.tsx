@@ -19,6 +19,7 @@ import useSignIn from "@/src/requests/auth/useSignIn";
 import { useToast } from "@/src/components/shadcn/use-toast";
 import useAuthContext from "@/src/utilities/useAuthContext";
 import { useRouter } from "next/router";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -34,7 +35,7 @@ const SignIn: PageComponent = () => {
     },
   });
 
-  const { mutate: signIn } = useSignIn();
+  const { mutate: signIn, isPending } = useSignIn();
 
   const { setAuthToken } = useAuthContext();
   const { toast } = useToast();
@@ -110,7 +111,10 @@ const SignIn: PageComponent = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
+            <Button disabled={isPending} type="submit" className="w-full">
+              {isPending && (
+                <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+              )}
               Sign In with Email
             </Button>
           </form>
