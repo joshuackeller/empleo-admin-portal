@@ -16,6 +16,8 @@ import {
 
 import * as z from "zod";
 import useResetPasswordRequest from "@/src/requests/auth/useResetPasswordRequest";
+import { useToast } from "@/src/components/shadcn/use-toast";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -29,10 +31,22 @@ const ResetPasswordRequest: PageComponent = () => {
     },
   });
 
-  const { mutate: resetPasswordRequest } = useResetPasswordRequest();
+  const { mutate: resetPasswordRequest, isPending } = useResetPasswordRequest();
+  const { toast } = useToast();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    resetPasswordRequest({ body: values });
+    resetPasswordRequest(
+      { body: values },
+      {
+        onError: (error) => {
+          toast({
+            variant: "destructive",
+            title: (error as any)?.response?.data || "Unknown Error",
+            description: "If that doesn't sound right, please contact support.",
+          });
+        },
+      }
+    );
   }
   return (
     <>
@@ -66,7 +80,10 @@ const ResetPasswordRequest: PageComponent = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
+            <Button disabled={isPending} type="submit" className="w-full">
+              {isPending && (
+                <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+              )}
               Get Link
             </Button>
           </form>

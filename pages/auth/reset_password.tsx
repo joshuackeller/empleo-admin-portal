@@ -18,6 +18,8 @@ import * as z from "zod";
 import useResetPassword from "@/src/requests/auth/useResetPassword";
 import { useQueryParam } from "@/src/utilities/useQueryParam";
 import { useEffect } from "react";
+import { useToast } from "@/src/components/shadcn/use-toast";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -37,18 +39,30 @@ const ResetPassword: PageComponent = () => {
     form.setValue("email", email);
   }, [email]);
 
-  const { mutate: resetPassword } = useResetPassword();
+  const { mutate: resetPassword, isPending } = useResetPassword();
 
+  const { toast } = useToast();
   const token = useQueryParam("token");
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const { password } = values;
-    resetPassword({
-      body: {
-        token,
-        password,
+    resetPassword(
+      {
+        body: {
+          token,
+          password,
+        },
       },
-    });
+      {
+        onError: (error) => {
+          toast({
+            variant: "destructive",
+            title: (error as any)?.response?.data || "Unknown Error",
+            description: "If that doesn't sound right, please contact support.",
+          });
+        },
+      }
+    );
   }
   return (
     <>
@@ -93,7 +107,10 @@ const ResetPassword: PageComponent = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
+            <Button disabled={isPending} type="submit" className="w-full">
+              {isPending && (
+                <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+              )}
               Reset Password
             </Button>
           </form>

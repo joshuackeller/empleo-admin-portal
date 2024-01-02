@@ -16,6 +16,8 @@ import {
 
 import * as z from "zod";
 import useResendEmailConfirmation from "@/src/requests/auth/useResendEmailConfirmation";
+import { useToast } from "@/src/components/shadcn/use-toast";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -29,10 +31,24 @@ const ResendConfirmation: PageComponent = () => {
     },
   });
 
-  const { mutate: resendConfirmation } = useResendEmailConfirmation();
+  const { mutate: resendConfirmation, isPending } =
+    useResendEmailConfirmation();
+
+  const { toast } = useToast();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    resendConfirmation({ body: values });
+    resendConfirmation(
+      { body: values },
+      {
+        onError: (error) => {
+          toast({
+            variant: "destructive",
+            title: (error as any)?.response?.data || "Unknown Error",
+            description: "If that doesn't sound right, please contact support.",
+          });
+        },
+      }
+    );
   }
   return (
     <>
@@ -64,7 +80,10 @@ const ResendConfirmation: PageComponent = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
+            <Button disabled={isPending} type="submit" className="w-full">
+              {isPending && (
+                <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+              )}
               Get Link
             </Button>
           </form>
