@@ -17,6 +17,8 @@ import {
 import * as z from "zod";
 import useSignIn from "@/src/requests/auth/useSignIn";
 import { useToast } from "@/src/components/shadcn/use-toast";
+import useAuthContext from "@/src/utilities/useAuthContext";
+import { useRouter } from "next/router";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -34,12 +36,26 @@ const SignIn: PageComponent = () => {
 
   const { mutate: signIn } = useSignIn();
 
+  const { setAuthToken } = useAuthContext();
   const { toast } = useToast();
+  const router = useRouter();
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
     signIn(
       { body: values },
       {
+        onSuccess: (response) => {
+          if (!!response?.token) {
+            setAuthToken(response?.token);
+            router.push("/");
+          } else {
+            toast({
+              variant: "destructive",
+              title: "Unknown Error",
+              description: "Please contact support",
+            });
+          }
+        },
         onError: (error) => {
           toast({
             variant: "destructive",
@@ -49,7 +65,8 @@ const SignIn: PageComponent = () => {
         },
       }
     );
-  }
+  };
+
   return (
     <>
       <div className="absolute top-5 right-5">

@@ -17,7 +17,6 @@ import {
 import * as z from "zod";
 import useCreateAccount from "@/src/requests/auth/useCreateAccount";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { Label } from "@/src/components/shadcn/Label";
 import { useToast } from "@/src/components/shadcn/use-toast";
 
 const formSchema = z.object({

@@ -3,6 +3,8 @@ import { ReactNode, createContext, useEffect, useState } from "react";
 
 interface AuthContextProps {
   token: string | undefined;
+  setAuthToken: (token: string) => void;
+  signOut: () => void;
 }
 
 export const AuthContext = createContext<AuthContextProps>(
@@ -16,9 +18,23 @@ interface AuthContextProviderProps {
 }
 
 const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
+  const router = useRouter();
   const [token, setToken] = useState<string | undefined>(undefined);
 
-  const router = useRouter();
+  const setAuthToken = (token: string) => {
+    if (typeof window !== undefined) {
+      localStorage.setItem(TOKEN_KEY, token);
+      setToken(token);
+    }
+  };
+
+  const signOut = () => {
+    if (typeof window !== undefined) {
+      localStorage.removeItem(TOKEN_KEY);
+      setToken(undefined);
+      router.reload();
+    }
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -34,7 +50,9 @@ const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ token }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ token, setAuthToken, signOut }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 
