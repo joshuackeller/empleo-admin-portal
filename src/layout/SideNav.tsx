@@ -1,4 +1,9 @@
-import { BackpackIcon, HomeIcon, PersonIcon } from "@radix-ui/react-icons";
+import {
+  BackpackIcon,
+  GearIcon,
+  HomeIcon,
+  PersonIcon,
+} from "@radix-ui/react-icons";
 import clsx from "clsx";
 import { useRouter } from "next/router";
 import EmpleoLogo from "@/src/components/EmpleoLogo";
@@ -6,6 +11,7 @@ import useGetSelf from "@/src/requests/self/useGetSelf";
 import { Button, buttonVariants } from "@/src/components/shadcn/Button";
 import { cn } from "@/src/utilities/cn";
 import Link from "next/link";
+import useGetCurrentOrganization from "../requests/self/organizations/useGetCurrentOrganziation";
 
 const SIDE_NAV_ITEMS = [
   {
@@ -39,6 +45,8 @@ interface SideNavProps {}
 const SideNav = ({}: SideNavProps) => {
   const router = useRouter();
   const { data: self } = useGetSelf();
+  const { data: organization } = useGetCurrentOrganization();
+
   return (
     <div className="px-5 py-3 bg-indigo-950 h-screen flex flex-col justify-between">
       <div>
@@ -82,13 +90,13 @@ const SideNav = ({}: SideNavProps) => {
         <Link
           className={cn(
             buttonVariants({ variant: "link" }),
-            "flex items-center gap-2 text-white p-0 m-0"
+            "flex justify-start gap-1 text-white p-0 m-0 py-2"
           )}
           href="/self"
         >
-          <PersonIcon className="h-5 w-5" />
-          <div className="small-text">
-            {!!self ? `${self?.first_name} ${self?.last_name}` : "Loading..."}
+          <GearIcon />
+          <div className="!text-left">
+            {!!organization && organization.title}
           </div>
         </Link>
       </div>

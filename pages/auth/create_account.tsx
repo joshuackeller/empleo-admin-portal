@@ -92,7 +92,7 @@ const CreateAccount: PageComponent = () => {
                         <FormItem>
                           <FormLabel>First Name</FormLabel>
                           <FormControl>
-                            <Input placeholder="Bob" {...field} />
+                            <Input placeholder="Art" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -107,7 +107,7 @@ const CreateAccount: PageComponent = () => {
                         <FormItem>
                           <FormLabel>Last Name</FormLabel>
                           <FormControl>
-                            <Input placeholder="Sacamano" {...field} />
+                            <Input placeholder="Vandelay" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -122,7 +122,10 @@ const CreateAccount: PageComponent = () => {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input placeholder="bob@email.com" {...field} />
+                        <Input
+                          placeholder="art@vandelayindustries.com"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

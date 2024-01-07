@@ -17,32 +17,42 @@ import {
 import * as z from "zod";
 import useResetPassword from "@/src/requests/auth/useResetPassword";
 import { useQueryParam } from "@/src/utilities/useQueryParam";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "@/src/components/shadcn/use-toast";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import ReadJWTData from "@/src/utilities/ReadJWTData";
 
 const formSchema = z.object({
-  email: z.string().email(),
+  email: z.string().email().optional(),
   password: z.string().min(8),
 });
 
 const ResetPassword: PageComponent = () => {
-  const email = useQueryParam("email");
+  const token = useQueryParam("token");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email,
+      email: "",
+      password: "",
     },
   });
 
-  useEffect(() => {
-    form.setValue("email", email);
-  }, [email]);
+  const [error, setError] = useState<boolean>(false);
 
-  const { mutate: resetPassword, isPending } = useResetPassword();
+  useEffect(() => {
+    if (typeof window !== "undefined" && !!token) {
+      const data = ReadJWTData(token);
+      if (!!data.email) {
+        form.setValue("email", data.email);
+      } else {
+        setError(true);
+      }
+    }
+  }, [token]);
+
+  const { mutate: resetPassword, isPending, isSuccess } = useResetPassword();
 
   const { toast } = useToast();
-  const token = useQueryParam("token");
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const { password } = values;
@@ -75,46 +85,83 @@ const ResetPassword: PageComponent = () => {
         </Link>
       </div>
       <div className="max-w-xs w-full space-y-3 m-5">
-        <div>
-          <h3>Reset Password</h3>
-          <div className="muted-text">Enter a new password</div>
-        </div>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input disabled {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button disabled={isPending} type="submit" className="w-full">
-              {isPending && (
-                <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              Reset Password
-            </Button>
-          </form>
-        </Form>
+        {error ? (
+          <>
+            <div>
+              <h3>Something went wrong...</h3>
+              <div className="muted-text">
+                Looks like something's wrong with the link you have. Submit a
+                request to get a new link.
+              </div>
+            </div>
+            <Link
+              className={cn(buttonVariants({}), "w-full")}
+              href="/auth/reset_password_request"
+            >
+              Request New Link
+            </Link>
+          </>
+        ) : isSuccess ? (
+          <>
+            <div>
+              <h3>Password Reset!</h3>
+              <div className="muted-text">Continue to sign in</div>
+            </div>
+            <Link
+              className={cn(buttonVariants({}), "w-full")}
+              href="/auth/sign_in"
+            >
+              Go to Sign In
+            </Link>
+          </>
+        ) : (
+          <>
+            <div>
+              <h3>Reset Password</h3>
+              <div className="muted-text">Enter a new password</div>
+            </div>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-2"
+              >
+                <FormField
+                  control={form.control}
+                  disabled
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input type="password" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button disabled={isPending} type="submit" className="w-full">
+                  {isPending && (
+                    <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  Reset Password
+                </Button>
+              </form>
+            </Form>
+          </>
+        )}
       </div>
     </>
   );

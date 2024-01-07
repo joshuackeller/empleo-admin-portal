@@ -1,4 +1,4 @@
-import { PageComponent } from "../_app";
+import { PageComponent } from "../../_app";
 import { Input } from "@/src/components/shadcn/Input";
 import { Button, buttonVariants } from "@/src/components/shadcn/Button";
 import Link from "next/link";
@@ -15,47 +15,42 @@ import {
 } from "@/src/components/shadcn/Form";
 
 import * as z from "zod";
-import useSignIn from "@/src/requests/auth/useSignIn";
+import { ReloadIcon } from "@radix-ui/react-icons";
 import { useToast } from "@/src/components/shadcn/use-toast";
+import useCreateSelfOrganization from "@/src/requests/self/organizations/useCreateSelfOrganization";
 import useAuthContext from "@/src/utilities/useAuthContext";
 import { useRouter } from "next/router";
-import { ReloadIcon } from "@radix-ui/react-icons";
 
 const formSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
+  title: z.string().min(1),
 });
 
-const SignIn: PageComponent = () => {
+const CreateAccount: PageComponent = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      title: "",
     },
   });
 
-  const { mutate: signIn, isPending } = useSignIn();
+  const {
+    mutate: createOrganization,
+    isPending,
+    isSuccess,
+  } = useCreateSelfOrganization();
 
-  const { setAuthToken } = useAuthContext();
   const { toast } = useToast();
+  const { selectOrganization } = useAuthContext();
   const router = useRouter();
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    signIn(
+    createOrganization(
       { body: values },
       {
         onSuccess: (response) => {
-          if (!!response?.token) {
-            setAuthToken(response?.token);
-            router.push("/auth/organizations");
-          } else {
-            toast({
-              variant: "destructive",
-              title: "Unknown Error",
-              description: "Please contact support",
-            });
-          }
+          console.log(response);
+          selectOrganization(response.id);
+          router.push("/");
         },
         onError: (error) => {
           toast({
@@ -67,81 +62,52 @@ const SignIn: PageComponent = () => {
       }
     );
   };
-
   return (
     <>
       <div className="absolute top-5 right-5">
         <Link
           className={cn(buttonVariants({ variant: "link" }))}
-          href="/auth/create_account"
+          href="/auth/organizations"
         >
-          Create Account
+          Select Organization
         </Link>
       </div>
       <div className="max-w-xs w-full space-y-3 m-5">
         <div>
-          <h3>Sign In</h3>
-          <div className="muted-text">Sign in with your email and password</div>
+          <h3>Create Organization</h3>
+          <div className="muted-text">
+            Create an organization to get started
+          </div>
         </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
             <FormField
               control={form.control}
-              name="email"
+              name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input placeholder="bob@email.com" {...field} />
+                    <Input placeholder="Vandelay Industries" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             <Button disabled={isPending} type="submit" className="w-full">
               {isPending && (
                 <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
               )}
-              Sign In with Email
+              Create Organization
             </Button>
           </form>
         </Form>
-        <div className="flex flex-col gap-0 space-y-0">
-          <div>
-            <Link
-              className={cn(buttonVariants({ variant: "link" }), "h-5 p-0")}
-              href="/auth/reset_password_request"
-            >
-              Forgot Password?
-            </Link>
-          </div>
-          <div>
-            <Link
-              className={cn(buttonVariants({ variant: "link" }), "h-5 p-0")}
-              href="/auth/resend_confirmation"
-            >
-              Resend Confirmation?
-            </Link>
-          </div>
-        </div>
       </div>
     </>
   );
 };
 
-SignIn.layout = "auth";
+CreateAccount.layout = "auth";
 
-export default SignIn;
+export default CreateAccount;

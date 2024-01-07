@@ -31,7 +31,11 @@ const ResetPasswordRequest: PageComponent = () => {
     },
   });
 
-  const { mutate: resetPasswordRequest, isPending } = useResetPasswordRequest();
+  const {
+    mutate: resetPasswordRequest,
+    isPending,
+    isSuccess,
+  } = useResetPasswordRequest();
   const { toast } = useToast();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -59,35 +63,50 @@ const ResetPasswordRequest: PageComponent = () => {
         </Link>
       </div>
       <div className="max-w-xs w-full space-y-3 m-5">
-        <div>
-          <h3>Reset Password</h3>
-          <div className="muted-text">
-            Request a link to reset your password
+        {isSuccess ? (
+          <div>
+            <h3>Email Sent!</h3>
+            <div className="muted-text">
+              In a few minutes you should receive an email that contains a link
+              to reset your password.
+            </div>
           </div>
-        </div>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="bob@email.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button disabled={isPending} type="submit" className="w-full">
-              {isPending && (
-                <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              Get Link
-            </Button>
-          </form>
-        </Form>
+        ) : (
+          <>
+            <div>
+              <h3>Reset Password</h3>
+              <div className="muted-text">
+                Request a link to reset your password
+              </div>
+            </div>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-2"
+              >
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input placeholder="bob@email.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button disabled={isPending} type="submit" className="w-full">
+                  {isPending && (
+                    <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  Get Link
+                </Button>
+              </form>
+            </Form>
+          </>
+        )}
       </div>
     </>
   );
