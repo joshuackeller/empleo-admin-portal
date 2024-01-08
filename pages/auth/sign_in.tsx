@@ -125,7 +125,7 @@ const SignIn: PageComponent = () => {
               className={cn(buttonVariants({ variant: "link" }), "h-5 p-0")}
               href="/auth/reset_password_request"
             >
-              Forgot Password?
+              Forgot Password
             </Link>
           </div>
           <div>
@@ -133,7 +133,7 @@ const SignIn: PageComponent = () => {
               className={cn(buttonVariants({ variant: "link" }), "h-5 p-0")}
               href="/auth/resend_confirmation"
             >
-              Resend Confirmation?
+              Resend Confirmation
             </Link>
           </div>
         </div>

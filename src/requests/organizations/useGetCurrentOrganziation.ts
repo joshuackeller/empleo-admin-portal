@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import useEmpleoApi from "../../useEmpleoApi";
+import useEmpleoApi from "../useEmpleoApi";
 import useAuthContext from "@/src/utilities/useAuthContext";
+import { Organization } from "@/src/utilities/interfaces";
 
 interface GetCurrentOrganizationProps {
   organizationId: string;
@@ -8,10 +9,10 @@ interface GetCurrentOrganizationProps {
 
 const GetCurrentOrganization = async ({
   organizationId,
-}: GetCurrentOrganizationProps) => {
+}: GetCurrentOrganizationProps): Promise<Organization> => {
   const api = useEmpleoApi();
 
-  const { data } = await api.get(`/self/organizations/${organizationId}`);
+  const { data } = await api.get(`/organizations/${organizationId}`);
 
   return data;
 };
@@ -21,7 +22,7 @@ const useGetCurrentOrganization = () => {
   return useQuery({
     queryFn: () =>
       GetCurrentOrganization({ organizationId: organizationId || "" }),
-    queryKey: ["SELF", "ORGANIZATIONS", "CURRENT"],
+    queryKey: ["ORGANIZATIONS", "CURRENT"],
     enabled: !!organizationId,
   });
 };

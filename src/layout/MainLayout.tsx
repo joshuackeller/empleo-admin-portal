@@ -13,7 +13,7 @@ const MainLayout = ({ children, layout = "normal" }: MainLayoutProps) => {
     return (
       <div className={"flex"}>
         <SideNav />
-        <div className="px-2 py-3">{children}</div>
+        <div className="px-2 py-3 w-full">{children}</div>
       </div>
     );
   }

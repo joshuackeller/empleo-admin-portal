@@ -1,7 +1,7 @@
 const Page = () => {
   return (
     <div>
-      <div>applicants</div>
+      <div>organization</div>
     </div>
   );
 };

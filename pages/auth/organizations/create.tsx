@@ -17,9 +17,9 @@ import {
 import * as z from "zod";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { useToast } from "@/src/components/shadcn/use-toast";
-import useCreateSelfOrganization from "@/src/requests/self/organizations/useCreateSelfOrganization";
 import useAuthContext from "@/src/utilities/useAuthContext";
 import { useRouter } from "next/router";
+import useCreateOrganization from "@/src/requests/organizations/useCreateOrganization";
 
 const formSchema = z.object({
   title: z.string().min(1),
@@ -37,7 +37,7 @@ const CreateAccount: PageComponent = () => {
     mutate: createOrganization,
     isPending,
     isSuccess,
-  } = useCreateSelfOrganization();
+  } = useCreateOrganization();
 
   const { toast } = useToast();
   const { selectOrganization } = useAuthContext();
@@ -48,7 +48,6 @@ const CreateAccount: PageComponent = () => {
       { body: values },
       {
         onSuccess: (response) => {
-          console.log(response);
           selectOrganization(response.id);
           router.push("/");
         },

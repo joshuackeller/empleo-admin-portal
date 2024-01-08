@@ -1,6 +1,5 @@
 import { Button, buttonVariants } from "@/src/components/shadcn/Button";
-import { Card } from "@/src/components/shadcn/Card";
-import useGetSelfOrganizations from "@/src/requests/self/organizations/useGetSelfOrganizations";
+import useGetOrganizations from "@/src/requests/organizations/useGetOrganizations";
 import { cn } from "@/src/utilities/cn";
 import useAuthContext from "@/src/utilities/useAuthContext";
 import { ExitIcon } from "@radix-ui/react-icons";
@@ -9,7 +8,7 @@ import { useRouter } from "next/router";
 
 const AuthOrganizations = () => {
   const { signOut, selectOrganization } = useAuthContext();
-  const { data: organizations } = useGetSelfOrganizations();
+  const { data: organizations } = useGetOrganizations();
   const router = useRouter();
   return (
     <>
@@ -18,9 +17,13 @@ const AuthOrganizations = () => {
           Sign Out <ExitIcon />
         </Button>
       </div>
-      <div>
-        <h3>Your Organizations</h3>
-        <div className="muted-text">Select an organization to get started</div>
+      <div className="max-w-xs w-full space-y-3 m-5">
+        <div>
+          <h3>Your Organizations</h3>
+          <div className="muted-text">
+            Select an organization to get started
+          </div>
+        </div>
         {!!organizations && organizations?.length > 0 && (
           <div className="space-y-2 py-2">
             {organizations.map((organization: any) => (
