@@ -25,20 +25,27 @@ const AuthOrganizations = () => {
           </div>
         </div>
         {!!organizations && organizations?.length > 0 && (
-          <div className="space-y-2 py-2">
-            {organizations.map((organization: any) => (
-              <Button
-                key={organization.id}
-                variant="outline"
-                className="w-full"
-                onClick={() => {
-                  selectOrganization(organization.id);
-                  router.push("/");
-                }}
-              >
-                {organization.title}
-              </Button>
-            ))}
+          <div className="space-y-2 pb-2">
+            {!!organizations && organizations.length > 0 ? (
+              organizations.map((organization: any) => (
+                <Button
+                  key={organization.id}
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => {
+                    selectOrganization(organization.id);
+                    router.push("/");
+                  }}
+                >
+                  {organization.title}
+                </Button>
+              ))
+            ) : (
+              <div className="text-center small-text space-y-1">
+                <div>No Organizations Found. </div>
+                <div>Create an organization to get started. </div>
+              </div>
+            )}
           </div>
         )}
         <Link

@@ -2,6 +2,7 @@ import useGetAdmins from "@/src/requests/admins/useGetAdmins";
 import { Admin } from "@/src/utilities/interfaces";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/src/components/shadcn/DataTable";
+import { Skeleton } from "@/src/components/shadcn/Skeleton";
 
 export const columns: ColumnDef<Admin>[] = [
   {
@@ -21,7 +22,7 @@ export const columns: ColumnDef<Admin>[] = [
 const AdminTable = () => {
   const { data } = useGetAdmins();
 
-  if (!data) return <div>loading...</div>;
+  if (!data) return <Skeleton className="h-24 w-full" />;
 
   return <DataTable columns={columns} data={data} />;
 };
