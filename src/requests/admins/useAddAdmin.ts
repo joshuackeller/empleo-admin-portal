@@ -1,6 +1,8 @@
 import { Admin } from "@/src/utilities/interfaces";
 import useEmpleoApi from "../useEmpleoApi";
 import useCustomMutation from "../useCustomMutation";
+import { useQueryClient } from "@tanstack/react-query";
+import AdminQueryKeys from ".";
 
 interface AddAdminProps {
   body: {
@@ -16,8 +18,14 @@ const AddAdmin = async ({ body }: AddAdminProps): Promise<Admin> => {
 };
 
 const useAddAdmin = () => {
+  const queryClient = useQueryClient();
   return useCustomMutation({
     mutationFn: AddAdmin,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: AdminQueryKeys.all,
+      });
+    },
   });
 };
 

@@ -1,5 +1,5 @@
 const AdminQueryKeys = {
-  all: ["admin_queries"],
+  all: ["admins"],
 };
 
 export default AdminQueryKeys;
