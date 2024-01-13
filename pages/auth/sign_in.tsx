@@ -57,13 +57,6 @@ const SignIn: PageComponent = () => {
             });
           }
         },
-        onError: (error) => {
-          toast({
-            variant: "destructive",
-            title: (error as any)?.response?.data || "Unknown Error",
-            description: "If that doesn't sound right, please contact support.",
-          });
-        },
       }
     );
   };

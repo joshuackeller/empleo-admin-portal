@@ -17,7 +17,6 @@ import {
 import * as z from "zod";
 import useCreateAccount from "@/src/requests/auth/useCreateAccount";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { useToast } from "@/src/components/shadcn/use-toast";
 
 const formSchema = z.object({
   first_name: z.string().min(1),
@@ -37,21 +36,8 @@ const CreateAccount: PageComponent = () => {
 
   const { mutate: createAccount, isPending, isSuccess } = useCreateAccount();
 
-  const { toast } = useToast();
-
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    createAccount(
-      { body: values },
-      {
-        onError: (error) => {
-          toast({
-            variant: "destructive",
-            title: (error as any)?.response?.data || "Unknown Error",
-            description: "If that doesn't sound right, please contact support.",
-          });
-        },
-      }
-    );
+    createAccount({ body: values });
   };
   return (
     <>

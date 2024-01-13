@@ -19,7 +19,7 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-inter)", ...fontFamily.sans],
+        sans: ["Inter", ...fontFamily.sans],
         patua: ["Patua One", "serif"],
       },
       // shadcn/ui

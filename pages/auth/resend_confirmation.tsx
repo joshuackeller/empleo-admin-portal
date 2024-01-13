@@ -16,7 +16,6 @@ import {
 
 import * as z from "zod";
 import useResendEmailConfirmation from "@/src/requests/auth/useResendEmailConfirmation";
-import { useToast } from "@/src/components/shadcn/use-toast";
 import { ReloadIcon } from "@radix-ui/react-icons";
 
 const formSchema = z.object({
@@ -37,21 +36,8 @@ const ResendConfirmation: PageComponent = () => {
     isSuccess,
   } = useResendEmailConfirmation();
 
-  const { toast } = useToast();
-
   function onSubmit(values: z.infer<typeof formSchema>) {
-    resendConfirmation(
-      { body: values },
-      {
-        onError: (error) => {
-          toast({
-            variant: "destructive",
-            title: (error as any)?.response?.data || "Unknown Error",
-            description: "If that doesn't sound right, please contact support.",
-          });
-        },
-      }
-    );
+    resendConfirmation({ body: values });
   }
   return (
     <>
