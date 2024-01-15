@@ -49,13 +49,6 @@ const TeamPage: PageComponent = () => {
     addAdmin(
       { body: values },
       {
-        onError: (error) => {
-          // toast({
-          //   variant: "destructive",
-          //   title: (error as any)?.response?.data || "Unknown Error",
-          //   description: "If that doesn't sound right, please contact support.",
-          // });
-        },
         onSuccess: () => {
           setOpen(false);
         },
