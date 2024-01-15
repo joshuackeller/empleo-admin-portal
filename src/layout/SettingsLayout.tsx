@@ -19,45 +19,51 @@ const SettingsLayout = ({ children }: SettingsLayoutProps) => {
   const { mutate: exitOrganization } = useExitOrganization();
 
   return (
-    <div className="h-screen">
-      <div className="w-full">
+    <div>
+      <div className="w-full flex flex-col justify-between fixed bg-white h-[40px]">
         <h3>Settings</h3>
-        <Separator className="mt-2" />
+        <Separator />
       </div>
-      <div className="flex h-full py-2 pr-2">
-        <div className="flex flex-col gap-y-1">
-          <Link
-            href="/settings/my_account"
-            className={cn(
-              buttonVariants({ variant: "ghost" }),
-              pathname === "/settings"
-                ? "bg-muted hover:bg-muted"
-                : "hover:bg-transparent hover:underline",
-              "justify-start"
-            )}
-          >
-            My Account
-          </Link>
-          <Button
-            variant="secondary"
-            onClick={() => signOut()}
-            className="gap-1 justify-between"
-          >
-            Sign Out
-            <ExitIcon />
-          </Button>
 
-          <Button
-            variant="secondary"
-            onClick={() => exitOrganization()}
-            className="gap-1 justify-between"
-          >
-            Switch Org
-            <ResetIcon />
-          </Button>
+      <div className="flex py-2 pr-2 pt-[50px]">
+        <div className="flex flex-col justify-between fixed h-[calc(100vh-70px)] w-[150px]">
+          <div className="flex flex-col gap-y-1">
+            <Link
+              href="/settings/my_account"
+              className={cn(
+                buttonVariants({ variant: "ghost" }),
+                pathname === "/settings"
+                  ? "bg-muted hover:bg-muted"
+                  : "hover:bg-transparent hover:underline",
+                "justify-start"
+              )}
+            >
+              My Account
+            </Link>
+          </div>
+          <div className="flex flex-col gap-y-1 ">
+            <Button
+              variant="secondary"
+              onClick={() => signOut()}
+              className="gap-1 justify-between"
+            >
+              Sign Out
+              <ExitIcon />
+            </Button>
+
+            <Button
+              variant="secondary"
+              onClick={() => exitOrganization()}
+              className="gap-1 justify-between"
+            >
+              Switch Org
+              <ResetIcon />
+            </Button>
+          </div>
         </div>
-
-        <div className="px-5 py-1 flex-1">{children}</div>
+        <div className="px-5 py-1 flex-1 ml-[150px] overflow-hidden">
+          {children}
+        </div>
       </div>
     </div>
   );
