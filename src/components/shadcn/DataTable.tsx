@@ -13,15 +13,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/src/components/shadcn/Table";
+import { cn } from "@/src/utilities/cn";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  isFetching?: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  isFetching = false,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -30,7 +33,12 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="rounded-md border">
+    <div
+      className={cn(
+        "rounded-md border ",
+        isFetching && "bg-gray-100 animate-pulse"
+      )}
+    >
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (

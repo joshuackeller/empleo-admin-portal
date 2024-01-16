@@ -8,6 +8,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { NextComponentType } from "next";
 import type { AppProps as NextAppProps } from "next/app";
 import { Inter } from "next/font/google";
+import Head from "next/head";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -17,6 +18,7 @@ const inter = Inter({
 
 export type PageComponent = NextComponentType & {
   layout?: "auth" | "normal";
+  title?: string;
 };
 
 interface AppProps extends NextAppProps {
@@ -35,16 +37,21 @@ const queryClient = new QueryClient({
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <main className={cn("font-sans", inter.variable)}>
-      <AuthContextProvider>
-        <QueryClientProvider client={queryClient}>
-          <MainLayout layout={Component?.layout || "normal"}>
-            <Component {...pageProps} />
-          </MainLayout>
-          <Toaster />
-          <ReactQueryDevtools />
-        </QueryClientProvider>
-      </AuthContextProvider>
-    </main>
+    <>
+      <Head>
+        <title>Empleo {Component.title || pageProps.title}</title>
+      </Head>
+      <main className={cn("font-sans", inter.variable)}>
+        <AuthContextProvider>
+          <QueryClientProvider client={queryClient}>
+            <MainLayout layout={Component?.layout || "normal"}>
+              <Component {...pageProps} />
+            </MainLayout>
+            <Toaster />
+            <ReactQueryDevtools />
+          </QueryClientProvider>
+        </AuthContextProvider>
+      </main>
+    </>
   );
 }

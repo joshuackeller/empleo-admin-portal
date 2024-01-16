@@ -27,13 +27,20 @@ const SIDE_NAV_ITEMS = [
   },
 ];
 
-interface SideNavProps {}
+interface SideNavProps {
+  className: string;
+}
 
-const SideNav = ({}: SideNavProps) => {
+const SideNav = ({ className }: SideNavProps) => {
   const { pathname } = useRouter();
 
   return (
-    <div className="px-3 py-3 bg-indigo-950 h-screen flex flex-col justify-between">
+    <div
+      className={cn(
+        className,
+        "px-3 py-3 bg-indigo-950  flex flex-col justify-between"
+      )}
+    >
       <div>
         <Link href="/" className="text-center">
           <EmpleoLogo />
