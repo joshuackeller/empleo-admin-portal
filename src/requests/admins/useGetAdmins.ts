@@ -1,6 +1,7 @@
 import { Admin } from "@/src/utilities/interfaces";
 import useEmpleoApi from "../useEmpleoApi";
 import { useQuery } from "@tanstack/react-query";
+import AdminQueryKeys from ".";
 
 const GetAdmins = async (): Promise<Admin[]> => {
   const api = useEmpleoApi();
@@ -12,7 +13,7 @@ const GetAdmins = async (): Promise<Admin[]> => {
 
 const useGetAdmins = () => {
   return useQuery({
-    queryKey: ["ADMINS"],
+    queryKey: AdminQueryKeys.all,
     queryFn: GetAdmins,
   });
 };

@@ -18,7 +18,6 @@ import * as z from "zod";
 import useResetPassword from "@/src/requests/auth/useResetPassword";
 import { useQueryParam } from "@/src/utilities/useQueryParam";
 import { useEffect, useState } from "react";
-import { useToast } from "@/src/components/shadcn/use-toast";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import ReadJWTData from "@/src/utilities/ReadJWTData";
 
@@ -52,27 +51,14 @@ const ResetPassword: PageComponent = () => {
 
   const { mutate: resetPassword, isPending, isSuccess } = useResetPassword();
 
-  const { toast } = useToast();
-
   function onSubmit(values: z.infer<typeof formSchema>) {
     const { password } = values;
-    resetPassword(
-      {
-        body: {
-          token,
-          password,
-        },
+    resetPassword({
+      body: {
+        token,
+        password,
       },
-      {
-        onError: (error) => {
-          toast({
-            variant: "destructive",
-            title: (error as any)?.response?.data || "Unknown Error",
-            description: "If that doesn't sound right, please contact support.",
-          });
-        },
-      }
-    );
+    });
   }
   return (
     <>

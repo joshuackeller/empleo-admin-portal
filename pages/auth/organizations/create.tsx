@@ -16,7 +16,6 @@ import {
 
 import * as z from "zod";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { useToast } from "@/src/components/shadcn/use-toast";
 import useAuthContext from "@/src/utilities/useAuthContext";
 import { useRouter } from "next/router";
 import useCreateOrganization from "@/src/requests/organizations/useCreateOrganization";
@@ -33,13 +32,8 @@ const CreateAccount: PageComponent = () => {
     },
   });
 
-  const {
-    mutate: createOrganization,
-    isPending,
-    isSuccess,
-  } = useCreateOrganization();
+  const { mutate: createOrganization, isPending } = useCreateOrganization();
 
-  const { toast } = useToast();
   const { selectOrganization } = useAuthContext();
   const router = useRouter();
 
@@ -50,13 +44,6 @@ const CreateAccount: PageComponent = () => {
         onSuccess: (response) => {
           selectOrganization(response.id);
           router.push("/");
-        },
-        onError: (error) => {
-          toast({
-            variant: "destructive",
-            title: (error as any)?.response?.data || "Unknown Error",
-            description: "If that doesn't sound right, please contact support.",
-          });
         },
       }
     );

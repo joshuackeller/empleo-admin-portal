@@ -12,8 +12,10 @@ const MainLayout = ({ children, layout = "normal" }: MainLayoutProps) => {
   else {
     return (
       <div className={"flex"}>
-        <SideNav />
-        <div className="px-2 py-3 w-full">{children}</div>
+        <SideNav className="h-[100vh] fixed overflow-y-auto w-[170px] " />
+        <div className="ml-[170px] px-2 py-3 w-full h-full flex-1">
+          {children}
+        </div>
       </div>
     );
   }

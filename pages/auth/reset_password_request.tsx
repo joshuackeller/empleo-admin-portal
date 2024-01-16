@@ -16,7 +16,6 @@ import {
 
 import * as z from "zod";
 import useResetPasswordRequest from "@/src/requests/auth/useResetPasswordRequest";
-import { useToast } from "@/src/components/shadcn/use-toast";
 import { ReloadIcon } from "@radix-ui/react-icons";
 
 const formSchema = z.object({
@@ -36,21 +35,9 @@ const ResetPasswordRequest: PageComponent = () => {
     isPending,
     isSuccess,
   } = useResetPasswordRequest();
-  const { toast } = useToast();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    resetPasswordRequest(
-      { body: values },
-      {
-        onError: (error) => {
-          toast({
-            variant: "destructive",
-            title: (error as any)?.response?.data || "Unknown Error",
-            description: "If that doesn't sound right, please contact support.",
-          });
-        },
-      }
-    );
+    resetPasswordRequest({ body: values });
   }
   return (
     <>
