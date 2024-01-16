@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useGetCurrentOrganization from "@/src/requests/organizations/useGetCurrentOrganization";
 import { Separator } from "@/src/components/shadcn/Separator";
 import { Button } from "@/src/components/shadcn/Button";
@@ -6,47 +6,59 @@ import { UpdateIcon } from "@radix-ui/react-icons";
 import useUpdateOrganization from "@/src/requests/organizations/useUpdateOrganization";
 
 const OrgPage = () => {
-  const { data: organization, isLoading, isError } = useGetCurrentOrganization();
+  const {
+    data: organization,
+    isLoading,
+    isError,
+  } = useGetCurrentOrganization();
+
   const [isUpdating, setIsUpdating] = useState(false);
-  const [updatedName, setUpdatedName] = useState(organization?.title || "");
-  const mutation = useUpdateOrganization();
+  const [title, setTitle] = useState(organization?.title || "");
+
+  useEffect(() => {
+    if (!!organization) {
+      setTitle(organization?.title);
+    }
+  }, [organization]);
+
+  const { mutate: updateOrganization, isPending } = useUpdateOrganization();
 
   const handleUpdateClick = () => {
     // Set updatedName to the current organization title
-    setUpdatedName(organization?.title || ""); 
     setIsUpdating(true);
+    setTitle(organization?.title || "");
   };
 
   const handleCancelUpdate = () => {
     // Reset updatedName to the current organization title
-    setIsUpdating(false);
   };
 
   const handleSaveUpdate = async () => {
     // Update the organization title
     try {
-      // Wait for the promise to resolve
-      const mutationResult = await mutation; 
-
-      // Call the mutateAsync function to update the organization title
-      await mutationResult.mutateAsync({ 
-        body: {
-          title: updatedName,
+      updateOrganization(
+        {
+          body: {
+            title,
+          },
+          organizationId: organization?.id || "",
         },
-        organizationId: organization?.id || "",
-      });
-
-      setIsUpdating(false); 
+        {
+          onSuccess: () => {
+            setIsUpdating(false);
+          },
+        }
+      );
 
       // Reload the page after updating -- This ensures that it is displaying the most up-to-date organization
-      window.location.reload();
+      // window.location.reload();
 
       // If there is an error, log it to the console
     } catch (error) {
       console.error("Error updating organization:", error);
     }
   };
-  
+
   // If the organization is loading, display a loading message
   if (isLoading) {
     return <p>Loading...</p>;
@@ -72,8 +84,8 @@ const OrgPage = () => {
           {/* Allow the user to update the org name -- highlight the text box */}
           <input
             type="text"
-            value={updatedName}
-            onChange={(e) => setUpdatedName(e.target.value)}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
             className="border-2 border-indigo-900 p-1 focus:outline-none focus:border-indigo-900"
           />
           {/* Save and Cancel buttons */}
@@ -84,7 +96,7 @@ const OrgPage = () => {
         <div>
           {/* Display the organization name -- Have a white border so the name stays in place */}
           <p className="border-2 border-white p-1 focus:outline-none focus:border-white">
-            {organization?.title}
+            {title}
           </p>
         </div>
       )}

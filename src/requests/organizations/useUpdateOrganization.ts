@@ -19,7 +19,7 @@ const UpdateOrganization = async ({
   return data;
 };
 
-const useUpdateOrganization = async () => {
+const useUpdateOrganization = () => {
   return useMutation({
     mutationFn: UpdateOrganization,
   });
