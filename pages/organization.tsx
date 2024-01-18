@@ -76,7 +76,7 @@ const OrgPage: PageComponent = () => {
               <FormItem>
                 <FormLabel>Organization Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Vandalay Industries" {...field} />
+                  <Input placeholder="Vandelay Industries" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
