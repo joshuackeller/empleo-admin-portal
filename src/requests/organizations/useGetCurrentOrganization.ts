@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import useEmpleoApi from "../useEmpleoApi";
 import useAuthContext from "@/src/utilities/useAuthContext";
 import { Organization } from "@/src/utilities/interfaces";
+import OrganizationKeys from ".";
 
 interface GetCurrentOrganizationProps {
   organizationId: string;
@@ -22,7 +23,7 @@ const useGetCurrentOrganization = () => {
   return useQuery({
     queryFn: () =>
       GetCurrentOrganization({ organizationId: organizationId || "" }),
-    queryKey: ["ORGANIZATIONS", "CURRENT"],
+    queryKey: OrganizationKeys.current,
     enabled: !!organizationId,
   });
 };

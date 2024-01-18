@@ -1,6 +1,7 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useEmpleoApi from "../useEmpleoApi";
 import { Organization } from "@/src/utilities/interfaces";
+import OrganizationKeys from ".";
 
 interface UpdateOrganizationProps {
   body: {
@@ -19,9 +20,15 @@ const UpdateOrganization = async ({
   return data;
 };
 
-const useUpdateOrganization = async () => {
+const useUpdateOrganization = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: UpdateOrganization,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: OrganizationKeys.current,
+      });
+    },
   });
 };
 
