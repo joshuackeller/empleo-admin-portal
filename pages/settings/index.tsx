@@ -18,8 +18,8 @@ import { Input } from "@/src/components/shadcn/Input";
 import useUpdateSelf from "@/src/requests/self/useUpdateSelf";
 
 const formSchema = z.object({
-  first_name: z.string().min(1),
-  last_name: z.string().optional(),
+  firstName: z.string().min(1),
+  lastName: z.string().optional(),
 });
 
 const MyAccountPage: PageComponent = () => {
@@ -28,15 +28,15 @@ const MyAccountPage: PageComponent = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      first_name: self?.first_name,
-      last_name: self?.last_name,
+      firstName: self?.firstName,
+      lastName: self?.lastName,
     },
   });
 
   useEffect(() => {
     if (!!self) {
-      form.setValue("first_name", self.first_name || "");
-      form.setValue("last_name", self.last_name || "");
+      form.setValue("firstName", self.firstName || "");
+      form.setValue("lastName", self.lastName || "");
     }
   }, [self]);
 
@@ -58,7 +58,7 @@ const MyAccountPage: PageComponent = () => {
         >
           <FormField
             control={form.control}
-            name="first_name"
+            name="firstName"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>First Name</FormLabel>
@@ -71,7 +71,7 @@ const MyAccountPage: PageComponent = () => {
           />
           <FormField
             control={form.control}
-            name="last_name"
+            name="lastName"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Last Name</FormLabel>

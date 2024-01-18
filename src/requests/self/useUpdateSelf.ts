@@ -4,8 +4,8 @@ import useCustomMutation from "../useCustomMutation";
 
 interface UpdateSelfProps {
   body: {
-    first_name: string;
-    last_name?: string;
+    firstName: string;
+    lastName?: string;
   };
 }
 

@@ -19,8 +19,8 @@ import useCreateAccount from "@/src/requests/auth/useCreateAccount";
 import { ReloadIcon } from "@radix-ui/react-icons";
 
 const formSchema = z.object({
-  first_name: z.string().min(1),
-  last_name: z.string().optional(),
+  firstName: z.string().min(1),
+  lastName: z.string().optional(),
   email: z.string().email(),
   password: z.string().min(8),
 });
@@ -73,7 +73,7 @@ const CreateAccount: PageComponent = () => {
                   <div className="flex-1">
                     <FormField
                       control={form.control}
-                      name="first_name"
+                      name="firstName"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>First Name</FormLabel>
@@ -88,7 +88,7 @@ const CreateAccount: PageComponent = () => {
                   <div className="flex-1">
                     <FormField
                       control={form.control}
-                      name="last_name"
+                      name="lastName"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Last Name</FormLabel>

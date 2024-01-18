@@ -1,5 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
 import useEmpleoApi from "@/src/requests/useEmpleoApi";
+import useCustomMutation from "../useCustomMutation";
 
 interface SignInProps {
   body: {
@@ -17,7 +17,7 @@ const SignIn = async ({ body }: SignInProps) => {
 };
 
 const useSignIn = () => {
-  return useMutation({
+  return useCustomMutation({
     mutationFn: SignIn,
   });
 };

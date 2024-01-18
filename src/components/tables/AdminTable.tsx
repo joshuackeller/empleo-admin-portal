@@ -29,11 +29,11 @@ const AdminTable = () => {
       data={data}
       columns={[
         {
-          accessorKey: "first_name",
+          accessorKey: "firstName",
           header: "First Name",
         },
         {
-          accessorKey: "last_name",
+          accessorKey: "lastName",
           header: "Last Name",
         },
         {
@@ -44,12 +44,12 @@ const AdminTable = () => {
           id: "actions",
           enableHiding: false,
           cell: ({ row }) => {
-            const admin_id = row.original.id;
+            const adminId = row.original.id;
 
             const { mutate: removeAdmin, isPending } = useRemoveAdmin();
 
             const handleRemoveAdmin = () => {
-              removeAdmin({ admin_id });
+              removeAdmin({ adminId });
             };
 
             return (
@@ -57,7 +57,7 @@ const AdminTable = () => {
                 <DropdownMenuTrigger asChild>
                   <Button
                     disabled={
-                      !!tokenData?.admin_id && tokenData?.admin_id === admin_id
+                      !!tokenData?.adminId && tokenData?.adminId === adminId
                     }
                     variant="ghost"
                     className="h-8 w-8 p-0"

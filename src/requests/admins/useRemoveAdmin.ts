@@ -5,12 +5,12 @@ import AdminQueryKeys from ".";
 import useCustomMutation from "../useCustomMutation";
 
 interface RemoveAdminProps {
-  admin_id: string;
+  adminId: string;
 }
 
-const RemoveAdmin = async ({ admin_id }: RemoveAdminProps): Promise<Admin> => {
+const RemoveAdmin = async ({ adminId }: RemoveAdminProps): Promise<Admin> => {
   const api = useEmpleoApi();
-  const { data } = await api.delete(`/admins/${admin_id}`);
+  const { data } = await api.delete(`/admins/${adminId}`);
 
   return data;
 };
