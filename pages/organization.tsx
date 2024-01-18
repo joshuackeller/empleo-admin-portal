@@ -1,106 +1,89 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import useGetCurrentOrganization from "@/src/requests/organizations/useGetCurrentOrganization";
 import { Separator } from "@/src/components/shadcn/Separator";
 import { Button } from "@/src/components/shadcn/Button";
-import { UpdateIcon } from "@radix-ui/react-icons";
 import useUpdateOrganization from "@/src/requests/organizations/useUpdateOrganization";
+import { z } from "zod";
+import { PageComponent } from "./_app";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/src/components/shadcn/Input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/src/components/shadcn/Form";
 
-const OrgPage = () => {
-  const {
-    data: organization,
-    isLoading,
-    isError,
-  } = useGetCurrentOrganization();
+// Create a schema for the form
+const formSchema = z.object({
+  title: z.string().min(1), // Only constraint is that the title must be at least 1 character long
+});
 
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [title, setTitle] = useState(organization?.title || "");
+// Create a page component
+const OrgPage : PageComponent = () => {
+  // Get the current organization
+  const { data: organization } = useGetCurrentOrganization();
 
+  // Create a form with the schema and default values
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: organization?.title, // Set the default value to the current organization's title
+    },
+  });
+
+  // When the organization changes, update the form's default values
   useEffect(() => {
     if (!!organization) {
-      setTitle(organization?.title);
+      form.setValue("title", organization.title || ""); // Set the default value to the current organization's title
     }
   }, [organization]);
 
+  // Get the updateOrganization function from the hook
   const { mutate: updateOrganization, isPending } = useUpdateOrganization();
 
-  const handleUpdateClick = () => {
-    // Set updatedName to the current organization title
-    setIsUpdating(true);
-    setTitle(organization?.title || "");
+  // Handle the form submission
+  const handleUpdate = (values: z.infer<typeof formSchema>) => {
+    updateOrganization({
+      body: values, // Pass the form values to the request
+      organizationId: organization?.id || "", // Pass the organization ID to the request
+    });
   };
 
-  const handleCancelUpdate = () => {
-    // Reset updatedName to the current organization title
-  };
-
-  const handleSaveUpdate = async () => {
-    // Update the organization title
-    try {
-      updateOrganization(
-        {
-          body: {
-            title,
-          },
-          organizationId: organization?.id || "",
-        },
-        {
-          onSuccess: () => {
-            setIsUpdating(false);
-          },
-        }
-      );
-
-      // Reload the page after updating -- This ensures that it is displaying the most up-to-date organization
-      // window.location.reload();
-
-      // If there is an error, log it to the console
-    } catch (error) {
-      console.error("Error updating organization:", error);
-    }
-  };
-
-  // If the organization is loading, display a loading message
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
-  // If there is an error loading the organization, display an error message
-  if (isError) {
-    return <p>Error loading organization data</p>;
-  }
-
-  return (
-    <div>
-      {/* Button to update the organization name */}
-      <div className="flex justify-between items-center mb-2">
-        <h3>Organization</h3>
-        <Button className="gap-1" onClick={handleUpdateClick}>
-          Update Organization <UpdateIcon />
-        </Button>
-      </div>
-      <Separator />
-      {isUpdating ? (
-        <div>
-          {/* Allow the user to update the org name -- highlight the text box */}
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="border-2 border-indigo-900 p-1 focus:outline-none focus:border-indigo-900"
-          />
-          {/* Save and Cancel buttons */}
-          &nbsp;<Button onClick={handleSaveUpdate}>Save</Button>&nbsp;
-          <Button onClick={handleCancelUpdate}>Cancel</Button>
-        </div>
-      ) : (
-        <div>
-          {/* Display the organization name -- Have a white border so the name stays in place */}
-          <p className="border-2 border-white p-1 focus:outline-none focus:border-white">
-            {title}
-          </p>
-        </div>
-      )}
+// Render the page
+return (
+  <div>
+    <div className="flex justify-between items-center mb-2">
+      <h3>Organization</h3>
     </div>
+    <Separator />
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(handleUpdate)}
+        className="max-w-2xl space-y-1"
+      >
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Organization Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Wonka Industries" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button className="!mt-2" disabled={isPending} type="submit">
+          Update
+        </Button>
+      </form>
+    </Form>
+  </div>
   );
 };
 
