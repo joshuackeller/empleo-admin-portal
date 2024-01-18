@@ -39,7 +39,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Empleo {Component.title || pageProps.title}</title>
+        <title>{`Empleo ${Component.title || pageProps.title || ""}`}</title>
       </Head>
       <main className={cn("font-sans", inter.variable)}>
         <AuthContextProvider>
