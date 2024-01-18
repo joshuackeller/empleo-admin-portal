@@ -3,8 +3,8 @@ import useEmpleoApi from "@/src/requests/useEmpleoApi";
 
 interface CreateAccountProps {
   body: {
-    first_name: string;
-    last_name?: string;
+    firstName: string;
+    lastName?: string;
     email: string;
     password: string;
   };

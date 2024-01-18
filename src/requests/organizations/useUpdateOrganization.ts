@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useEmpleoApi from "../useEmpleoApi";
 import { Organization } from "@/src/utilities/interfaces";
 import OrganizationKeys from ".";
+import { useToast } from "@/src/components/shadcn/use-toast";
 
 interface UpdateOrganizationProps {
   body: {
@@ -22,9 +23,14 @@ const UpdateOrganization = async ({
 
 const useUpdateOrganization = () => {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
   return useMutation({
     mutationFn: UpdateOrganization,
     onSuccess: () => {
+      toast({
+        title: "Updated Organization Details",
+        description: "nice work",
+      });
       queryClient.invalidateQueries({
         queryKey: OrganizationKeys.current,
       });

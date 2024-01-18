@@ -1,39 +1,39 @@
 export interface BaseSelf {
   id: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  email_confirmed: string;
-  created_at: string;
-  updated_at: string;
+  emailConfirmed: string;
+  createdAt: string;
+  updatedAt: string;
 }
 export interface Self extends BaseSelf {}
 
 export interface BaseAdmin {
   id: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 }
 export interface Admin extends BaseAdmin {}
 
 export interface BaseOrganization {
   id: string;
   title: string;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 }
 export interface Organization extends BaseOrganization {}
 
 export interface BaseUser {
   id: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  email_confirmed: string;
-  created_at: string;
-  updated_at: string;
+  emailConfirmed: string;
+  createdAt: string;
+  updatedAt: string;
 }
 export interface User extends BaseUser {}

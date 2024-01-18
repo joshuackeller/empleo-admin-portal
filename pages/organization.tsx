@@ -23,7 +23,7 @@ const formSchema = z.object({
 });
 
 // Create a page component
-const OrgPage : PageComponent = () => {
+const OrgPage: PageComponent = () => {
   // Get the current organization
   const { data: organization } = useGetCurrentOrganization();
 
@@ -43,7 +43,11 @@ const OrgPage : PageComponent = () => {
   }, [organization]);
 
   // Get the updateOrganization function from the hook
-  const { mutate: updateOrganization, isPending } = useUpdateOrganization();
+  const {
+    mutate: updateOrganization,
+    isPending,
+    isSuccess,
+  } = useUpdateOrganization();
 
   // Handle the form submission
   const handleUpdate = (values: z.infer<typeof formSchema>) => {
@@ -53,37 +57,37 @@ const OrgPage : PageComponent = () => {
     });
   };
 
-// Render the page
-return (
-  <div>
-    <div className="flex justify-between items-center mb-2">
-      <h3>Organization</h3>
+  // Render the page
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-2">
+        <h3>Organization</h3>
+      </div>
+      <Separator />
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(handleUpdate)}
+          className="max-w-2xl space-y-1"
+        >
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Organization Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Vandalay Industries" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button className="!mt-2" disabled={isPending} type="submit">
+            Update
+          </Button>
+        </form>
+      </Form>
     </div>
-    <Separator />
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(handleUpdate)}
-        className="max-w-2xl space-y-1"
-      >
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Organization Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Vandalay Industries" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button className="!mt-2" disabled={isPending} type="submit">
-          Update
-        </Button>
-      </form>
-    </Form>
-  </div>
   );
 };
 
