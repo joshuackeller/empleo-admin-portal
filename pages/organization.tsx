@@ -72,7 +72,7 @@ return (
             <FormItem>
               <FormLabel>Organization Name</FormLabel>
               <FormControl>
-                <Input placeholder="Wonka Industries" {...field} />
+                <Input placeholder="Vandalay Industries" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
