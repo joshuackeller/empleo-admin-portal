@@ -68,6 +68,11 @@ const AuthContextProvider = ({ children }: AuthContextProviderProps) => {
       if (!!localToken) {
         setToken(localToken);
       }
+      if (!!localOrganizationId && !!localToken) {
+        if (router.pathname.startsWith("/auth")) {
+          router.push("/");
+        }
+      }
       if (!localToken && !localOrganizationId) {
         if (
           !router.pathname.startsWith("/auth") ||
