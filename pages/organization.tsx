@@ -60,10 +60,9 @@ const OrgPage: PageComponent = () => {
   // Render the page
   return (
     <div>
-      <div className="flex justify-between items-center mb-2">
-        <h3>Organization</h3>
-      </div>
-      <Separator />
+      <h4>Organization</h4>
+
+      <Separator className="mb-2 mt-1" />
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleUpdate)}

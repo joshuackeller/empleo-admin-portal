@@ -11,7 +11,7 @@ const AuthLayout = ({ children }: AuthLayout) => {
       <div className="flex h-screen">
         <div className="hidden md:block w-1/2 p-5 bg-indigo-950 h-full">
           <div className="hidden md:block">
-            <EmpleoLogo size="lg" />
+            <EmpleoLogo size="lg" background="dark" />
           </div>
         </div>
         <div className="w-full md:w-1/2 flex justify-center items-center relative">
@@ -19,7 +19,7 @@ const AuthLayout = ({ children }: AuthLayout) => {
         </div>
       </div>
       <div className="md:hidden block absolute top-5 left-5">
-        <EmpleoLogo size="lg" lightBackground />
+        <EmpleoLogo size="lg" background="light" />
       </div>
     </>
   );

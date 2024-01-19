@@ -27,6 +27,7 @@ import {
   FormMessage,
 } from "@/src/components/shadcn/Form";
 import { useState } from "react";
+import { Plus, PlusCircle } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -59,14 +60,14 @@ const TeamPage: PageComponent = () => {
   return (
     <div>
       <div>
-        <div className="flex justify-between items-center mb-2">
-          <h3>Team</h3>
+        <div className="flex justify-between items-start ">
+          <h4>Team</h4>
           <div className="!font-sans">
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
-                <Button className="gap-1">
-                  Add Admin <PlusCircledIcon />
-                </Button>
+                <button className="p-1 rounded-full bg-indigo-500">
+                  <Plus className="h-4 w-4 text-white" />
+                </button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
@@ -108,7 +109,7 @@ const TeamPage: PageComponent = () => {
             </Dialog>
           </div>
         </div>
-        <Separator />
+        <Separator className="mb-2 mt-1" />
       </div>
       <div className="mt-3">
         <AdminTable />
