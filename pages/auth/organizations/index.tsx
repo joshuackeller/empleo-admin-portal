@@ -50,7 +50,7 @@ const AuthOrganizations = () => {
         )}
         <Link
           href="/auth/organizations/create"
-          className={cn(buttonVariants({}), "w-full mt-2")}
+          className={cn(buttonVariants({ variant: "link" }), " m-0 p-0")}
         >
           Create New Organization
         </Link>

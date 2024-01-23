@@ -19,9 +19,23 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 import useAuthContext from "@/src/utilities/useAuthContext";
 import { useRouter } from "next/router";
 import useCreateOrganization from "@/src/requests/organizations/useCreateOrganization";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/src/components/shadcn/Tooltip";
+import { CircleDashed, HelpCircleIcon } from "lucide-react";
 
 const formSchema = z.object({
   title: z.string().min(1),
+  slug: z
+    .string()
+    .max(22)
+    .refine((value) => /^[a-z0-9-]+$/.test(value), {
+      message:
+        "Subdomain can only contain lowercase letters, numbers, and dashes",
+    }),
 });
 
 const CreateAccount: PageComponent = () => {
@@ -29,6 +43,7 @@ const CreateAccount: PageComponent = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
+      slug: "",
     },
   });
 
@@ -66,7 +81,7 @@ const CreateAccount: PageComponent = () => {
           </div>
         </div>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
             <FormField
               control={form.control}
               name="title"
@@ -74,7 +89,55 @@ const CreateAccount: PageComponent = () => {
                 <FormItem>
                   <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input placeholder="Vandelay Industries" {...field} />
+                    <Input placeholder="Dunder Mifflin" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="slug"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    <div className="flex items-center gap-x-1 mb-1">
+                      Subdomain
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger disabled className="cursor-default">
+                            <HelpCircleIcon className="h-3.5 w-3.5 " />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="max-w-sm">
+                              Create a unique subdomain for you white label job
+                              board. Subdomains can only have lowercase letters,
+                              numbers, and dashes.
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  </FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Input
+                        {...field}
+                        onChange={(e) =>
+                          form.setValue(
+                            "slug",
+                            e.target.value
+                              ?.replace(/[^a-zA-Z0-9-]/g, "")
+                              ?.toLowerCase()
+                          )
+                        }
+                        placeholder="dunder-mifflin"
+                        maxLength={22}
+                      />
+                      <div className="absolute top-0 right-0 bg-gray-100 border dark:bg-gray-800 text-gray-500 dark:text-gray-300 h-full w-1/3 flex items-center rounded-r-lg overflow-hidden z-10">
+                        <div className="ml-1 text-sm">.empleo.work</div>
+                      </div>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -83,7 +146,7 @@ const CreateAccount: PageComponent = () => {
 
             <Button disabled={isPending} type="submit" className="w-full">
               {isPending && (
-                <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                <CircleDashed className="mr-2 h-4 w-4 animate-spin" />
               )}
               Create Organization
             </Button>
