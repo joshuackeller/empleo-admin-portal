@@ -43,13 +43,13 @@ main {
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 240 7% 5%;
     --foreground: 210 40% 98%;
 
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 84% 4.9%;
+    --popover: 240 7% 5%;
     --popover-foreground: 210 40% 98%;
 
     --primary: 210 40% 98%;
@@ -64,7 +64,7 @@ main {
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 72.8% 60.6%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 217.2 32.6% 17.5%;

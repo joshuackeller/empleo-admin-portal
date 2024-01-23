@@ -73,7 +73,7 @@ const ListingsPage: PageComponent = () => {
     <div>
       <div>
         <div className="flex justify-between items-center mb-2">
-          <h3>Listing</h3>
+          <h4>Listing</h4>
           <div className="!font-sans">
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>

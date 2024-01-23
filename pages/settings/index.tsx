@@ -16,6 +16,7 @@ import {
 } from "@/src/components/shadcn/Form";
 import { Input } from "@/src/components/shadcn/Input";
 import useUpdateSelf from "@/src/requests/self/useUpdateSelf";
+import { Separator } from "@/src/components/shadcn/Separator";
 
 const formSchema = z.object({
   firstName: z.string().min(1),
@@ -49,8 +50,9 @@ const MyAccountPage: PageComponent = () => {
   };
 
   return (
-    <SettingsLayout>
+    <div>
       <h4>Account Details</h4>
+      <Separator className="mb-2 mt-1" />
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleUpdate)}
@@ -88,7 +90,7 @@ const MyAccountPage: PageComponent = () => {
           </Button>
         </form>
       </Form>
-    </SettingsLayout>
+    </div>
   );
 };
 
