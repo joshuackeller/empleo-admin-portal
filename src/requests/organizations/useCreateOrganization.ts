@@ -5,6 +5,7 @@ import { Organization } from "@/src/utilities/interfaces";
 interface CreateOrganizationProps {
   body: {
     title: string;
+    slug: string;
   };
 }
 

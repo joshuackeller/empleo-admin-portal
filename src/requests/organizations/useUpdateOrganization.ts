@@ -7,6 +7,7 @@ import { useToast } from "@/src/components/shadcn/use-toast";
 interface UpdateOrganizationProps {
   body: {
     title: string;
+    slug: string;
   };
   organizationId: string;
 }

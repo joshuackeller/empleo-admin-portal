@@ -17,6 +17,7 @@ import {
 import * as z from "zod";
 import useCreateAccount from "@/src/requests/auth/useCreateAccount";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { CircleDashed } from "lucide-react";
 
 const formSchema = z.object({
   firstName: z.string().min(1),
@@ -132,7 +133,7 @@ const CreateAccount: PageComponent = () => {
                 />
                 <Button disabled={isPending} type="submit" className="w-full">
                   {isPending && (
-                    <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                    <CircleDashed className="mr-2 h-4 w-4 animate-spin" />
                   )}
                   Create Account
                 </Button>
