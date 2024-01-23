@@ -9,7 +9,6 @@ import { useRouter } from "next/router";
 
 import SearchDialog from "../components/other/SearchDialog";
 import SettingsDropdown from "../components/other/SettingsDropdown";
-import { useTheme } from "next-themes";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -51,7 +50,7 @@ const MainLayout = ({ children, layout = "normal" }: MainLayoutProps) => {
                 </div>
               </Link>
             </div>
-            <div className="pr-2 py-1 flex justify-end  w-full mr-7">
+            <div className="pr-2 py-1 flex justify-end w-full mr-7">
               <SearchDialog />
               <SettingsDropdown />
             </div>

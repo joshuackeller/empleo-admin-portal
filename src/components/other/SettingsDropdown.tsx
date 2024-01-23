@@ -27,7 +27,7 @@ const SettingsDropdown = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="p-1.5">
+      <DropdownMenuTrigger className="p-1">
         <SettingsIcon className="h-4 w-4" />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end">
