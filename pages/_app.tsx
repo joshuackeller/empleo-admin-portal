@@ -1,3 +1,4 @@
+import { ThemeProvider } from "@/src/components/shadcn/ThemeProvider";
 import { Toaster } from "@/src/components/shadcn/toaster";
 import AuthContextProvider from "@/src/layout/AuthContextProvider";
 import MainLayout from "@/src/layout/MainLayout";
@@ -42,15 +43,22 @@ export default function App({ Component, pageProps }: AppProps) {
         <title>{`Empleo ${Component.title || pageProps.title || ""}`}</title>
       </Head>
       <main className={cn("font-sans", inter.variable)}>
-        <AuthContextProvider>
-          <QueryClientProvider client={queryClient}>
-            <MainLayout layout={Component?.layout || "normal"}>
-              <Component {...pageProps} />
-            </MainLayout>
-            <Toaster />
-            <ReactQueryDevtools />
-          </QueryClientProvider>
-        </AuthContextProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AuthContextProvider>
+            <QueryClientProvider client={queryClient}>
+              <MainLayout layout={Component?.layout || "normal"}>
+                <Component {...pageProps} />
+              </MainLayout>
+              <Toaster />
+              <ReactQueryDevtools />
+            </QueryClientProvider>
+          </AuthContextProvider>
+        </ThemeProvider>
       </main>
     </>
   );

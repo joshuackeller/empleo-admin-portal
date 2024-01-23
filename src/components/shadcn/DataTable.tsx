@@ -36,7 +36,7 @@ export function DataTable<TData, TValue>({
     <div
       className={cn(
         "rounded-md border ",
-        isFetching && "bg-gray-100 animate-pulse"
+        isFetching && "bg-gray-100 dark:bg-gray-900 animate-pulse"
       )}
     >
       <Table>

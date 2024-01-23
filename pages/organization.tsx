@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import useGetCurrentOrganization from "@/src/requests/organizations/useGetCurrentOrganization";
 import { Separator } from "@/src/components/shadcn/Separator";
 import { Button } from "@/src/components/shadcn/Button";
@@ -16,6 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/src/components/shadcn/Form";
+import { useTheme } from "next-themes";
 
 // Create a schema for the form
 const formSchema = z.object({
@@ -57,7 +58,6 @@ const OrgPage: PageComponent = () => {
     });
   };
 
-  // Render the page
   return (
     <div>
       <h4>Organization</h4>

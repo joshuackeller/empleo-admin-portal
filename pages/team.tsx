@@ -27,7 +27,7 @@ import {
   FormMessage,
 } from "@/src/components/shadcn/Form";
 import { useState } from "react";
-import { Plus, PlusCircle } from "lucide-react";
+import { Plus } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email(),
