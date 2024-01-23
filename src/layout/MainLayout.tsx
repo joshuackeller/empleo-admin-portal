@@ -50,7 +50,7 @@ const MainLayout = ({ children, layout = "normal" }: MainLayoutProps) => {
                 </div>
               </Link>
             </div>
-            <div className="pr-2 py-1 flex justify-end w-full mr-7">
+            <div className="pr-2 py-1 flex justify-end gap-x-1 w-full mr-7">
               <SearchDialog />
               <SettingsDropdown />
             </div>
