@@ -37,3 +37,18 @@ export interface BaseUser {
   updatedAt: string;
 }
 export interface User extends BaseUser {}
+
+export interface BaseListing {
+  id: string;
+  published: boolean;
+  jobTitle: string;
+  location: string | null;
+  employmentType: string | null;
+  salaryRange: string | null;
+  jobDescription: string | null;
+  jobRequirements: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Listing extends BaseListing {}
