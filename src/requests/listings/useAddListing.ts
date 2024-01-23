@@ -8,11 +8,11 @@ import { Listing } from "@/src/utilities/interfaces";
 interface AddListingProps {
   body: {
     jobTitle: string;
-    jobDescription: string;
-    jobRequirements: string;
-    employmentType: string;
-    location: string;
-    salaryRange: string;
+    jobDescription?: string;
+    jobRequirements?: string;
+    employmentType?: string;
+    location?: string;
+    salaryRange?: string;
     published: boolean;
   };
 }
