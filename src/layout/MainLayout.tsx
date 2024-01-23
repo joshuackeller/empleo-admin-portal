@@ -51,13 +51,13 @@ const MainLayout = ({ children, layout = "normal" }: MainLayoutProps) => {
                 </div>
               </Link>
             </div>
-            <div className="pr-2 py-1 flex justify-end gap-x-2 w-full mr-7">
+            <div className="pr-2 py-1 flex justify-end  w-full mr-7">
               <SearchDialog />
               <SettingsDropdown />
             </div>
           </div>
           <div className="flex">
-            <div className="w-[200px] mt-[55px] bg-gradient-to-r bg-gray-50 dark:bg-gray-600/10 rounded-lg h-min fixed">
+            <div className="w-[200px] mt-[55px] bg-gradient-to-r bg-gray-200/30 dark:bg-gray-600/10 rounded-lg h-min fixed">
               <div className=" ml-2 mr-5 py-3 flex flex-col gap-y-1">
                 {SIDE_NAV_ITEMS.map((item) => (
                   <Link
