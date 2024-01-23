@@ -1,6 +1,6 @@
-import { useMutation } from "@tanstack/react-query";
 import useEmpleoApi from "../useEmpleoApi";
 import { Organization } from "@/src/utilities/interfaces";
+import useCustomMutation from "../useCustomMutation";
 
 interface CreateOrganizationProps {
   body: {
@@ -19,7 +19,7 @@ const CreateOrganization = async ({
 };
 
 const useCreateOrganization = () => {
-  return useMutation({
+  return useCustomMutation({
     mutationFn: CreateOrganization,
   });
 };

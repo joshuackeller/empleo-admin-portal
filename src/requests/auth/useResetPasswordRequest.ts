@@ -1,5 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
 import useEmpleoApi from "@/src/requests/useEmpleoApi";
+import useCustomMutation from "../useCustomMutation";
 
 interface ResetPasswordRequestProps {
   body: {
@@ -16,7 +16,7 @@ const ResetPasswordRequest = async ({ body }: ResetPasswordRequestProps) => {
 };
 
 const useResetPasswordRequest = () => {
-  return useMutation({
+  return useCustomMutation({
     mutationFn: ResetPasswordRequest,
   });
 };

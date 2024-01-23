@@ -1,5 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
 import useEmpleoApi from "@/src/requests/useEmpleoApi";
+import useCustomMutation from "../useCustomMutation";
 
 interface CreateAccountProps {
   body: {
@@ -19,7 +19,7 @@ const CreateAccount = async ({ body }: CreateAccountProps) => {
 };
 
 const useCreateAccount = () => {
-  return useMutation({
+  return useCustomMutation({
     mutationFn: CreateAccount,
   });
 };

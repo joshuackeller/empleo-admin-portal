@@ -1,8 +1,9 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import useEmpleoApi from "../useEmpleoApi";
 import { Organization } from "@/src/utilities/interfaces";
 import OrganizationKeys from ".";
 import { useToast } from "@/src/components/shadcn/use-toast";
+import useCustomMutation from "../useCustomMutation";
 
 interface UpdateOrganizationProps {
   body: {
@@ -25,7 +26,7 @@ const UpdateOrganization = async ({
 const useUpdateOrganization = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  return useMutation({
+  return useCustomMutation({
     mutationFn: UpdateOrganization,
     onSuccess: () => {
       toast({
