@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { S3 } from "aws-sdk";
 import useGetCurrentOrganization from "@/src/requests/organizations/useGetCurrentOrganization";
 import { Separator } from "@/src/components/shadcn/Separator";
 import { Button } from "@/src/components/shadcn/Button";
@@ -16,7 +17,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/src/components/shadcn/Form";
-import { useTheme } from "next-themes";
+import dotenv from 'dotenv';
+
+// Load in the environment variables
+dotenv.config();
+
+// Create an S3 client
+const s3 = new S3({
+  accessKeyId: process.env.S3_ACCESS_KEY,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+  region: 'us-east-1',
+});
+
 
 // Create a schema for the form
 const formSchema = z.object({
@@ -37,7 +49,7 @@ const OrgPage: PageComponent = () => {
 
     if (file) {
       // Check if the file type is allowed (e.g., only allow image files)
-      const allowedFileTypes = ["image/jpeg", "image/png", "image/gif"];
+      const allowedFileTypes = ['image/jpeg', 'image/png', 'image/gif'];
       if (allowedFileTypes.includes(file.type)) {
         const reader = new FileReader();
 
@@ -50,28 +62,28 @@ const OrgPage: PageComponent = () => {
         reader.readAsDataURL(file);
       } else {
         // Display a message or handle the case where the file type is not allowed
-        alert("Invalid file type. Please upload a valid image file.");
+        alert('Invalid file type. Please upload a valid image file.');
       }
     }
   };
-
+  
   const boxStyle: React.CSSProperties = {
-    width: "100%", // Use the same width as the input box
-    height: "200px", // Fixed Height
-    border: "1px solid rgba(0, 0, 110, .075)",
-    borderRadius: "8px", // Add border-radius for a rounded appearance
-    overflow: "hidden",
-    position: "relative",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)", // Add a small shadow
+    width: '100%', // Use the same width as the input box
+    height: '200px', // Fixed Height
+    border: '1px solid rgba(0, 0, 110, .075)',
+    borderRadius: '8px', // Rounded
+    overflow: 'hidden',
+    position: 'relative',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)', // Add a small shadow
   };
 
   const imageStyle: React.CSSProperties = {
-    maxWidth: "100%",
-    maxHeight: "100%",
-    objectFit: "contain",
+    maxWidth: '100%',
+    maxHeight: '100%',
+    objectFit: 'contain',
   };
 
   // Create a form with the schema and default values
@@ -96,19 +108,26 @@ const OrgPage: PageComponent = () => {
     isSuccess,
   } = useUpdateOrganization();
 
+
+  // addState for dataUrl (Ex: const [dataUrl, setDataUrl] = useState<string | null>(null);)
   // Handle the form submission
   const handleUpdate = (values: z.infer<typeof formSchema>) => {
     updateOrganization({
-      body: values, // Pass the form values to the request
+      body: {
+        // dataUrl, // Add this line for uploading image (Ex: data:image/png;base64,....)
+        ...values
+      }, // Pass the form values to the request
       organizationId: organization?.id || "", // Pass the organization ID to the request
     });
   };
 
+  // Render the page
   return (
     <div>
-      <h4>Organization</h4>
-
-      <Separator className="mb-2 mt-1" />
+      <div className="flex justify-between items-center mb-2">
+        <h3>Organization</h3>
+      </div>
+      <Separator />
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleUpdate)}
@@ -145,26 +164,16 @@ const OrgPage: PageComponent = () => {
             {image ? (
               <img src={image} alt="Uploaded" style={imageStyle} />
             ) : (
-              <div
-                style={{
-                  height: "100%",
-                  backgroundColor: "transparent",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
+              <div style={{ height: '100%', backgroundColor: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 Company Logo
               </div>
             )}
           </div>
           {/* Move the file upload button below the image upload box */}
           <div>
-            <input
-              type="file"
-              onChange={handleImageChange}
-              style={{ fontSize: "14px", width: "100%" }}
-            />
+            <input type="file" 
+            // update onChange to also convert the image to a data URL and also setDataUrl 
+            onChange={handleImageChange} style={{ fontSize: '14px', width: '100%' }} />
           </div>
           <Button className="!mt-2" disabled={isPending} type="submit">
             Update
