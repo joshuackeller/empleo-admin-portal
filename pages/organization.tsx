@@ -17,28 +17,28 @@ import {
   FormLabel,
   FormMessage,
 } from "@/src/components/shadcn/Form";
-import dotenv from 'dotenv';
+import { useTheme } from "next-themes";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/src/components/shadcn/Tooltip";
+import { HelpCircleIcon } from "lucide-react";
 
-// Load in the environment variables
-dotenv.config();
-
-// Create an S3 client
-const s3 = new S3({
-  accessKeyId: process.env.S3_ACCESS_KEY,
-  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-  region: 'us-east-1',
-});
-
-
-// Create a schema for the form
 const formSchema = z.object({
-  title: z.string().min(1), // Only constraint is that the title must be at least 1 character long
+  title: z.string().min(1),
+  slug: z
+    .string()
+    .max(22)
+    .refine((value) => /^[a-z0-9-]+$/.test(value), {
+      message:
+        "Subdomain can only contain lowercase letters, numbers, and dashes",
+    }),
   imageURL: z.string().url().optional(), // Add this line for the image URL
 });
 
-// Create a page component
 const OrgPage: PageComponent = () => {
-  // Get the current organization
   const { data: organization } = useGetCurrentOrganization();
 
   // Image Upload
@@ -98,6 +98,7 @@ const OrgPage: PageComponent = () => {
   useEffect(() => {
     if (!!organization) {
       form.setValue("title", organization.title || ""); // Set the default value to the current organization's title
+      form.setValue("slug", organization.slug || ""); // Set the default value to the current organization's title
     }
   }, [organization]);
 
@@ -131,7 +132,7 @@ const OrgPage: PageComponent = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleUpdate)}
-          className="max-w-2xl space-y-1"
+          className="max-w-2xl space-y-3"
         >
           <FormField
             control={form.control}
@@ -141,6 +142,54 @@ const OrgPage: PageComponent = () => {
                 <FormLabel>Organization Name</FormLabel>
                 <FormControl>
                   <Input placeholder="Vandelay Industries" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="slug"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  <div className="flex items-center gap-x-1 mb-1">
+                    Subdomain
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger disabled className="cursor-default">
+                          <HelpCircleIcon className="h-3.5 w-3.5 " />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="max-w-sm">
+                            Create a unique subdomain for you white label job
+                            board. Subdomains can only have lowercase letters,
+                            numbers, and dashes.
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                </FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <Input
+                      {...field}
+                      onChange={(e) =>
+                        form.setValue(
+                          "slug",
+                          e.target.value
+                            ?.replace(/[^a-zA-Z0-9-]/g, "")
+                            ?.toLowerCase()
+                        )
+                      }
+                      placeholder="dunder-mifflin"
+                      maxLength={22}
+                    />
+                    <div className="absolute top-0 right-0 bg-gray-100 border dark:bg-gray-800 text-gray-500 dark:text-gray-300 h-full w-1/4 flex items-center rounded-r-lg overflow-hidden z-10">
+                      <div className="ml-1 text-sm">.empleo.work</div>
+                    </div>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>

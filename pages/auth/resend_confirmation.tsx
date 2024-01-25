@@ -17,6 +17,7 @@ import {
 import * as z from "zod";
 import useResendEmailConfirmation from "@/src/requests/auth/useResendEmailConfirmation";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { CircleDashed } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -82,7 +83,7 @@ const ResendConfirmation: PageComponent = () => {
               />
               <Button disabled={isPending} type="submit" className="w-full">
                 {isPending && (
-                  <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                  <CircleDashed className="mr-2 h-4 w-4 animate-spin" />
                 )}
                 Get Link
               </Button>
