@@ -9,6 +9,7 @@ import { PageComponent } from "./_app";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/src/components/shadcn/Input";
+import { Label } from "@/src/components/shadcn/Label";
 import {
   Form,
   FormControl,
@@ -202,13 +203,12 @@ const OrgPage: PageComponent = () => {
               <FormItem>
                 <FormLabel>Organization Logo</FormLabel>
                 <FormControl>
-                  {/* <input type="file" {...field} onChange={handleImageChange} /> */}
+                  <Input id="picture" type="file" onChange={handleImageChange} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          {/* Move the image upload box right below the "Organization Logo" title */}
           <div style={boxStyle}>
             {image ? (
               <img src={image} alt="Uploaded" style={imageStyle} />
@@ -219,11 +219,16 @@ const OrgPage: PageComponent = () => {
             )}
           </div>
           {/* Move the file upload button below the image upload box */}
-          <div>
+          {/* <div>
             <input type="file" 
             // update onChange to also convert the image to a data URL and also setDataUrl 
             onChange={handleImageChange} style={{ fontSize: '14px', width: '100%' }} />
-          </div>
+          </div> */}
+          {/* <div className="grid w-full max-w-sm items-center gap-1.5"> */}
+            {/* <Label htmlFor="picture">Upload Logo</Label> */}
+            {/* <Input id="picture" type="file" onChange={handleImageChange} />
+          </div> */}
+          
           <Button className="!mt-2" disabled={isPending} type="submit">
             Update
           </Button>
