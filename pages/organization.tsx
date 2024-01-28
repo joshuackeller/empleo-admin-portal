@@ -23,7 +23,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/src/components/shadcn/Tooltip";
-import { HelpCircleIcon } from "lucide-react";
+import { ExternalLinkIcon, HelpCircleIcon } from "lucide-react";
 
 const formSchema = z.object({
   title: z.string().min(1),
@@ -164,24 +164,41 @@ const OrgPage: PageComponent = () => {
                   </div>
                 </FormLabel>
                 <FormControl>
-                  <div className="relative">
-                    <Input
-                      {...field}
-                      onChange={(e) =>
-                        form.setValue(
-                          "slug",
-                          e.target.value
-                            ?.replace(/[^a-zA-Z0-9-]/g, "")
-                            ?.toLowerCase()
-                        )
-                      }
-                      placeholder="dunder-mifflin"
-                      maxLength={22}
-                    />
-                    <div className="absolute top-0 right-0 bg-gray-100 border dark:bg-gray-800 text-gray-500 dark:text-gray-300 h-full w-1/4 flex items-center rounded-r-lg overflow-hidden z-10">
-                      <div className="ml-1 text-sm">.empleo.work</div>
+                  <>
+                    <div className="relative">
+                      <Input
+                        {...field}
+                        onChange={(e) =>
+                          form.setValue(
+                            "slug",
+                            e.target.value
+                              ?.replace(/[^a-zA-Z0-9-]/g, "")
+                              ?.toLowerCase(),
+                          )
+                        }
+                        placeholder="dunder-mifflin"
+                        maxLength={22}
+                      />
+                      <div className="absolute top-0 right-0 bg-gray-100 border dark:bg-gray-800 text-gray-500 dark:text-gray-300 h-full w-28 flex items-center rounded-r-lg overflow-hidden z-10">
+                        <div className="ml-1 text-sm">.empleo.work</div>
+                      </div>
                     </div>
-                  </div>
+                    <div className="flex items-center gap-x-2 !-mt-5">
+                      <a
+                        href={`https://${organization?.slug}.empleo.work`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="small-text flex items-center gap-x-1 !mt-1 whitespace-nowrap"
+                      >
+                        View Preview{" "}
+                        <ExternalLinkIcon className="h-3.5 w-3.5" />
+                      </a>
+                      <p className="muted-text">
+                        Warning: Updating the subdomain can cause several
+                        minutes of downtime as DNS records update.
+                      </p>
+                    </div>
+                  </>
                 </FormControl>
                 <FormMessage />
               </FormItem>
