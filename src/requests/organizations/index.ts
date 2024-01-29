@@ -1,4 +1,5 @@
 const OrganizationKeys = {
+  all: ["organizations"],
   current: ["organizations", "current"],
 };
 

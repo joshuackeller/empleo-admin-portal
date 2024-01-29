@@ -134,7 +134,7 @@ const CreateAccount: PageComponent = () => {
                         placeholder="dunder-mifflin"
                         maxLength={22}
                       />
-                      <div className="absolute top-0 right-0 bg-gray-100 border dark:bg-gray-800 text-gray-500 dark:text-gray-300 h-full w-1/3 flex items-center rounded-r-lg overflow-hidden z-10">
+                      <div className="absolute top-0 right-0 bg-gray-100 border dark:bg-gray-800 text-gray-500 dark:text-gray-300 h-full w-[105px] flex items-center rounded-r-lg overflow-hidden z-10">
                         <div className="ml-1 text-sm">.empleo.work</div>
                       </div>
                     </div>
