@@ -8,7 +8,6 @@ import useCustomMutation from "../useCustomMutation";
 interface UpdateOrganizationProps {
   body: {
     title: string;
-    slug: string;
   };
   organizationId: string;
 }
