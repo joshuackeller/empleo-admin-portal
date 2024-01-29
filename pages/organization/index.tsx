@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import useGetCurrentOrganization from "@/src/requests/organizations/useGetCurrentOrganization";
 import { Separator } from "@/src/components/shadcn/Separator";
-import { Button } from "@/src/components/shadcn/Button";
+import { Button, buttonVariants } from "@/src/components/shadcn/Button";
 import useUpdateOrganization from "@/src/requests/organizations/useUpdateOrganization";
 import { z } from "zod";
-import { PageComponent } from "./_app";
+import { PageComponent } from "../_app";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/src/components/shadcn/Input";
@@ -23,17 +23,24 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/src/components/shadcn/Tooltip";
-import { ExternalLinkIcon, HelpCircleIcon } from "lucide-react";
+import {
+  AlertTriangleIcon,
+  ExternalLinkIcon,
+  HelpCircleIcon,
+  MonitorIcon,
+} from "lucide-react";
+import OrganizationWrapper from "@/src/layout/wrappers/OrganizationWrapper";
+import { Card } from "@/src/components/shadcn/Card";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/src/components/shadcn/Alert";
+import { cn } from "@/src/utilities/cn";
+import Link from "next/link";
 
 const formSchema = z.object({
   title: z.string().min(1),
-  slug: z
-    .string()
-    .max(22)
-    .refine((value) => /^[a-z0-9-]+$/.test(value), {
-      message:
-        "Subdomain can only contain lowercase letters, numbers, and dashes",
-    }),
   imageURL: z.string().url().optional(), // Add this line for the image URL
 });
 
@@ -97,7 +104,6 @@ const OrgPage: PageComponent = () => {
   useEffect(() => {
     if (!!organization) {
       form.setValue("title", organization.title || ""); // Set the default value to the current organization's title
-      form.setValue("slug", organization.slug || ""); // Set the default value to the current organization's title
     }
   }, [organization]);
 
@@ -117,14 +123,34 @@ const OrgPage: PageComponent = () => {
   };
 
   return (
-    <div>
-      <h4>Organization</h4>
-
-      <Separator className="mb-2 mt-1" />
+    <OrganizationWrapper>
+      <div className="max-w-2xl flex justify-between gap-x-2 p-3 border rounded-lg mt-3">
+        <div className="flex gap-x-3">
+          <div className="mt-1">
+            <MonitorIcon className="h-4 w-4" />
+          </div>
+          <div>
+            <div className="small-text">Website</div>
+            <div className="flex justify-between muted-text">
+              View your live website.
+            </div>
+          </div>
+        </div>
+        <div>
+          <Link
+            href={`https://${organization?.slug}.empleo.work`}
+            target="_blank"
+            rel="noreferrer"
+            className={cn(buttonVariants({ variant: "secondary" }), "gap-x-1")}
+          >
+            View <ExternalLinkIcon className="h-4 w-4 " />
+          </Link>
+        </div>
+      </div>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleUpdate)}
-          className="max-w-2xl space-y-3"
+          className="max-w-2xl space-y-3 mt-3"
         >
           <FormField
             control={form.control}
@@ -134,71 +160,6 @@ const OrgPage: PageComponent = () => {
                 <FormLabel>Organization Name</FormLabel>
                 <FormControl>
                   <Input placeholder="Vandelay Industries" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="slug"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  <div className="flex items-center gap-x-1 mb-1">
-                    Subdomain
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger disabled className="cursor-default">
-                          <HelpCircleIcon className="h-3.5 w-3.5 " />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className="max-w-sm">
-                            Create a unique subdomain for you white label job
-                            board. Subdomains can only have lowercase letters,
-                            numbers, and dashes.
-                          </p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                </FormLabel>
-                <FormControl>
-                  <>
-                    <div className="relative">
-                      <Input
-                        {...field}
-                        onChange={(e) =>
-                          form.setValue(
-                            "slug",
-                            e.target.value
-                              ?.replace(/[^a-zA-Z0-9-]/g, "")
-                              ?.toLowerCase(),
-                          )
-                        }
-                        placeholder="dunder-mifflin"
-                        maxLength={22}
-                      />
-                      <div className="absolute top-0 right-0 bg-gray-100 border dark:bg-gray-800 text-gray-500 dark:text-gray-300 h-full w-28 flex items-center rounded-r-lg overflow-hidden z-10">
-                        <div className="ml-1 text-sm">.empleo.work</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-x-2 !-mt-5">
-                      <a
-                        href={`https://${organization?.slug}.empleo.work`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="small-text flex items-center gap-x-1 !mt-1 whitespace-nowrap"
-                      >
-                        View Preview{" "}
-                        <ExternalLinkIcon className="h-3.5 w-3.5" />
-                      </a>
-                      <p className="muted-text">
-                        Warning: Updating the subdomain can cause several
-                        minutes of downtime as DNS records update.
-                      </p>
-                    </div>
-                  </>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -248,7 +209,7 @@ const OrgPage: PageComponent = () => {
           </Button>
         </form>
       </Form>
-    </div>
+    </OrganizationWrapper>
   );
 };
 
