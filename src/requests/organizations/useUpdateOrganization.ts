@@ -9,7 +9,7 @@ interface UpdateOrganizationProps {
   body: {
     title: string;
     dataUrl?: string;
-    slug?: string;
+    // slug: string;
   };
   organizationId: string;
 }
