@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import useEmpleoApi from "../useEmpleoApi";
 import { Organization } from "@/src/utilities/interfaces";
+import OrganizationKeys from ".";
 
 const GetOrganizations = async (): Promise<Organization[]> => {
   const api = useEmpleoApi();
@@ -13,7 +14,7 @@ const GetOrganizations = async (): Promise<Organization[]> => {
 const useGetOrganizations = () => {
   return useQuery({
     queryFn: GetOrganizations,
-    queryKey: ["ORGANIZATIONS"],
+    queryKey: OrganizationKeys.all,
   });
 };
 

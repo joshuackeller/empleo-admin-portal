@@ -5,32 +5,32 @@ import OrganizationKeys from ".";
 import { useToast } from "@/src/components/shadcn/use-toast";
 import useCustomMutation from "../useCustomMutation";
 
-interface UpdateOrganizationProps {
+interface UpdateOrganizationSlugProps {
   body: {
-    title: string;
+    slug: string;
   };
   organizationId: string;
 }
 
-const UpdateOrganization = async ({
+const UpdateOrganizationSlug = async ({
   body,
   organizationId,
-}: UpdateOrganizationProps): Promise<Organization> => {
+}: UpdateOrganizationSlugProps): Promise<Organization> => {
   const api = useEmpleoApi();
-  const { data } = await api.put(`/organizations/${organizationId}`, body);
+  const { data } = await api.put(`/organizations/${organizationId}/slug`, body);
 
   return data;
 };
 
-const useUpdateOrganization = () => {
+const useUpdateOrganizationSlug = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   return useCustomMutation({
-    mutationFn: UpdateOrganization,
+    mutationFn: UpdateOrganizationSlug,
     onSuccess: () => {
       toast({
-        title: "Updated Organization Details",
-        description: "nice work",
+        title: "Updated Organization Slug",
+        description: "Your website domain will update within 24 hours",
       });
       queryClient.invalidateQueries({
         queryKey: OrganizationKeys.current,
@@ -39,4 +39,4 @@ const useUpdateOrganization = () => {
   });
 };
 
-export default useUpdateOrganization;
+export default useUpdateOrganizationSlug;

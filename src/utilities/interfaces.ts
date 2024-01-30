@@ -21,6 +21,7 @@ export interface Admin extends BaseAdmin {}
 
 export interface BaseOrganization {
   id: string;
+  slug: string;
   title: string;
   createdAt: string;
   updatedAt: string;

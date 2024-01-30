@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import useGetCurrentOrganization from "@/src/requests/organizations/useGetCurrentOrganization";
 import { Separator } from "@/src/components/shadcn/Separator";
-import { Button } from "@/src/components/shadcn/Button";
+import { Button, buttonVariants } from "@/src/components/shadcn/Button";
 import useUpdateOrganization from "@/src/requests/organizations/useUpdateOrganization";
 import { z } from "zod";
-import { PageComponent } from "./_app";
+import { PageComponent } from "../_app";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/src/components/shadcn/Input";
@@ -17,16 +17,34 @@ import {
   FormMessage,
 } from "@/src/components/shadcn/Form";
 import { useTheme } from "next-themes";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/src/components/shadcn/Tooltip";
+import {
+  AlertTriangleIcon,
+  ExternalLinkIcon,
+  HelpCircleIcon,
+  MonitorIcon,
+} from "lucide-react";
+import OrganizationWrapper from "@/src/layout/wrappers/OrganizationWrapper";
+import { Card } from "@/src/components/shadcn/Card";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/src/components/shadcn/Alert";
+import { cn } from "@/src/utilities/cn";
+import Link from "next/link";
 
-// Create a schema for the form
 const formSchema = z.object({
-  title: z.string().min(1), // Only constraint is that the title must be at least 1 character long
+  title: z.string().min(1),
   imageURL: z.string().url().optional(), // Add this line for the image URL
 });
 
-// Create a page component
 const OrgPage: PageComponent = () => {
-  // Get the current organization
   const { data: organization } = useGetCurrentOrganization();
 
   // Image Upload
@@ -105,14 +123,34 @@ const OrgPage: PageComponent = () => {
   };
 
   return (
-    <div>
-      <h4>Organization</h4>
-
-      <Separator className="mb-2 mt-1" />
+    <OrganizationWrapper>
+      <div className="max-w-2xl flex justify-between gap-x-2 p-3 border rounded-lg mt-3">
+        <div className="flex gap-x-3">
+          <div className="mt-1">
+            <MonitorIcon className="h-4 w-4" />
+          </div>
+          <div>
+            <div className="small-text">Website</div>
+            <div className="flex justify-between muted-text">
+              View your live website.
+            </div>
+          </div>
+        </div>
+        <div>
+          <Link
+            href={`https://${organization?.slug}.empleo.work`}
+            target="_blank"
+            rel="noreferrer"
+            className={cn(buttonVariants({ variant: "secondary" }), "gap-x-1")}
+          >
+            View <ExternalLinkIcon className="h-4 w-4 " />
+          </Link>
+        </div>
+      </div>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleUpdate)}
-          className="max-w-2xl space-y-1"
+          className="max-w-2xl space-y-3 mt-3"
         >
           <FormField
             control={form.control}
@@ -171,7 +209,7 @@ const OrgPage: PageComponent = () => {
           </Button>
         </form>
       </Form>
-    </div>
+    </OrganizationWrapper>
   );
 };
 

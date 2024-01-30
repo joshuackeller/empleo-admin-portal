@@ -20,6 +20,7 @@ import { useQueryParam } from "@/src/utilities/useQueryParam";
 import { useEffect, useState } from "react";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import ReadJWTData from "@/src/utilities/ReadJWTData";
+import { CircleDashed } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email().optional(),
@@ -140,7 +141,7 @@ const ResetPassword: PageComponent = () => {
                 />
                 <Button disabled={isPending} type="submit" className="w-full">
                   {isPending && (
-                    <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                    <CircleDashed className="mr-2 h-4 w-4 animate-spin" />
                   )}
                   Reset Password
                 </Button>

@@ -1,5 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
 import useEmpleoApi from "@/src/requests/useEmpleoApi";
+import useCustomMutation from "../useCustomMutation";
 
 interface ResendEmailConfirmationProps {
   body: {
@@ -18,7 +18,7 @@ const ResendEmailConfirmation = async ({
 };
 
 const useResendEmailConfirmation = () => {
-  return useMutation({
+  return useCustomMutation({
     mutationFn: ResendEmailConfirmation,
   });
 };
