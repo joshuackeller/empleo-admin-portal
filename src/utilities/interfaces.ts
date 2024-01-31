@@ -23,6 +23,10 @@ export interface BaseOrganization {
   id: string;
   slug: string;
   title: string;
+  logo: {
+    id: string;
+    url: string;
+  } | null;
   createdAt: string;
   updatedAt: string;
 }
