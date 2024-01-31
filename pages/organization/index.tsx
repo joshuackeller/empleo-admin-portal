@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { S3 } from "aws-sdk";
 import useGetCurrentOrganization from "@/src/requests/organizations/useGetCurrentOrganization";
-import { Separator } from "@/src/components/shadcn/Separator";
 import { Button, buttonVariants } from "@/src/components/shadcn/Button";
 import useUpdateOrganization from "@/src/requests/organizations/useUpdateOrganization";
 import { z } from "zod";
@@ -9,7 +7,6 @@ import { PageComponent } from "../_app";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/src/components/shadcn/Input";
-import { Label } from "@/src/components/shadcn/Label";
 import {
   Form,
   FormControl,
@@ -18,26 +15,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/src/components/shadcn/Form";
-import { useTheme } from "next-themes";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/src/components/shadcn/Tooltip";
-import {
-  AlertTriangleIcon,
   ExternalLinkIcon,
-  HelpCircleIcon,
   MonitorIcon,
 } from "lucide-react";
 import OrganizationWrapper from "@/src/layout/wrappers/OrganizationWrapper";
-import { Card } from "@/src/components/shadcn/Card";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/src/components/shadcn/Alert";
 import { cn } from "@/src/utilities/cn";
 import Link from "next/link";
 
