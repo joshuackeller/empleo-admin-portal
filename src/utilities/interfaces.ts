@@ -27,6 +27,7 @@ export interface BaseOrganization {
     id: string;
     url: string;
   } | null;
+  selectedFont: string | null;
   createdAt: string;
   updatedAt: string;
 }

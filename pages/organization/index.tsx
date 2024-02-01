@@ -22,10 +22,21 @@ import {
 import OrganizationWrapper from "@/src/layout/wrappers/OrganizationWrapper";
 import { cn } from "@/src/utilities/cn";
 import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/src/components/shadcn//DropdownMenu";
+ 
 
 const formSchema = z.object({
   title: z.string().min(1),
   imageURL: z.string().url().optional(), // Add this line for the image URL
+  font: z.string().optional(),
 });
 
 const OrgPage: PageComponent = () => {
@@ -38,14 +49,14 @@ const OrgPage: PageComponent = () => {
     const file = e.target.files?.[0];
 
     if (file) {
-      // Check if the file size is within the limit (70KB)
-      const fileSize = file.size; // in bytes
-      const limit = 70 * 1024; // 70KB in bytes
+      // // Check if the file size is within the limit
+      // const fileSize = file.size; // in bytes
+      // const limit = 76750; // this is the limit of a file size -- pretty much 75 KB
 
-      if (fileSize > limit) {
-        alert('File size exceeds the limit of 70KB. Please upload a smaller file.');
-        return;
-      }
+      // if (fileSize > limit) {
+      //   alert('File size is too big. Please upload a smaller file.');
+      //   return;
+      // }
 
       // Check if the file type is allowed (e.g., only allow image files)
       const allowedFileTypes = ['image/jpeg', 'image/png', 'image/gif'];
@@ -113,18 +124,23 @@ const OrgPage: PageComponent = () => {
   // addState for dataUrl (Ex: const [dataUrl, setDataUrl] = useState<string | null>(null);)
   const [dataUrl, setDataUrl] = useState<string | undefined>(undefined);
 
+  // addState for selectedFont
+  const [selectedFont, setSelectedFont] = useState<string | undefined>(undefined);
+
   // Handle the form submission
   const handleUpdate = (values: z.infer<typeof formSchema>) => {
     updateOrganization({
       body: {
         dataUrl, // Add this line for uploading image (Ex: data:image/png;base64,....)
         imageURL: image, // Pass the base64 image directly to the request
+        selectedFont, // Add this line for the font
         ...values
       }, // Pass the form values to the request
       organizationId: organization?.id || "", // Pass the organization ID to the request
     });
   };
 
+  
   // Render the page
   return (
     <OrganizationWrapper>
@@ -196,6 +212,85 @@ const OrgPage: PageComponent = () => {
               </div>
             )}
           </div>
+
+          <FormField
+            control={form.control}
+            name="font"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Font</FormLabel>
+                <FormControl>
+                  {/* <div> */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline">Select</Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56" style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                      <DropdownMenuLabel>Available Fonts</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuRadioGroup value={selectedFont} onValueChange={setSelectedFont}>
+                        <DropdownMenuRadioItem value="Arial">Arial</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Calibri">Calibri</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Cambria">Cambria</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Candara">Candara</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Copperplate">Copperplate</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Courier New">Courier New</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Didot">Didot</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Franklin Gothic">Franklin Gothic</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Garamond">Garamond</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Georgia">Georgia</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Helvetica">Helvetica</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Impact">Impact</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Lucida Console">Lucida Console</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Lucida Sans Unicode">Lucida Sans Unicode</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Monaco">Monaco</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="MS Sans Serif">MS Sans Serif</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Optima">Optima</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Palatino Linotype">Palatino Linotype</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Perpetua">Perpetua</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Rockwell">Rockwell</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Segoe UI">Segoe UI</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Tahoma">Tahoma</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Times New Roman">Times New Roman</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Trebuchet MS">Trebuchet MS</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Verdana">Verdana</DropdownMenuRadioItem>
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
+                  {/* <p style={{ fontFamily: selectedFont }}>{organization?.title}</p> */}
+
+                  <div style={{
+                    fontFamily: selectedFont,
+                    fontSize: '16px',
+                    height: '25px',
+                    width: '100%', // Use the same width as the input box
+                    // border: '1px solid rgba(0, 0, 110, .075)',
+                    // borderRadius: '8px', // Rounded
+                    overflow: 'hidden',
+                    position: 'relative',
+                    display: 'flex',
+                    justifyContent: 'left',
+                    padding: '10px',
+                    alignItems: 'center',
+                    // boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)', // Add a small shadow
+
+                  }}>
+                    {selectedFont ? (
+                      <p>{organization?.title}</p>
+                    ) : (
+                      <p style={{ color: 'gray' }}>No font selected</p>
+                    
+                    )}
+                  </div>
+                
+                </div>
+                </FormControl>
+              <FormMessage />
+            </FormItem>
+            )}
+          />
 
           <Button className="!mt-2" disabled={isPending} type="submit">
             Update

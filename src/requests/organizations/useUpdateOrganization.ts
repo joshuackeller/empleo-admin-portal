@@ -9,6 +9,7 @@ interface UpdateOrganizationProps {
   body: {
     title: string;
     dataUrl?: string;
+    selectedFont?: string;
   };
   organizationId: string;
 }
