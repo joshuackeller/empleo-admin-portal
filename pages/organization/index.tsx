@@ -223,29 +223,7 @@ const OrgPage: PageComponent = () => {
                       <DropdownMenuRadioGroup value={selectedFont} onValueChange={setSelectedFont}>
                         <DropdownMenuRadioItem value="Arial">Arial</DropdownMenuRadioItem>
                         <DropdownMenuRadioItem value="Calibri">Calibri</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Cambria">Cambria</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Candara">Candara</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Copperplate">Copperplate</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Courier New">Courier New</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Didot">Didot</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Franklin Gothic">Franklin Gothic</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Garamond">Garamond</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Georgia">Georgia</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Helvetica">Helvetica</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Impact">Impact</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Lucida Console">Lucida Console</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Lucida Sans Unicode">Lucida Sans Unicode</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Monaco">Monaco</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="MS Sans Serif">MS Sans Serif</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Optima">Optima</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Palatino Linotype">Palatino Linotype</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Perpetua">Perpetua</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Rockwell">Rockwell</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Segoe UI">Segoe UI</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Tahoma">Tahoma</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Times New Roman">Times New Roman</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Trebuchet MS">Trebuchet MS</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Verdana">Verdana</DropdownMenuRadioItem>
+
                       </DropdownMenuRadioGroup>
                     </DropdownMenuContent>
                   </DropdownMenu>
