@@ -45,15 +45,6 @@ const OrgPage: PageComponent = () => {
     const file = e.target.files?.[0];
 
     if (file) {
-      // // Check if the file size is within the limit
-      // const fileSize = file.size; // in bytes
-      // const limit = 76750; // this is the limit of a file size -- pretty much 75 KB
-
-      // if (fileSize > limit) {
-      //   alert('File size is too big. Please upload a smaller file.');
-      //   return;
-      // }
-
       // Check if the file type is allowed (e.g., only allow image files)
       const allowedFileTypes = ["image/jpeg", "image/png", "image/gif"];
       if (allowedFileTypes.includes(file.type)) {
