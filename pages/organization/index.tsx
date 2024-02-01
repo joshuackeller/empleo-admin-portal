@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import useGetCurrentOrganization from "@/src/requests/organizations/useGetCurrentOrganization";
-import { Separator } from "@/src/components/shadcn/Separator";
 import { Button, buttonVariants } from "@/src/components/shadcn/Button";
 import useUpdateOrganization from "@/src/requests/organizations/useUpdateOrganization";
 import { z } from "zod";
@@ -16,32 +15,28 @@ import {
   FormLabel,
   FormMessage,
 } from "@/src/components/shadcn/Form";
-import { useTheme } from "next-themes";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/src/components/shadcn/Tooltip";
-import {
-  AlertTriangleIcon,
   ExternalLinkIcon,
-  HelpCircleIcon,
   MonitorIcon,
 } from "lucide-react";
 import OrganizationWrapper from "@/src/layout/wrappers/OrganizationWrapper";
-import { Card } from "@/src/components/shadcn/Card";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/src/components/shadcn/Alert";
 import { cn } from "@/src/utilities/cn";
 import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/src/components/shadcn//DropdownMenu";
+ 
 
 const formSchema = z.object({
   title: z.string().min(1),
   imageURL: z.string().url().optional(), // Add this line for the image URL
+  font: z.string().optional(),
 });
 
 const OrgPage: PageComponent = () => {
@@ -55,41 +50,44 @@ const OrgPage: PageComponent = () => {
 
     if (file) {
       // Check if the file type is allowed (e.g., only allow image files)
-      const allowedFileTypes = ["image/jpeg", "image/png", "image/gif"];
+      const allowedFileTypes = ['image/jpeg', 'image/png', 'image/gif'];
       if (allowedFileTypes.includes(file.type)) {
         const reader = new FileReader();
 
         reader.onload = (readerEvent) => {
           if (readerEvent.target) {
-            setImage(readerEvent.target.result as string);
+            // setImage(readerEvent.target.result as string);
+            const dataUrlData = readerEvent.target.result as string;
+            setDataUrl(dataUrlData);
+            setImage(dataUrlData);
           }
         };
 
         reader.readAsDataURL(file);
       } else {
         // Display a message or handle the case where the file type is not allowed
-        alert("Invalid file type. Please upload a valid image file.");
+        alert('Invalid file type. Please upload a valid image file.');
       }
     }
   };
-
+  
   const boxStyle: React.CSSProperties = {
-    width: "100%", // Use the same width as the input box
-    height: "200px", // Fixed Height
-    border: "1px solid rgba(0, 0, 110, .075)",
-    borderRadius: "8px", // Add border-radius for a rounded appearance
-    overflow: "hidden",
-    position: "relative",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)", // Add a small shadow
+    width: '100%', // Use the same width as the input box
+    height: '200px', // Fixed Height
+    border: '1px solid rgba(0, 0, 110, .075)',
+    borderRadius: '8px', // Rounded
+    overflow: 'hidden',
+    position: 'relative',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)', // Add a small shadow
   };
 
   const imageStyle: React.CSSProperties = {
-    maxWidth: "100%",
-    maxHeight: "100%",
-    objectFit: "contain",
+    maxWidth: '100%',
+    maxHeight: '100%',
+    objectFit: 'contain',
   };
 
   // Create a form with the schema and default values
@@ -114,14 +112,27 @@ const OrgPage: PageComponent = () => {
     isSuccess,
   } = useUpdateOrganization();
 
+  // addState for dataUrl (Ex: const [dataUrl, setDataUrl] = useState<string | null>(null);)
+  const [dataUrl, setDataUrl] = useState<string | undefined>(undefined);
+
+  // addState for selectedFont
+  const [selectedFont, setSelectedFont] = useState<string | undefined>(undefined);
+
   // Handle the form submission
   const handleUpdate = (values: z.infer<typeof formSchema>) => {
     updateOrganization({
-      body: values, // Pass the form values to the request
+      body: {
+        dataUrl, // Add this line for uploading image (Ex: data:image/png;base64,....)
+        imageURL: image, // Pass the base64 image directly to the request
+        selectedFont, // Add this line for the font
+        ...values
+      }, // Pass the form values to the request
       organizationId: organization?.id || "", // Pass the organization ID to the request
     });
   };
 
+  
+  // Render the page
   return (
     <OrganizationWrapper>
       <div className="max-w-2xl flex justify-between gap-x-2 p-3 border rounded-lg mt-3">
@@ -172,38 +183,106 @@ const OrgPage: PageComponent = () => {
               <FormItem>
                 <FormLabel>Organization Logo</FormLabel>
                 <FormControl>
-                  {/* <input type="file" {...field} onChange={handleImageChange} /> */}
+                  <Input id="picture" type="file" onChange={handleImageChange} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          {/* Move the image upload box right below the "Organization Logo" title */}
+
+          {/* LOGIC: If the user uploads an image, it will display the image they uploaded. */}
+          {/* If they don't hit save and they refresh the page, it will pull the one from S3 if it exists */}
           <div style={boxStyle}>
-            {image ? (
-              <img src={image} alt="Uploaded" style={imageStyle} />
+            {dataUrl ? (
+              <img src={dataUrl} alt="Uploaded" style={imageStyle} />
+            ) : organization?.logo?.url ? (
+              <img src={organization.logo.url} style={imageStyle} />
             ) : (
-              <div
-                style={{
-                  height: "100%",
-                  backgroundColor: "transparent",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
+              <div style={{ height: '100%', backgroundColor: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 Company Logo
               </div>
             )}
           </div>
-          {/* Move the file upload button below the image upload box */}
-          <div>
-            <input
-              type="file"
-              onChange={handleImageChange}
-              style={{ fontSize: "14px", width: "100%" }}
-            />
-          </div>
+
+          <FormField
+            control={form.control}
+            name="font"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Font</FormLabel>
+                <FormControl>
+                  {/* <div> */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline">Select</Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56" style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                      <DropdownMenuLabel>Available Fonts</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuRadioGroup value={selectedFont} onValueChange={setSelectedFont}>
+                        <DropdownMenuRadioItem value="Arial">Arial</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Calibri">Calibri</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Cambria">Cambria</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Candara">Candara</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Copperplate">Copperplate</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Courier New">Courier New</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Didot">Didot</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Franklin Gothic">Franklin Gothic</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Garamond">Garamond</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Georgia">Georgia</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Helvetica">Helvetica</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Impact">Impact</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Lucida Console">Lucida Console</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Lucida Sans Unicode">Lucida Sans Unicode</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Monaco">Monaco</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="MS Sans Serif">MS Sans Serif</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Optima">Optima</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Palatino Linotype">Palatino Linotype</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Perpetua">Perpetua</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Rockwell">Rockwell</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Segoe UI">Segoe UI</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Tahoma">Tahoma</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Times New Roman">Times New Roman</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Trebuchet MS">Trebuchet MS</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="Verdana">Verdana</DropdownMenuRadioItem>
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
+                  {/* <p style={{ fontFamily: selectedFont }}>{organization?.title}</p> */}
+
+                  <div style={{
+                    fontFamily: selectedFont,
+                    fontSize: '16px',
+                    height: '25px',
+                    width: '100%', // Use the same width as the input box
+                    // border: '1px solid rgba(0, 0, 110, .075)',
+                    // borderRadius: '8px', // Rounded
+                    overflow: 'hidden',
+                    position: 'relative',
+                    display: 'flex',
+                    justifyContent: 'left',
+                    padding: '10px',
+                    alignItems: 'center',
+                    // boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)', // Add a small shadow
+
+                  }}>
+                    {selectedFont ? (
+                      <p>{organization?.title}</p>
+                    ) : (
+                      <p style={{ color: 'gray' }}>No font selected</p>
+                    
+                    )}
+                  </div>
+                
+                </div>
+                </FormControl>
+              <FormMessage />
+            </FormItem>
+            )}
+          />
+
           <Button className="!mt-2" disabled={isPending} type="submit">
             Update
           </Button>
