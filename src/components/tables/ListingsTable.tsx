@@ -67,31 +67,33 @@ const columns: ColumnDef<Listing>[] = [
       // };
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel
-              //className="!text-red-500 cursor-pointer"
-              asChild
-            >
-              <Link href={`/listings/${listingId}`}>Update</Link>
-            </DropdownMenuLabel>
+        <div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <DotsHorizontalIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel
+                //className="!text-red-500 cursor-pointer"
+                asChild
+              >
+                <Link href={`/listings/${listingId}`}>Update</Link>
+              </DropdownMenuLabel>
 
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              disabled={isRemoving}
-              onClick={handleRemoveListing}
-              className="!text-red-500 cursor-pointer"
-            >
-              Remove
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                disabled={isRemoving}
+                onClick={handleRemoveListing}
+                className="!text-red-500 cursor-pointer"
+              >
+                Remove
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       );
     },
   },

@@ -22,9 +22,17 @@ import ListingsTable from "@/src/components/tables/ListingsTable";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import useUpdateListing from "@/src/requests/listings/useUpdateListing";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/src/components/shadcn/Input";
-import { Checkbox } from "@/src/components/shadcn/Checkbox";
+import { Switch } from "@/src/components/shadcn/Switch";
+import useGetListings from "@/src/requests/listings/useGetListings";
+import useGetListing from "@/src/requests/listings/useGetListing";
+import { Skeleton } from "@/src/components/shadcn/Skeleton";
+import { routeModule } from "next/dist/build/templates/app-page";
+import { useQueryClient } from "@tanstack/react-query";
+import ListingQueryKeys from "@/src/requests/listings";
+import { ChevronRightIcon } from "@radix-ui/react-icons";
+import { ChevronLeftIcon } from "lucide-react";
 
 const formSchema = z.object({
   jobTitle: z.string(),
@@ -37,40 +45,58 @@ const formSchema = z.object({
 });
 
 const ListingPage: PageComponent = () => {
-  //line below to auto fill with listing values.
-  //const {data: listing} = useGetLis
+  const router = useRouter();
+  const listingId = router.query.listingId;
+
+  const { data: listing, isLoading } = useGetListing(listingId as string);
   const { mutate: updateListing, isPending } = useUpdateListing();
-  const [open, setOpen] = useState<boolean>(false);
-  const {
-    query: { listingId },
-  } = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      jobTitle: "",
-      jobDescription: "",
-      jobRequirements: "",
-      employmentType: "",
-      location: "",
-      salaryRange: "",
-      published: false,
+      jobTitle: listing?.jobTitle || "",
+      jobDescription: listing?.jobDescription || "",
+      jobRequirements: listing?.jobRequirements || "",
+      employmentType: listing?.employmentType || "",
+      location: listing?.location || "",
+      salaryRange: listing?.salaryRange || "",
+      published: listing?.published || false,
     },
   });
 
+  useEffect(() => {
+    if (listing) {
+      form.reset({
+        jobTitle: listing?.jobTitle || "",
+        jobDescription: listing?.jobDescription || "",
+        jobRequirements: listing?.jobRequirements || "",
+        employmentType: listing?.employmentType || "",
+        location: listing?.location || "",
+        salaryRange: listing?.salaryRange || "",
+        published: listing?.published || false,
+      });
+    }
+  }, [listing]);
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    updateListing(
-      { body: values, listingId: listingId as string },
-      {
-        onSuccess: () => {
-          setOpen(false);
-        },
-      }
-    );
+    updateListing({ body: values, listingId: listingId as string });
+    //router.replace("/listings");
   };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-5">
+        <Skeleton className="h-8 w-full" />
+        <Skeleton className="h-8 w-full" />
+        <Skeleton className="h-8 w-full" />
+        <Skeleton className="h-8 w-full" />
+        <Skeleton className="h-8 w-full" />
+      </div>
+    );
+  }
 
   return (
     <div>
+      <div></div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
@@ -157,14 +183,9 @@ const ListingPage: PageComponent = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id="terms2" disabled />
-                    <label
-                      htmlFor="terms2"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      Published?
-                    </label>
+                  <div className="flex items-center space-y-0.5 mt-3">
+                    <FormLabel>Published</FormLabel>
+                    <Switch>Published</Switch>
                   </div>
                 </FormControl>
                 <FormMessage />
@@ -174,7 +195,21 @@ const ListingPage: PageComponent = () => {
 
           <div className="flex justify-end mt-3">
             <Button disabled={isPending} type="submit">
-              Add
+              Save
+            </Button>
+          </div>
+
+          <div className="flex justify-start mt-3 mb-4">
+            <Button
+              variant={"outline"}
+              disabled={isPending}
+              type="submit"
+              onClick={(event) => {
+                event.preventDefault();
+                router.push("/listings");
+              }}
+            >
+              Back to Listings
             </Button>
           </div>
         </form>
@@ -184,85 +219,3 @@ const ListingPage: PageComponent = () => {
 };
 
 export default ListingPage;
-
-//  <FormField
-// control={form.control}
-// name="jobDescription"
-// render={({ field }) => (
-//   <FormItem>
-//     <FormLabel>Job Description</FormLabel>
-//     <FormControl>
-//       {/* <Input placeholder="Write Code" {...field} /> */}
-//     </FormControl>
-//     <FormMessage />
-//   </FormItem>
-// )}
-// />
-// <FormField
-// control={form.control}
-// name="jobRequirements"
-// render={({ field }) => (
-//   <FormItem>
-//     <FormLabel>Job Requirements</FormLabel>
-//     <FormControl>
-//       {/* <Input */}
-//       {/* placeholder="1-2 years of experience" */}
-//       {/* {...field} */}
-//       {/* /> */}
-//     </FormControl>
-//     <FormMessage />
-//   </FormItem>
-// )}
-// />
-// <FormField
-// control={form.control}
-// name="employmentType"
-// render={({ field }) => (
-//   <FormItem>
-//     <FormLabel>Employment Type</FormLabel>
-//     <FormControl>
-//       {/* <Input placeholder="Full Time" {...field} /> */}
-//     </FormControl>
-//     <FormMessage />
-//   </FormItem>
-// )}
-// />
-// <FormField
-// control={form.control}
-// name="location"
-// render={({ field }) => (
-//   <FormItem>
-//     <FormLabel>Location</FormLabel>
-//     <FormControl>
-//       {/* <Input placeholder="Provo, Utah" {...field} /> */}
-//     </FormControl>
-//     <FormMessage />
-//   </FormItem>
-// )}
-// />
-// <FormField
-// control={form.control}
-// name="salaryRange"
-// render={({ field }) => (
-//   <FormItem>
-//     <FormLabel>Salary Range</FormLabel>
-//     <FormControl>
-//       {/* <Input placeholder="$85,000 - $95,000" {...field} /> */}
-//     </FormControl>
-//     <FormMessage />
-//   </FormItem>
-// )}
-// />
-// <FormField
-// control={form.control}
-// name="published"
-// render={({ field }) => (
-//   <FormItem>
-//     <FormLabel>Published?</FormLabel>
-//     <FormControl>
-//       <input type="checkbox" />
-//     </FormControl>
-//     <FormMessage />
-//   </FormItem>
-// )}
-// />

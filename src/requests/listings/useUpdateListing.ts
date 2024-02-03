@@ -38,9 +38,9 @@ const useUpdateListing = () => {
         title: "Updated Listing Details",
         description: "nice work",
       });
-      //   queryClient.invalidateQueries({
-      //     queryKey: ListingQueryKeys.single(response.id),
-      //   });
+      queryClient.invalidateQueries({
+        queryKey: ListingQueryKeys.all,
+      });
       queryClient.setQueryData(ListingQueryKeys.single(response.id), response);
     },
   });

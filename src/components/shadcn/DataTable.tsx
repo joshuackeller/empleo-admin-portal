@@ -14,6 +14,8 @@ import {
   TableRow,
 } from "@/src/components/shadcn/Table";
 import { cn } from "@/src/utilities/cn";
+import { useRouter } from "next/router";
+import { string } from "zod";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -26,11 +28,19 @@ export function DataTable<TData, TValue>({
   data,
   isFetching = false,
 }: DataTableProps<TData, TValue>) {
+  const router = useRouter();
+  const baseRoute = router.pathname;
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  //emily's attempt at routing function for all tables.
+
+  const handleRowClick = (baseRoute: string, id: string) => {
+    router.push(`${baseRoute}/${id}`);
+  };
 
   return (
     <div
@@ -62,6 +72,9 @@ export function DataTable<TData, TValue>({
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
+                onClick={() =>
+                  handleRowClick(baseRoute, (row.original as any).id)
+                }
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
