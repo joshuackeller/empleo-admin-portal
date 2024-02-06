@@ -34,6 +34,10 @@ const formSchema = z.object({
   title: z.string().min(1),
   imageURL: z.string().url().optional(), // Add this line for the image URL
   headerFont: z.nativeEnum(Font).optional(), // Add this line for the font
+  bodyFont: z.nativeEnum(Font).optional(), // Add this line for the font
+  primaryColor: z.string().optional(),
+  // secondaryColor: z.string().optional(),
+  // description: z.string().optional(),
 });
 
 const OrgPage: PageComponent = () => {
@@ -92,7 +96,6 @@ const OrgPage: PageComponent = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: organization?.title, // Set the default value to the current organization's title
-      //headerFont: organization?.headerFont || "inter", // Set the default value to the current organization's headerFont
     },
   });
 
@@ -131,14 +134,36 @@ const OrgPage: PageComponent = () => {
     }
   }, [headerFont]);
 
+  // addState for bodyFont
+  const [bodyFont, setBodyFont] = useState<string | undefined>(undefined);
+
+  // Create a use effect for bodyFont
+  useEffect(() => {
+    if (!!organization) {
+      setBodyFont(organization.bodyFont || "inter"); // This pulls the bodyFont from the organization
+      form.setValue("bodyFont", organization.bodyFont || "inter"); // Set the default value to the current organization's bodyFont
+    }
+  }, [organization]);
+
+  // Create a use effect for bodyFont -- have it update the form's default values
+  useEffect(() => {
+    if (bodyFont === "inter" || bodyFont === "notoSerif") {
+      form.setValue("bodyFont", bodyFont as Font);
+    }
+  }, [bodyFont]);
+
+  // Add state for primaryColor
+  const [primaryColor, setPrimaryColor] = useState<string | undefined>(undefined);
+
   // Handle the form submission
   const handleUpdate = (values: z.infer<typeof formSchema>) => {
-    console.log("Updating with headerFont:", headerFont); // check the headerFont
     updateOrganization({
       body: {
         dataUrl, // Add this line for uploading image (Ex: data:image/png;base64,....)
         imageURL: image, // Pass the base64 image directly to the request
         headerFont: headerFont as Font, // Ensure headerFont is of type Font
+        bodyFont: bodyFont as Font, // Ensure bodyFont is of type Font
+        primaryColor: '', // Pass the primaryColor to the request
         ...values,
       }, // Pass the form values to the request
       organizationId: organization?.id || "", // Pass the organization ID to the request
@@ -290,6 +315,92 @@ const OrgPage: PageComponent = () => {
                         <p style={{ color: "gray" }}>No font selected</p>
                       )}
                     </div>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="bodyFont"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Secondary/Body Font</FormLabel>
+                <FormControl>
+                  {/* <div> */}
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                    }}
+                  >
+                    <Select 
+                      value={bodyFont} 
+                      onValueChange={setBodyFont}
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select a Font" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Select a Font</SelectLabel>
+                          <SelectItem value="inter">San Serif</SelectItem>
+                          <SelectItem value="notoSerif" className="!font-serif">Serif</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+
+                    <div
+                      style={{
+                        fontFamily: bodyFont,
+                        fontSize: "16px",
+                        height: "25px",
+                        width: "100%", // Use the same width as the input box
+                        overflow: "hidden",
+                        position: "relative",
+                        display: "flex",
+                        justifyContent: "left",
+                        padding: "10px",
+                        alignItems: "center",
+                      }}
+                    >
+                      {bodyFont ? (
+                        <p>{organization?.title}</p>
+                      ) : (
+                        <p style={{ color: "gray" }}>No font selected</p>
+                      )}
+                    </div>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+
+          <FormField
+            control={form.control}
+            name="primaryColor"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Primary Color</FormLabel>
+                <FormControl>
+                  <div style={{ height: "25px" }}>
+                    <input 
+                      type="color" 
+                      //style={{ backgroundColor: primaryColor, width: '25px', height: '25px', borderRadius: '5px'}}
+                      value={primaryColor} 
+                      onChange={(event) => setPrimaryColor(event.target.value)} 
+                    />
+                    <input 
+                      type="text" 
+                      style={{ marginLeft: '10px' }} 
+                      value={primaryColor} 
+                      readOnly 
+                    />
                   </div>
                 </FormControl>
                 <FormMessage />
