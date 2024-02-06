@@ -16,8 +16,9 @@ import {
 
 import * as z from "zod";
 import useResendEmailConfirmation from "@/src/requests/auth/useResendEmailConfirmation";
-import { ReloadIcon } from "@radix-ui/react-icons";
 import { CircleDashed } from "lucide-react";
+import Turnstile from "react-turnstile";
+import { useState } from "react";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -37,8 +38,15 @@ const ResendConfirmation: PageComponent = () => {
     isSuccess,
   } = useResendEmailConfirmation();
 
+  const [cloudflareToken, setCloudflareToken] = useState<string>("");
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    resendConfirmation({ body: values });
+    resendConfirmation({
+      body: {
+        ...values,
+        cloudflareToken,
+      },
+    });
   }
   return (
     <>
@@ -80,6 +88,12 @@ const ResendConfirmation: PageComponent = () => {
                     <FormMessage />
                   </FormItem>
                 )}
+              />
+              <Turnstile
+                sitekey={process.env.NEXT_PUBLIC_CAPTCHA_SITE_KEY!}
+                onVerify={(token: any) => {
+                  setCloudflareToken(token);
+                }}
               />
               <Button disabled={isPending} type="submit" className="w-full">
                 {isPending && (

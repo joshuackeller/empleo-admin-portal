@@ -16,8 +16,9 @@ import {
 
 import * as z from "zod";
 import useCreateAccount from "@/src/requests/auth/useCreateAccount";
-import { ReloadIcon } from "@radix-ui/react-icons";
 import { CircleDashed } from "lucide-react";
+import Turnstile from "react-turnstile";
+import { useState } from "react";
 
 const formSchema = z.object({
   firstName: z.string().min(1),
@@ -35,10 +36,17 @@ const CreateAccount: PageComponent = () => {
     },
   });
 
+  const [cloudflareToken, setCloudflareToken] = useState<string>("");
+
   const { mutate: createAccount, isPending, isSuccess } = useCreateAccount();
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    createAccount({ body: values });
+    createAccount({
+      body: {
+        ...values,
+        cloudflareToken,
+      },
+    });
   };
   return (
     <>
@@ -130,6 +138,12 @@ const CreateAccount: PageComponent = () => {
                       <FormMessage />
                     </FormItem>
                   )}
+                />
+                <Turnstile
+                  sitekey={process.env.NEXT_PUBLIC_CAPTCHA_SITE_KEY!}
+                  onVerify={(token: any) => {
+                    setCloudflareToken(token);
+                  }}
                 />
                 <Button disabled={isPending} type="submit" className="w-full">
                   {isPending && (

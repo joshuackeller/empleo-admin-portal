@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import useGetCurrentOrganization from "@/src/requests/organizations/useGetCurrentOrganization";
-import { Separator } from "@/src/components/shadcn/Separator";
 import { Button, buttonVariants } from "@/src/components/shadcn/Button";
 import useUpdateOrganization from "@/src/requests/organizations/useUpdateOrganization";
 import { z } from "zod";
@@ -16,26 +15,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/src/components/shadcn/Form";
-import { useTheme } from "next-themes";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/src/components/shadcn/Tooltip";
-import {
-  AlertTriangleIcon,
-  ExternalLinkIcon,
-  HelpCircleIcon,
-  MonitorIcon,
-} from "lucide-react";
+import { ExternalLinkIcon, MonitorIcon } from "lucide-react";
 import OrganizationWrapper from "@/src/layout/wrappers/OrganizationWrapper";
-import { Card } from "@/src/components/shadcn/Card";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/src/components/shadcn/Alert";
 import { cn } from "@/src/utilities/cn";
 import Link from "next/link";
 
@@ -124,28 +105,38 @@ const OrgPage: PageComponent = () => {
 
   return (
     <OrganizationWrapper>
-      <div className="max-w-2xl flex justify-between gap-x-2 p-3 border rounded-lg mt-3">
-        <div className="flex gap-x-3">
-          <div className="mt-1">
-            <MonitorIcon className="h-4 w-4" />
-          </div>
-          <div>
-            <div className="small-text">Website</div>
-            <div className="flex justify-between muted-text">
-              View your live website.
+      <div className="max-w-2xl ">
+        <div className="flex justify-between gap-x-2 p-3 border rounded-lg mt-3">
+          <div className="flex gap-x-3">
+            <div className="mt-1">
+              <MonitorIcon className="h-4 w-4" />
+            </div>
+            <div>
+              <div className="small-text">Website</div>
+              <div className="flex justify-between muted-text">
+                View your live website.
+              </div>
             </div>
           </div>
+          <div>
+            <Link
+              href={`https://${organization?.slug}.empleo.work`}
+              target="_blank"
+              rel="noreferrer"
+              className={cn(
+                buttonVariants({ variant: "secondary" }),
+                "gap-x-1",
+              )}
+            >
+              View <ExternalLinkIcon className="h-4 w-4 " />
+            </Link>
+          </div>
         </div>
-        <div>
-          <Link
-            href={`https://${organization?.slug}.empleo.work`}
-            target="_blank"
-            rel="noreferrer"
-            className={cn(buttonVariants({ variant: "secondary" }), "gap-x-1")}
-          >
-            View <ExternalLinkIcon className="h-4 w-4 " />
-          </Link>
-        </div>
+        <p className="muted-text !mt-1">
+          Note: If you created your organization within the last 24 hours, DNS
+          records might not have had time to update. If this is the case, your
+          white label website might not be ready yet.
+        </p>
       </div>
       <Form {...form}>
         <form

@@ -4,6 +4,7 @@ import useCustomMutation from "../useCustomMutation";
 interface ResetPasswordRequestProps {
   body: {
     email: string;
+    cloudflareToken: string;
   };
 }
 

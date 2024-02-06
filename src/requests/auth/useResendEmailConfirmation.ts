@@ -4,6 +4,7 @@ import useCustomMutation from "../useCustomMutation";
 interface ResendEmailConfirmationProps {
   body: {
     email: string;
+    cloudflareToken: string;
   };
 }
 
