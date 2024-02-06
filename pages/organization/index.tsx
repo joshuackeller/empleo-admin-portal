@@ -15,28 +15,25 @@ import {
   FormLabel,
   FormMessage,
 } from "@/src/components/shadcn/Form";
-import {
-  ExternalLinkIcon,
-  MonitorIcon,
-} from "lucide-react";
+import { ExternalLinkIcon, MonitorIcon } from "lucide-react";
 import OrganizationWrapper from "@/src/layout/wrappers/OrganizationWrapper";
 import { cn } from "@/src/utilities/cn";
 import Link from "next/link";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/src/components/shadcn//DropdownMenu";
- 
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/src/components/shadcn/Select";
+import { Font } from "@/src/utilities/interfaces";
 
 const formSchema = z.object({
   title: z.string().min(1),
   imageURL: z.string().url().optional(), // Add this line for the image URL
-  font: z.string().optional(),
+  headerFont: z.nativeEnum(Font).optional(), // Add this line for the font
 });
 
 const OrgPage: PageComponent = () => {
@@ -50,7 +47,7 @@ const OrgPage: PageComponent = () => {
 
     if (file) {
       // Check if the file type is allowed (e.g., only allow image files)
-      const allowedFileTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      const allowedFileTypes = ["image/jpeg", "image/png", "image/gif"];
       if (allowedFileTypes.includes(file.type)) {
         const reader = new FileReader();
 
@@ -66,28 +63,28 @@ const OrgPage: PageComponent = () => {
         reader.readAsDataURL(file);
       } else {
         // Display a message or handle the case where the file type is not allowed
-        alert('Invalid file type. Please upload a valid image file.');
+        alert("Invalid file type. Please upload a valid image file.");
       }
     }
   };
-  
+
   const boxStyle: React.CSSProperties = {
-    width: '100%', // Use the same width as the input box
-    height: '200px', // Fixed Height
-    border: '1px solid rgba(0, 0, 110, .075)',
-    borderRadius: '8px', // Rounded
-    overflow: 'hidden',
-    position: 'relative',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)', // Add a small shadow
+    width: "100%", // Use the same width as the input box
+    height: "200px", // Fixed Height
+    border: "1px solid rgba(0, 0, 110, .075)",
+    borderRadius: "8px", // Rounded
+    overflow: "hidden",
+    position: "relative",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)", // Add a small shadow
   };
 
   const imageStyle: React.CSSProperties = {
-    maxWidth: '100%',
-    maxHeight: '100%',
-    objectFit: 'contain',
+    maxWidth: "100%",
+    maxHeight: "100%",
+    objectFit: "contain",
   };
 
   // Create a form with the schema and default values
@@ -95,6 +92,7 @@ const OrgPage: PageComponent = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: organization?.title, // Set the default value to the current organization's title
+      //headerFont: organization?.headerFont || "inter", // Set the default value to the current organization's headerFont
     },
   });
 
@@ -115,48 +113,73 @@ const OrgPage: PageComponent = () => {
   // addState for dataUrl (Ex: const [dataUrl, setDataUrl] = useState<string | null>(null);)
   const [dataUrl, setDataUrl] = useState<string | undefined>(undefined);
 
-  // addState for selectedFont
-  const [selectedFont, setSelectedFont] = useState<string | undefined>(undefined);
+  // addState for headerFont
+  const [headerFont, setHeaderFont] = useState<string | undefined>(undefined);
+
+  // Create a use effect for headerFont
+  useEffect(() => {
+    if (!!organization) {
+      setHeaderFont(organization.headerFont || "inter"); // This pulls the headerFont from the organization
+      form.setValue("headerFont", organization.headerFont || "inter"); // Set the default value to the current organization's headerFont
+    }
+  }, [organization]);
+
+  // Create a use effect for headerFont -- have it update the form's default values
+  useEffect(() => {
+    if (headerFont === "inter" || headerFont === "notoSerif") {
+      form.setValue("headerFont", headerFont as Font);
+    }
+  }, [headerFont]);
 
   // Handle the form submission
   const handleUpdate = (values: z.infer<typeof formSchema>) => {
+    console.log("Updating with headerFont:", headerFont); // check the headerFont
     updateOrganization({
       body: {
         dataUrl, // Add this line for uploading image (Ex: data:image/png;base64,....)
         imageURL: image, // Pass the base64 image directly to the request
-        selectedFont, // Add this line for the font
-        ...values
+        headerFont: headerFont as Font, // Ensure headerFont is of type Font
+        ...values,
       }, // Pass the form values to the request
       organizationId: organization?.id || "", // Pass the organization ID to the request
     });
   };
 
-  
   // Render the page
   return (
     <OrganizationWrapper>
-      <div className="max-w-2xl flex justify-between gap-x-2 p-3 border rounded-lg mt-3">
-        <div className="flex gap-x-3">
-          <div className="mt-1">
-            <MonitorIcon className="h-4 w-4" />
-          </div>
-          <div>
-            <div className="small-text">Website</div>
-            <div className="flex justify-between muted-text">
-              View your live website.
+      <div className="max-w-2xl ">
+        <div className="flex justify-between gap-x-2 p-3 border rounded-lg mt-3">
+          <div className="flex gap-x-3">
+            <div className="mt-1">
+              <MonitorIcon className="h-4 w-4" />
+            </div>
+            <div>
+              <div className="small-text">Website</div>
+              <div className="flex justify-between muted-text">
+                View your live website.
+              </div>
             </div>
           </div>
+          <div>
+            <Link
+              href={`https://${organization?.slug}.empleo.work`}
+              target="_blank"
+              rel="noreferrer"
+              className={cn(
+                buttonVariants({ variant: "secondary" }),
+                "gap-x-1",
+              )}
+            >
+              View <ExternalLinkIcon className="h-4 w-4 " />
+            </Link>
+          </div>
         </div>
-        <div>
-          <Link
-            href={`https://${organization?.slug}.empleo.work`}
-            target="_blank"
-            rel="noreferrer"
-            className={cn(buttonVariants({ variant: "secondary" }), "gap-x-1")}
-          >
-            View <ExternalLinkIcon className="h-4 w-4 " />
-          </Link>
-        </div>
+        <p className="muted-text !mt-1">
+          Note: If you created your organization within the last 24 hours, DNS
+          records might not have had time to update. If this is the case, your
+          white label website might not be ready yet.
+        </p>
       </div>
       <Form {...form}>
         <form
@@ -183,7 +206,11 @@ const OrgPage: PageComponent = () => {
               <FormItem>
                 <FormLabel>Organization Logo</FormLabel>
                 <FormControl>
-                  <Input id="picture" type="file" onChange={handleImageChange} />
+                  <Input
+                    id="picture"
+                    type="file"
+                    onChange={handleImageChange}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -198,7 +225,15 @@ const OrgPage: PageComponent = () => {
             ) : organization?.logo?.url ? (
               <img src={organization.logo.url} style={imageStyle} />
             ) : (
-              <div style={{ height: '100%', backgroundColor: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div
+                style={{
+                  height: "100%",
+                  backgroundColor: "transparent",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 Company Logo
               </div>
             )}
@@ -206,80 +241,59 @@ const OrgPage: PageComponent = () => {
 
           <FormField
             control={form.control}
-            name="font"
+            name="headerFont"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Font</FormLabel>
+                <FormLabel>Primary/Header Font</FormLabel>
                 <FormControl>
                   {/* <div> */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline">Select</Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56" style={{ maxHeight: '300px', overflowY: 'auto' }}>
-                      <DropdownMenuLabel>Available Fonts</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuRadioGroup value={selectedFont} onValueChange={setSelectedFont}>
-                        <DropdownMenuRadioItem value="Arial">Arial</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Calibri">Calibri</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Cambria">Cambria</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Candara">Candara</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Copperplate">Copperplate</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Courier New">Courier New</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Didot">Didot</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Franklin Gothic">Franklin Gothic</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Garamond">Garamond</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Georgia">Georgia</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Helvetica">Helvetica</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Impact">Impact</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Lucida Console">Lucida Console</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Lucida Sans Unicode">Lucida Sans Unicode</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Monaco">Monaco</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="MS Sans Serif">MS Sans Serif</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Optima">Optima</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Palatino Linotype">Palatino Linotype</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Perpetua">Perpetua</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Rockwell">Rockwell</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Segoe UI">Segoe UI</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Tahoma">Tahoma</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Times New Roman">Times New Roman</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Trebuchet MS">Trebuchet MS</DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="Verdana">Verdana</DropdownMenuRadioItem>
-                      </DropdownMenuRadioGroup>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                    }}
+                  >
+                    <Select 
+                      value={headerFont} 
+                      onValueChange={setHeaderFont}
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select a Font" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Select a Font</SelectLabel>
+                          <SelectItem value="inter">San Serif</SelectItem>
+                          <SelectItem value="notoSerif" className="!font-serif">Serif</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
 
-                  {/* <p style={{ fontFamily: selectedFont }}>{organization?.title}</p> */}
-
-                  <div style={{
-                    fontFamily: selectedFont,
-                    fontSize: '16px',
-                    height: '25px',
-                    width: '100%', // Use the same width as the input box
-                    // border: '1px solid rgba(0, 0, 110, .075)',
-                    // borderRadius: '8px', // Rounded
-                    overflow: 'hidden',
-                    position: 'relative',
-                    display: 'flex',
-                    justifyContent: 'left',
-                    padding: '10px',
-                    alignItems: 'center',
-                    // boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)', // Add a small shadow
-
-                  }}>
-                    {selectedFont ? (
-                      <p>{organization?.title}</p>
-                    ) : (
-                      <p style={{ color: 'gray' }}>No font selected</p>
-                    
-                    )}
+                    <div
+                      style={{
+                        fontFamily: headerFont,
+                        fontSize: "16px",
+                        height: "25px",
+                        width: "100%", // Use the same width as the input box
+                        overflow: "hidden",
+                        position: "relative",
+                        display: "flex",
+                        justifyContent: "left",
+                        padding: "10px",
+                        alignItems: "center",
+                      }}
+                    >
+                      {headerFont ? (
+                        <p>{organization?.title}</p>
+                      ) : (
+                        <p style={{ color: "gray" }}>No font selected</p>
+                      )}
+                    </div>
                   </div>
-                
-                </div>
                 </FormControl>
-              <FormMessage />
-            </FormItem>
+                <FormMessage />
+              </FormItem>
             )}
           />
 
@@ -293,3 +307,4 @@ const OrgPage: PageComponent = () => {
 };
 
 export default OrgPage;
+

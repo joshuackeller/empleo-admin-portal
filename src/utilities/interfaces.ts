@@ -19,6 +19,11 @@ export interface BaseAdmin {
 }
 export interface Admin extends BaseAdmin {}
 
+export enum Font {
+  inter = "inter",
+  notoSerif = "notoSerif",
+}
+
 export interface BaseOrganization {
   id: string;
   slug: string;
@@ -27,7 +32,8 @@ export interface BaseOrganization {
     id: string;
     url: string;
   } | null;
-  selectedFont: string | null;
+  headerFont: Font;
+  bodyFont: Font;
   createdAt: string;
   updatedAt: string;
 }
