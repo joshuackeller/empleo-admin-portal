@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import useGetCurrentOrganization from "@/src/requests/organizations/useGetCurrentOrganization";
-import { Separator } from "@/src/components/shadcn/Separator";
 import { Button, buttonVariants } from "@/src/components/shadcn/Button";
 import useUpdateOrganization from "@/src/requests/organizations/useUpdateOrganization";
 import { z } from "zod";
@@ -16,32 +15,25 @@ import {
   FormLabel,
   FormMessage,
 } from "@/src/components/shadcn/Form";
-import { useTheme } from "next-themes";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/src/components/shadcn/Tooltip";
-import {
-  AlertTriangleIcon,
-  ExternalLinkIcon,
-  HelpCircleIcon,
-  MonitorIcon,
-} from "lucide-react";
+import { ExternalLinkIcon, MonitorIcon } from "lucide-react";
 import OrganizationWrapper from "@/src/layout/wrappers/OrganizationWrapper";
-import { Card } from "@/src/components/shadcn/Card";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/src/components/shadcn/Alert";
 import { cn } from "@/src/utilities/cn";
 import Link from "next/link";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/src/components/shadcn/Select";
+import { Font } from "@/src/utilities/interfaces";
 
 const formSchema = z.object({
   title: z.string().min(1),
   imageURL: z.string().url().optional(), // Add this line for the image URL
+  headerFont: z.nativeEnum(Font).optional(), // Add this line for the font
 });
 
 const OrgPage: PageComponent = () => {
@@ -61,7 +53,10 @@ const OrgPage: PageComponent = () => {
 
         reader.onload = (readerEvent) => {
           if (readerEvent.target) {
-            setImage(readerEvent.target.result as string);
+            // setImage(readerEvent.target.result as string);
+            const dataUrlData = readerEvent.target.result as string;
+            setDataUrl(dataUrlData);
+            setImage(dataUrlData);
           }
         };
 
@@ -77,7 +72,7 @@ const OrgPage: PageComponent = () => {
     width: "100%", // Use the same width as the input box
     height: "200px", // Fixed Height
     border: "1px solid rgba(0, 0, 110, .075)",
-    borderRadius: "8px", // Add border-radius for a rounded appearance
+    borderRadius: "8px", // Rounded
     overflow: "hidden",
     position: "relative",
     display: "flex",
@@ -97,6 +92,7 @@ const OrgPage: PageComponent = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: organization?.title, // Set the default value to the current organization's title
+      //headerFont: organization?.headerFont || "inter", // Set the default value to the current organization's headerFont
     },
   });
 
@@ -114,38 +110,76 @@ const OrgPage: PageComponent = () => {
     isSuccess,
   } = useUpdateOrganization();
 
+  // addState for dataUrl (Ex: const [dataUrl, setDataUrl] = useState<string | null>(null);)
+  const [dataUrl, setDataUrl] = useState<string | undefined>(undefined);
+
+  // addState for headerFont
+  const [headerFont, setHeaderFont] = useState<string | undefined>(undefined);
+
+  // Create a use effect for headerFont
+  useEffect(() => {
+    if (!!organization) {
+      setHeaderFont(organization.headerFont || "inter"); // This pulls the headerFont from the organization
+      form.setValue("headerFont", organization.headerFont || "inter"); // Set the default value to the current organization's headerFont
+    }
+  }, [organization]);
+
+  // Create a use effect for headerFont -- have it update the form's default values
+  useEffect(() => {
+    if (headerFont === "inter" || headerFont === "notoSerif") {
+      form.setValue("headerFont", headerFont as Font);
+    }
+  }, [headerFont]);
+
   // Handle the form submission
   const handleUpdate = (values: z.infer<typeof formSchema>) => {
+    console.log("Updating with headerFont:", headerFont); // check the headerFont
     updateOrganization({
-      body: values, // Pass the form values to the request
+      body: {
+        dataUrl, // Add this line for uploading image (Ex: data:image/png;base64,....)
+        imageURL: image, // Pass the base64 image directly to the request
+        headerFont: headerFont as Font, // Ensure headerFont is of type Font
+        ...values,
+      }, // Pass the form values to the request
       organizationId: organization?.id || "", // Pass the organization ID to the request
     });
   };
 
+  // Render the page
   return (
     <OrganizationWrapper>
-      <div className="max-w-2xl flex justify-between gap-x-2 p-3 border rounded-lg mt-3">
-        <div className="flex gap-x-3">
-          <div className="mt-1">
-            <MonitorIcon className="h-4 w-4" />
-          </div>
-          <div>
-            <div className="small-text">Website</div>
-            <div className="flex justify-between muted-text">
-              View your live website.
+      <div className="max-w-2xl ">
+        <div className="flex justify-between gap-x-2 p-3 border rounded-lg mt-3">
+          <div className="flex gap-x-3">
+            <div className="mt-1">
+              <MonitorIcon className="h-4 w-4" />
+            </div>
+            <div>
+              <div className="small-text">Website</div>
+              <div className="flex justify-between muted-text">
+                View your live website.
+              </div>
             </div>
           </div>
+          <div>
+            <Link
+              href={`https://${organization?.slug}.empleo.work`}
+              target="_blank"
+              rel="noreferrer"
+              className={cn(
+                buttonVariants({ variant: "secondary" }),
+                "gap-x-1",
+              )}
+            >
+              View <ExternalLinkIcon className="h-4 w-4 " />
+            </Link>
+          </div>
         </div>
-        <div>
-          <Link
-            href={`https://${organization?.slug}.empleo.work`}
-            target="_blank"
-            rel="noreferrer"
-            className={cn(buttonVariants({ variant: "secondary" }), "gap-x-1")}
-          >
-            View <ExternalLinkIcon className="h-4 w-4 " />
-          </Link>
-        </div>
+        <p className="muted-text !mt-1">
+          Note: If you created your organization within the last 24 hours, DNS
+          records might not have had time to update. If this is the case, your
+          white label website might not be ready yet.
+        </p>
       </div>
       <Form {...form}>
         <form
@@ -172,16 +206,24 @@ const OrgPage: PageComponent = () => {
               <FormItem>
                 <FormLabel>Organization Logo</FormLabel>
                 <FormControl>
-                  {/* <input type="file" {...field} onChange={handleImageChange} /> */}
+                  <Input
+                    id="picture"
+                    type="file"
+                    onChange={handleImageChange}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          {/* Move the image upload box right below the "Organization Logo" title */}
+
+          {/* LOGIC: If the user uploads an image, it will display the image they uploaded. */}
+          {/* If they don't hit save and they refresh the page, it will pull the one from S3 if it exists */}
           <div style={boxStyle}>
-            {image ? (
-              <img src={image} alt="Uploaded" style={imageStyle} />
+            {dataUrl ? (
+              <img src={dataUrl} alt="Uploaded" style={imageStyle} />
+            ) : organization?.logo?.url ? (
+              <img src={organization.logo.url} style={imageStyle} />
             ) : (
               <div
                 style={{
@@ -196,14 +238,65 @@ const OrgPage: PageComponent = () => {
               </div>
             )}
           </div>
-          {/* Move the file upload button below the image upload box */}
-          <div>
-            <input
-              type="file"
-              onChange={handleImageChange}
-              style={{ fontSize: "14px", width: "100%" }}
-            />
-          </div>
+
+          <FormField
+            control={form.control}
+            name="headerFont"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Primary/Header Font</FormLabel>
+                <FormControl>
+                  {/* <div> */}
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                    }}
+                  >
+                    <Select 
+                      value={headerFont} 
+                      onValueChange={setHeaderFont}
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select a Font" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Select a Font</SelectLabel>
+                          <SelectItem value="inter">San Serif</SelectItem>
+                          <SelectItem value="notoSerif" className="!font-serif">Serif</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+
+                    <div
+                      style={{
+                        fontFamily: headerFont,
+                        fontSize: "16px",
+                        height: "25px",
+                        width: "100%", // Use the same width as the input box
+                        overflow: "hidden",
+                        position: "relative",
+                        display: "flex",
+                        justifyContent: "left",
+                        padding: "10px",
+                        alignItems: "center",
+                      }}
+                    >
+                      {headerFont ? (
+                        <p>{organization?.title}</p>
+                      ) : (
+                        <p style={{ color: "gray" }}>No font selected</p>
+                      )}
+                    </div>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <Button className="!mt-2" disabled={isPending} type="submit">
             Update
           </Button>
@@ -214,3 +307,4 @@ const OrgPage: PageComponent = () => {
 };
 
 export default OrgPage;
+

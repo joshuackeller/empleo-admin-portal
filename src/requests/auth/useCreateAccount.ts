@@ -7,6 +7,7 @@ interface CreateAccountProps {
     lastName?: string;
     email: string;
     password: string;
+    cloudflareToken: string;
   };
 }
 

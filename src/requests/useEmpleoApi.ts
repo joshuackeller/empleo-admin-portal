@@ -31,6 +31,7 @@ const useEmpleoApi = () => {
           window.location.href = "/auth/sign_in";
           token = localStorage.removeItem(TOKEN_KEY);
           organizationId = localStorage.removeItem(ORGANIZATION_ID_KEY);
+          return;
         }
       } else if (
         error?.response?.data === "Invalid organization" ||
@@ -38,8 +39,10 @@ const useEmpleoApi = () => {
       ) {
         window.location.href = "/auth/organizations";
         organizationId = localStorage.removeItem(ORGANIZATION_ID_KEY);
+        return;
       }
-    }
+      throw Error(error);
+    },
   );
 
   return api;

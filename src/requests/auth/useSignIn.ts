@@ -5,6 +5,7 @@ interface SignInProps {
   body: {
     email: string;
     password: string;
+    cloudflareToken: string;
   };
 }
 
