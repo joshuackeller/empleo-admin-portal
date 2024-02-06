@@ -33,6 +33,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import ListingQueryKeys from "@/src/requests/listings";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import { ChevronLeftIcon } from "lucide-react";
+import { Textarea } from "@/src/components/shadcn/textarea";
 
 const formSchema = z.object({
   jobTitle: z.string(),
@@ -41,7 +42,7 @@ const formSchema = z.object({
   employmentType: z.string().optional(),
   location: z.string().optional(),
   salaryRange: z.string().optional(),
-  published: z.boolean(),
+  published: z.boolean().default(false),
 });
 
 const ListingPage: PageComponent = () => {
@@ -119,7 +120,7 @@ const ListingPage: PageComponent = () => {
               <FormItem>
                 <FormLabel>Job Description</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Textarea {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -132,7 +133,7 @@ const ListingPage: PageComponent = () => {
               <FormItem>
                 <FormLabel>Job Requirements</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Textarea {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -185,7 +186,12 @@ const ListingPage: PageComponent = () => {
                 <FormControl>
                   <div className="flex items-center space-y-0.5 mt-3">
                     <FormLabel>Published</FormLabel>
-                    <Switch>Published</Switch>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    >
+                      Published
+                    </Switch>
                   </div>
                 </FormControl>
                 <FormMessage />

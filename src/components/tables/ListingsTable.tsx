@@ -16,7 +16,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Listing } from "@/src/utilities/interfaces";
 import useUpdateListing from "@/src/requests/listings/useUpdateListing";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 const columns: ColumnDef<Listing>[] = [
   {
@@ -101,10 +100,18 @@ const columns: ColumnDef<Listing>[] = [
 
 const ListingsTable = () => {
   const { data, isFetching } = useGetListings();
+  const isClickable = true;
 
   if (!data) return <Skeleton className="h-24 w-full" />;
 
-  return <DataTable isFetching={isFetching} data={data} columns={columns} />;
+  return (
+    <DataTable
+      isFetching={isFetching}
+      data={data}
+      columns={columns}
+      isClickable={isClickable}
+    />
+  );
 };
 
 export default ListingsTable;

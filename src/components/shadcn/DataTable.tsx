@@ -15,18 +15,19 @@ import {
 } from "@/src/components/shadcn/Table";
 import { cn } from "@/src/utilities/cn";
 import { useRouter } from "next/router";
-import { string } from "zod";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   isFetching?: boolean;
+  isClickable?: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   isFetching = false,
+  isClickable = false,
 }: DataTableProps<TData, TValue>) {
   const router = useRouter();
   const baseRoute = router.pathname;
@@ -38,8 +39,14 @@ export function DataTable<TData, TValue>({
 
   //emily's attempt at routing function for all tables.
 
-  const handleRowClick = (baseRoute: string, id: string) => {
-    router.push(`${baseRoute}/${id}`);
+  const handleRowClick = (
+    baseRoute: string,
+    id: string,
+    isClickable: boolean
+  ) => {
+    if (isClickable) {
+      router.push(`${baseRoute}/${id}`);
+    }
   };
 
   return (
@@ -73,7 +80,11 @@ export function DataTable<TData, TValue>({
             table.getRowModel().rows.map((row) => (
               <TableRow
                 onClick={() =>
-                  handleRowClick(baseRoute, (row.original as any).id)
+                  handleRowClick(
+                    baseRoute,
+                    (row.original as any).id,
+                    isClickable
+                  )
                 }
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
