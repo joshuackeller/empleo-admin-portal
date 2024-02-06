@@ -110,7 +110,7 @@ const CreateAccount: PageComponent = () => {
                           </TooltipTrigger>
                           <TooltipContent>
                             <p className="max-w-sm">
-                              Create a unique subdomain for you white label job
+                              Create a unique subdomain for your white label job
                               board. Subdomains can only have lowercase letters,
                               numbers, and dashes.
                             </p>
