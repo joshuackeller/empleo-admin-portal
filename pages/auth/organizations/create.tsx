@@ -15,7 +15,6 @@ import {
 } from "@/src/components/shadcn/Form";
 
 import * as z from "zod";
-import { ReloadIcon } from "@radix-ui/react-icons";
 import useAuthContext from "@/src/utilities/useAuthContext";
 import { useRouter } from "next/router";
 import useCreateOrganization from "@/src/requests/organizations/useCreateOrganization";
@@ -26,6 +25,8 @@ import {
   TooltipTrigger,
 } from "@/src/components/shadcn/Tooltip";
 import { CircleDashed, HelpCircleIcon } from "lucide-react";
+import Turnstile from "react-turnstile";
+import { useState } from "react";
 
 const formSchema = z.object({
   title: z.string().min(1),
@@ -52,15 +53,22 @@ const CreateAccount: PageComponent = () => {
   const { selectOrganization } = useAuthContext();
   const router = useRouter();
 
+  const [cloudflareToken, setCloudflareToken] = useState<string>("");
+
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     createOrganization(
-      { body: values },
+      {
+        body: {
+          ...values,
+          cloudflareToken,
+        },
+      },
       {
         onSuccess: (response) => {
           selectOrganization(response.id);
           router.push("/");
         },
-      }
+      },
     );
   };
   return (
@@ -128,7 +136,7 @@ const CreateAccount: PageComponent = () => {
                             "slug",
                             e.target.value
                               ?.replace(/[^a-zA-Z0-9-]/g, "")
-                              ?.toLowerCase()
+                              ?.toLowerCase(),
                           )
                         }
                         placeholder="dunder-mifflin"
@@ -142,6 +150,12 @@ const CreateAccount: PageComponent = () => {
                   <FormMessage />
                 </FormItem>
               )}
+            />
+            <Turnstile
+              sitekey={process.env.NEXT_PUBLIC_CAPTCHA_SITE_KEY!}
+              onVerify={(token: any) => {
+                setCloudflareToken(token);
+              }}
             />
 
             <Button disabled={isPending} type="submit" className="w-full">

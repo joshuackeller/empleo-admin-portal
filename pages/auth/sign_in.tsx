@@ -13,14 +13,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/src/components/shadcn/Form";
-
 import * as z from "zod";
 import useSignIn from "@/src/requests/auth/useSignIn";
 import { useToast } from "@/src/components/shadcn/use-toast";
 import useAuthContext from "@/src/utilities/useAuthContext";
 import { useRouter } from "next/router";
-import { ReloadIcon } from "@radix-ui/react-icons";
 import { CircleDashed } from "lucide-react";
+import Turnstile, { useTurnstile } from "react-turnstile";
+import { useState } from "react";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -28,6 +28,7 @@ const formSchema = z.object({
 });
 
 const SignIn: PageComponent = () => {
+  const [cloudflareToken, setCloudflareToken] = useState<string>("");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,7 +45,12 @@ const SignIn: PageComponent = () => {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     signIn(
-      { body: values },
+      {
+        body: {
+          ...values,
+          cloudflareToken,
+        },
+      },
       {
         onSuccess: (response) => {
           if (!!response?.token) {
@@ -58,7 +64,7 @@ const SignIn: PageComponent = () => {
             });
           }
         },
-      }
+      },
     );
   };
 
@@ -104,6 +110,12 @@ const SignIn: PageComponent = () => {
                   <FormMessage />
                 </FormItem>
               )}
+            />
+            <Turnstile
+              sitekey={process.env.NEXT_PUBLIC_CAPTCHA_SITE_KEY!}
+              onVerify={(token: any) => {
+                setCloudflareToken(token);
+              }}
             />
             <Button disabled={isPending} type="submit" className="w-full">
               {isPending && (

@@ -16,8 +16,9 @@ import {
 
 import * as z from "zod";
 import useResetPasswordRequest from "@/src/requests/auth/useResetPasswordRequest";
-import { ReloadIcon } from "@radix-ui/react-icons";
 import { CircleDashed } from "lucide-react";
+import { useState } from "react";
+import Turnstile from "react-turnstile";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -37,8 +38,15 @@ const ResetPasswordRequest: PageComponent = () => {
     isSuccess,
   } = useResetPasswordRequest();
 
+  const [cloudflareToken, setCloudflareToken] = useState<string>("");
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    resetPasswordRequest({ body: values });
+    resetPasswordRequest({
+      body: {
+        ...values,
+        cloudflareToken,
+      },
+    });
   }
   return (
     <>
@@ -84,6 +92,12 @@ const ResetPasswordRequest: PageComponent = () => {
                       <FormMessage />
                     </FormItem>
                   )}
+                />
+                <Turnstile
+                  sitekey={process.env.NEXT_PUBLIC_CAPTCHA_SITE_KEY!}
+                  onVerify={(token: any) => {
+                    setCloudflareToken(token);
+                  }}
                 />
                 <Button disabled={isPending} type="submit" className="w-full">
                   {isPending && (

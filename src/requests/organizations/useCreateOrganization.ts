@@ -6,6 +6,7 @@ interface CreateOrganizationProps {
   body: {
     title: string;
     slug: string;
+    cloudflareToken: string;
   };
 }
 

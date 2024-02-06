@@ -18,7 +18,6 @@ import * as z from "zod";
 import useResetPassword from "@/src/requests/auth/useResetPassword";
 import { useQueryParam } from "@/src/utilities/useQueryParam";
 import { useEffect, useState } from "react";
-import { ReloadIcon } from "@radix-ui/react-icons";
 import ReadJWTData from "@/src/utilities/ReadJWTData";
 import { CircleDashed } from "lucide-react";
 

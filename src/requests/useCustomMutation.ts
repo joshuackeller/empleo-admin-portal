@@ -10,16 +10,17 @@ const useCustomMutation = <
   TData = unknown,
   TError = Error,
   TVariables = void,
-  TContext = unknown
+  TContext = unknown,
 >(
   options: UseMutationOptions<TData, TError, TVariables, TContext>,
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ) => {
   const { toast } = useToast();
   return useMutation<TData, TError, TVariables, TContext>(
     {
       ...options,
       onError: (error) => {
+        console.log("HERE FIRST", error);
         toast({
           variant: "destructive",
           title: HandleAPIError(error),
@@ -27,7 +28,7 @@ const useCustomMutation = <
         });
       },
     },
-    queryClient
+    queryClient,
   );
 };
 
