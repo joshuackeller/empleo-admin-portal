@@ -4,12 +4,14 @@ import { Organization } from "@/src/utilities/interfaces";
 import OrganizationKeys from ".";
 import { useToast } from "@/src/components/shadcn/use-toast";
 import useCustomMutation from "../useCustomMutation";
+import { Font } from "@/src/utilities/interfaces";
 
 interface UpdateOrganizationProps {
   body: {
     title: string;
     dataUrl?: string;
-    selectedFont?: string;
+    // selectedFont?: string;
+    headerFont: Font;
   };
   organizationId: string;
 }

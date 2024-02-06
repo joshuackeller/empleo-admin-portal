@@ -20,19 +20,20 @@ import OrganizationWrapper from "@/src/layout/wrappers/OrganizationWrapper";
 import { cn } from "@/src/utilities/cn";
 import Link from "next/link";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/src/components/shadcn//DropdownMenu";
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/src/components/shadcn/Select";
+import { Font } from "@/src/utilities/interfaces";
 
 const formSchema = z.object({
   title: z.string().min(1),
   imageURL: z.string().url().optional(), // Add this line for the image URL
-  font: z.string().optional(),
+  headerFont: z.nativeEnum(Font).optional(), // Add this line for the font
 });
 
 const OrgPage: PageComponent = () => {
@@ -91,6 +92,7 @@ const OrgPage: PageComponent = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: organization?.title, // Set the default value to the current organization's title
+      //headerFont: organization?.headerFont || "inter", // Set the default value to the current organization's headerFont
     },
   });
 
@@ -111,18 +113,32 @@ const OrgPage: PageComponent = () => {
   // addState for dataUrl (Ex: const [dataUrl, setDataUrl] = useState<string | null>(null);)
   const [dataUrl, setDataUrl] = useState<string | undefined>(undefined);
 
-  // addState for selectedFont
-  const [selectedFont, setSelectedFont] = useState<string | undefined>(
-    undefined,
-  );
+  // addState for headerFont
+  const [headerFont, setHeaderFont] = useState<string | undefined>(undefined);
+
+  // Create a use effect for headerFont
+  useEffect(() => {
+    if (!!organization) {
+      setHeaderFont(organization.headerFont || "inter"); // This pulls the headerFont from the organization
+      form.setValue("headerFont", organization.headerFont || "inter"); // Set the default value to the current organization's headerFont
+    }
+  }, [organization]);
+
+  // Create a use effect for headerFont -- have it update the form's default values
+  useEffect(() => {
+    if (headerFont === "inter" || headerFont === "notoSerif") {
+      form.setValue("headerFont", headerFont as Font);
+    }
+  }, [headerFont]);
 
   // Handle the form submission
   const handleUpdate = (values: z.infer<typeof formSchema>) => {
+    console.log("Updating with headerFont:", headerFont); // check the headerFont
     updateOrganization({
       body: {
         dataUrl, // Add this line for uploading image (Ex: data:image/png;base64,....)
         imageURL: image, // Pass the base64 image directly to the request
-        selectedFont, // Add this line for the font
+        headerFont: headerFont as Font, // Ensure headerFont is of type Font
         ...values,
       }, // Pass the form values to the request
       organizationId: organization?.id || "", // Pass the organization ID to the request
@@ -215,7 +231,7 @@ const OrgPage: PageComponent = () => {
 
           <FormField
             control={form.control}
-            name="font"
+            name="headerFont"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Font</FormLabel>
@@ -228,53 +244,37 @@ const OrgPage: PageComponent = () => {
                       gap: "10px",
                     }}
                   >
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="outline">Select</Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        className="w-56"
-                        style={{ maxHeight: "300px", overflowY: "auto" }}
-                      >
-                        <DropdownMenuLabel>Available Fonts</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuRadioGroup
-                          value={selectedFont}
-                          onValueChange={setSelectedFont}
-                        >
-                          <DropdownMenuRadioItem value="inter">
-                            San Serif
-                          </DropdownMenuRadioItem>
-                          <DropdownMenuRadioItem
-                            value="notoSerif"
-                            className="!font-serif"
-                          >
-                            Serif
-                          </DropdownMenuRadioItem>
-                        </DropdownMenuRadioGroup>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-
-                    {/* <p style={{ fontFamily: selectedFont }}>{organization?.title}</p> */}
+                    <Select 
+                      value={headerFont} 
+                      onValueChange={setHeaderFont}
+                    >
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select a Font" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Select a Font</SelectLabel>
+                          <SelectItem value="inter">San Serif</SelectItem>
+                          <SelectItem value="notoSerif" className="!font-serif">Serif</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
 
                     <div
                       style={{
-                        fontFamily: selectedFont,
+                        fontFamily: headerFont,
                         fontSize: "16px",
                         height: "25px",
                         width: "100%", // Use the same width as the input box
-                        // border: '1px solid rgba(0, 0, 110, .075)',
-                        // borderRadius: '8px', // Rounded
                         overflow: "hidden",
                         position: "relative",
                         display: "flex",
                         justifyContent: "left",
                         padding: "10px",
                         alignItems: "center",
-                        // boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)', // Add a small shadow
                       }}
                     >
-                      {selectedFont ? (
+                      {headerFont ? (
                         <p>{organization?.title}</p>
                       ) : (
                         <p style={{ color: "gray" }}>No font selected</p>
