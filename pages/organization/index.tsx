@@ -234,7 +234,7 @@ const OrgPage: PageComponent = () => {
             name="headerFont"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Font</FormLabel>
+                <FormLabel>Primary/Header Font</FormLabel>
                 <FormControl>
                   {/* <div> */}
                   <div
