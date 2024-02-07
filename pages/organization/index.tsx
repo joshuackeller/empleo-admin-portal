@@ -470,7 +470,7 @@ const OrgPage: PageComponent = () => {
                       value={primaryColor} 
                       onChange={(event) => setPrimaryColor(event.target.value)} 
                     />
-                    <input style={{ fontSize: "16px" }}
+                    <input style={{ fontSize: "14px" }}
                       type="text" 
                       value={primaryColor} 
                       readOnly 
@@ -495,7 +495,7 @@ const OrgPage: PageComponent = () => {
                       value={secondaryColor} 
                       onChange={(event) => setSecondaryColor(event.target.value)} 
                     />
-                    <input style={{ fontSize: "16px" }}
+                    <input style={{ fontSize: "14px" }}
                       type="text" 
                       value={secondaryColor} 
                       readOnly 
