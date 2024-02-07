@@ -15,7 +15,7 @@ interface UpdateOrganizationProps {
     primaryColor: string;
     secondaryColor: string;
     description: string;
-    // longDescription: string;
+    longDescription: string;
   };
   organizationId: string;
 }

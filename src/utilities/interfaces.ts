@@ -37,6 +37,7 @@ export interface BaseOrganization {
   primaryColor: string;
   secondaryColor: string;
   description: string;
+  longDescription: string;
   createdAt: string;
   updatedAt: string;
 }

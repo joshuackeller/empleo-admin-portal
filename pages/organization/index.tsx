@@ -31,20 +31,24 @@ import {
 import { Font } from "@/src/utilities/interfaces";
 import { d } from "@tanstack/react-query-devtools/build/legacy/devtools-0Hr18ibL";
 
+// Create a schema for the form -- this will be used to validate the form's values
 const formSchema = z.object({
   title: z.string().min(1),
-  imageURL: z.string().url().optional(), // Add this line for the image URL
-  headerFont: z.nativeEnum(Font).optional(), // Add this line for the font
-  bodyFont: z.nativeEnum(Font).optional(), // Add this line for the font
+  imageURL: z.string().url().optional(), 
+  headerFont: z.nativeEnum(Font).optional(), 
+  bodyFont: z.nativeEnum(Font).optional(), 
   primaryColor: z.string().optional(),
   secondaryColor: z.string().optional(),
   description: z.string().optional(),
+  longDescription: z.string().optional(),
 });
 
+// Create the page component
 const OrgPage: PageComponent = () => {
+  // Get the current organization
   const { data: organization } = useGetCurrentOrganization();
 
-  // Image Upload
+  // IMAGE UPLOAD
   const [image, setImage] = useState<string | null>(null);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,6 +77,7 @@ const OrgPage: PageComponent = () => {
     }
   };
 
+  // Create a style for boxes
   const boxStyle: React.CSSProperties = {
     width: "100%", // Use the same width as the input box
     height: "200px", // Fixed Height
@@ -86,6 +91,7 @@ const OrgPage: PageComponent = () => {
     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)", // Add a small shadow
   };
 
+  // Create a style for images
   const imageStyle: React.CSSProperties = {
     maxWidth: "100%",
     maxHeight: "100%",
@@ -117,6 +123,7 @@ const OrgPage: PageComponent = () => {
   // addState for dataUrl (Ex: const [dataUrl, setDataUrl] = useState<string | null>(null);)
   const [dataUrl, setDataUrl] = useState<string | undefined>(undefined);
 
+  // PRIMARY/HEADER FONT
   // addState for headerFont
   const [headerFont, setHeaderFont] = useState<string | undefined>(undefined);
 
@@ -135,6 +142,7 @@ const OrgPage: PageComponent = () => {
     }
   }, [headerFont]);
 
+  // SECONDARY/BODY FONT
   // addState for bodyFont
   const [bodyFont, setBodyFont] = useState<string | undefined>(undefined);
 
@@ -153,6 +161,7 @@ const OrgPage: PageComponent = () => {
     }
   }, [bodyFont]);
 
+  // PRIMARY COLOR
   // Add state for primaryColor
   const [primaryColor, setPrimaryColor] = useState<string | undefined>(undefined);
 
@@ -169,6 +178,7 @@ const OrgPage: PageComponent = () => {
     form.setValue("primaryColor", primaryColor || "");
   }, [primaryColor]);
 
+  // SECONDARY COLOR
   // Add state for secondaryColor
   const [secondaryColor, setSecondaryColor] = useState<string | undefined>(undefined);
 
@@ -185,6 +195,7 @@ const OrgPage: PageComponent = () => {
     form.setValue("secondaryColor", secondaryColor || "");
   }, [secondaryColor]);
 
+  // DESCRIPTION
   // Add state for description
   const [description, setDescription] = useState<string | undefined>(undefined);
 
@@ -201,7 +212,25 @@ const OrgPage: PageComponent = () => {
     form.setValue("description", description || "");
   }, [description]);
 
-  // Handle the form submission
+  // LONG DESCRIPTION
+  // Add state for longDescription
+  const [longDescription, setLongDescription] = useState<string | undefined>(undefined);
+
+  // Create a use effect for longDescription
+  useEffect(() => {
+    if (!!organization) {
+      setLongDescription(organization.longDescription || ""); // This pulls the longDescription from the organization
+      form.setValue("longDescription", organization.longDescription || ""); // Set the default value to the current organization's longDescription
+    }
+  }, [organization]);
+
+  // Create a use effect for longDescription -- have it update the form's default values
+  useEffect(() => {
+    form.setValue("longDescription", longDescription || "");
+  }, [longDescription]);
+
+
+  // Handle the form submission -- this will be called when the form is submitted
   const handleUpdate = (values: z.infer<typeof formSchema>) => {
     updateOrganization({
       body: {
@@ -212,6 +241,7 @@ const OrgPage: PageComponent = () => {
         primaryColor: primaryColor || "", // Pass the primaryColor to the request
         secondaryColor: secondaryColor || "", // Pass the secondaryColor to the request
         description: description || "", // Pass the description to the request
+        longDescription: longDescription || "", // Pass the longDescription to the request
         ...values,
       }, // Pass the form values to the request
       organizationId: organization?.id || "", // Pass the organization ID to the request
@@ -259,6 +289,7 @@ const OrgPage: PageComponent = () => {
           onSubmit={form.handleSubmit(handleUpdate)}
           className="max-w-2xl space-y-3 mt-3"
         >
+
           <FormField
             control={form.control}
             name="title"
@@ -272,6 +303,7 @@ const OrgPage: PageComponent = () => {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="imageURL" // Add this line for the image URL
@@ -289,7 +321,6 @@ const OrgPage: PageComponent = () => {
               </FormItem>
             )}
           />
-
           {/* LOGIC: If the user uploads an image, it will display the image they uploaded. */}
           {/* If they don't hit save and they refresh the page, it will pull the one from S3 if it exists */}
           <div style={boxStyle}>
@@ -342,7 +373,6 @@ const OrgPage: PageComponent = () => {
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-
                     <div
                       style={{
                         fontFamily: headerFont,
@@ -400,7 +430,6 @@ const OrgPage: PageComponent = () => {
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-
                     <div
                       style={{
                         fontFamily: bodyFont,
@@ -428,7 +457,6 @@ const OrgPage: PageComponent = () => {
             )}
           />
 
-
           <FormField
             control={form.control}
             name="primaryColor"
@@ -436,13 +464,13 @@ const OrgPage: PageComponent = () => {
               <FormItem>
                 <FormLabel>Primary Color</FormLabel>
                 <FormControl>
-                  <div style={{ height: "25px", display: "flex", gap: "10px", alignItems: "center", }}>
+                  <div style={{ height: "25px", display: "flex", gap: "10px", alignItems: "center" }}>
                     <input 
                       type="color" 
                       value={primaryColor} 
                       onChange={(event) => setPrimaryColor(event.target.value)} 
                     />
-                    <input 
+                    <input style={{ fontSize: "16px" }}
                       type="text" 
                       value={primaryColor} 
                       readOnly 
@@ -467,7 +495,7 @@ const OrgPage: PageComponent = () => {
                       value={secondaryColor} 
                       onChange={(event) => setSecondaryColor(event.target.value)} 
                     />
-                    <input 
+                    <input style={{ fontSize: "16px" }}
                       type="text" 
                       value={secondaryColor} 
                       readOnly 
@@ -487,6 +515,27 @@ const OrgPage: PageComponent = () => {
                 <FormLabel>Organization Description</FormLabel>
                 <FormControl>
                   <Input placeholder="We make the best widgets in the world" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="longDescription"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Long Organization Description</FormLabel>
+                <FormControl>
+                  <div>
+                    <textarea style={{ ...boxStyle, paddingLeft: '10px', paddingTop: '5px', fontSize: '14px'}}
+                      placeholder="Our company values are..." 
+                      rows={5} // Set the number of rows
+                      {...field}
+                    />
+                  </div>
+
                 </FormControl>
                 <FormMessage />
               </FormItem>
