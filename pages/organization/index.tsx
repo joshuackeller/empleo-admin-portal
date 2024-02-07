@@ -29,6 +29,7 @@ import {
   SelectValue,
 } from "@/src/components/shadcn/Select";
 import { Font } from "@/src/utilities/interfaces";
+import { d } from "@tanstack/react-query-devtools/build/legacy/devtools-0Hr18ibL";
 
 const formSchema = z.object({
   title: z.string().min(1),
@@ -36,8 +37,8 @@ const formSchema = z.object({
   headerFont: z.nativeEnum(Font).optional(), // Add this line for the font
   bodyFont: z.nativeEnum(Font).optional(), // Add this line for the font
   primaryColor: z.string().optional(),
-  // secondaryColor: z.string().optional(),
-  // description: z.string().optional(),
+  secondaryColor: z.string().optional(),
+  description: z.string().optional(),
 });
 
 const OrgPage: PageComponent = () => {
@@ -155,6 +156,51 @@ const OrgPage: PageComponent = () => {
   // Add state for primaryColor
   const [primaryColor, setPrimaryColor] = useState<string | undefined>(undefined);
 
+  // Create a use effect for primaryColor
+  useEffect(() => {
+    if (!!organization) {
+      setPrimaryColor(organization.primaryColor || ""); // This pulls the primaryColor from the organization
+      form.setValue("primaryColor", organization.primaryColor || ""); // Set the default value to the current organization's primaryColor
+    }
+  }, [organization]);
+
+  // Create a use effect for primaryColor -- have it update the form's default values
+  useEffect(() => {
+    form.setValue("primaryColor", primaryColor || "");
+  }, [primaryColor]);
+
+  // Add state for secondaryColor
+  const [secondaryColor, setSecondaryColor] = useState<string | undefined>(undefined);
+
+  // Create a use effect for secondaryColor
+  useEffect(() => {
+    if (!!organization) {
+      setSecondaryColor(organization.secondaryColor || ""); // This pulls the secondaryColor from the organization
+      form.setValue("secondaryColor", organization.secondaryColor || ""); // Set the default value to the current organization's secondaryColor
+    }
+  }, [organization]);
+
+  // Create a use effect for secondaryColor -- have it update the form's default values
+  useEffect(() => {
+    form.setValue("secondaryColor", secondaryColor || "");
+  }, [secondaryColor]);
+
+  // Add state for description
+  const [description, setDescription] = useState<string | undefined>(undefined);
+
+  // Create a use effect for description
+  useEffect(() => {
+    if (!!organization) {
+      setDescription(organization.description || ""); // This pulls the description from the organization
+      form.setValue("description", organization.description || ""); // Set the default value to the current organization's description
+    }
+  }, [organization]);
+
+  // Create a use effect for description -- have it update the form's default values
+  useEffect(() => {
+    form.setValue("description", description || "");
+  }, [description]);
+
   // Handle the form submission
   const handleUpdate = (values: z.infer<typeof formSchema>) => {
     updateOrganization({
@@ -163,7 +209,9 @@ const OrgPage: PageComponent = () => {
         imageURL: image, // Pass the base64 image directly to the request
         headerFont: headerFont as Font, // Ensure headerFont is of type Font
         bodyFont: bodyFont as Font, // Ensure bodyFont is of type Font
-        primaryColor: '', // Pass the primaryColor to the request
+        primaryColor: primaryColor || "", // Pass the primaryColor to the request
+        secondaryColor: secondaryColor || "", // Pass the secondaryColor to the request
+        description: description || "", // Pass the description to the request
         ...values,
       }, // Pass the form values to the request
       organizationId: organization?.id || "", // Pass the organization ID to the request
@@ -388,20 +436,57 @@ const OrgPage: PageComponent = () => {
               <FormItem>
                 <FormLabel>Primary Color</FormLabel>
                 <FormControl>
-                  <div style={{ height: "25px" }}>
+                  <div style={{ height: "25px", display: "flex", gap: "10px", alignItems: "center", }}>
                     <input 
                       type="color" 
-                      //style={{ backgroundColor: primaryColor, width: '25px', height: '25px', borderRadius: '5px'}}
                       value={primaryColor} 
                       onChange={(event) => setPrimaryColor(event.target.value)} 
                     />
                     <input 
                       type="text" 
-                      style={{ marginLeft: '10px' }} 
                       value={primaryColor} 
                       readOnly 
                     />
                   </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="secondaryColor"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Secondary Color</FormLabel>
+                <FormControl>
+                  <div style={{ height: "25px", display: "flex", gap: "10px", alignItems: "center", }}>
+                    <input 
+                      type="color" 
+                      value={secondaryColor} 
+                      onChange={(event) => setSecondaryColor(event.target.value)} 
+                    />
+                    <input 
+                      type="text" 
+                      value={secondaryColor} 
+                      readOnly 
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Organization Description</FormLabel>
+                <FormControl>
+                  <Input placeholder="We make the best widgets in the world" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

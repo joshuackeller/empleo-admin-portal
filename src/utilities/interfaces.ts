@@ -34,6 +34,9 @@ export interface BaseOrganization {
   } | null;
   headerFont: Font;
   bodyFont: Font;
+  primaryColor: string;
+  secondaryColor: string;
+  description: string;
   createdAt: string;
   updatedAt: string;
 }
