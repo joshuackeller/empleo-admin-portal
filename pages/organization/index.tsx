@@ -643,7 +643,7 @@ const OrgPage: PageComponent = () => {
                 backgroundColor: 'rgba(0, 0, 0, 0.5)', 
                 display: 'flex', 
                 justifyContent: 'center', 
-                alignItems: 'center' 
+                alignItems: 'center',
               }}>
                 <div style={{ 
                   fontFamily: preview.bodyFont, 
@@ -656,12 +656,16 @@ const OrgPage: PageComponent = () => {
                   // overflow: 'auto',
                   // overflowY: 'scroll',
                   // overflowX: 'hidden',
+                  // overflow: 'auto',
+                  // overflowY: 'scroll',
+                  // overflow: 'hidden',
                   display: 'flex', 
                   flexDirection: 'column', 
                   justifyContent: 'center', 
                   alignItems: 'center',
                   borderRadius: '10px',
                 }}>
+
                 {/* Button for the x in the top right corner */}
                 <button 
                   onClick={() => setShowPreview(false)} 
@@ -727,7 +731,6 @@ const OrgPage: PageComponent = () => {
                   <div><p style={{ fontFamily: preview.bodyFont }}>{preview.description}</p></div>
                 </div>
 
-                {/* <div style={{ marginTop: '10px' }}> */}
                 <div style={{ marginTop: '10px', paddingBottom: '50px' }}>
                   <h3 style={{ textAlign: 'center', fontFamily: preview.headerFont }}>About Us</h3>
                   {preview.longDescription?.split('\n').map((line, index) => (
