@@ -29,40 +29,34 @@ import {
   SelectValue,
 } from "@/src/components/shadcn/Select";
 import { Font } from "@/src/utilities/interfaces";
-import { d } from "@tanstack/react-query-devtools/build/legacy/devtools-0Hr18ibL";
 
-// Create a schema for the form -- this will be used to validate the form's values
 const formSchema = z.object({
   title: z.string().min(1),
-  imageURL: z.string().url().optional(), 
-  headerFont: z.nativeEnum(Font).optional(), 
-  bodyFont: z.nativeEnum(Font).optional(), 
+  imageURL: z.string().url().optional(),
+  headerFont: z.nativeEnum(Font).optional(),
+  bodyFont: z.nativeEnum(Font).optional(),
   primaryColor: z.string().optional(),
   secondaryColor: z.string().optional(),
+  accentColor: z.string().optional(),
   description: z.string().optional(),
   longDescription: z.string().optional(),
 });
 
-// Create the page component
 const OrgPage: PageComponent = () => {
-  // Get the current organization
   const { data: organization } = useGetCurrentOrganization();
 
-  // IMAGE UPLOAD
   const [image, setImage] = useState<string | null>(null);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
     if (file) {
-      // Check if the file type is allowed (e.g., only allow image files)
       const allowedFileTypes = ["image/jpeg", "image/png", "image/gif"];
       if (allowedFileTypes.includes(file.type)) {
         const reader = new FileReader();
 
         reader.onload = (readerEvent) => {
           if (readerEvent.target) {
-            // setImage(readerEvent.target.result as string);
             const dataUrlData = readerEvent.target.result as string;
             setDataUrl(dataUrlData);
             setImage(dataUrlData);
@@ -71,164 +65,27 @@ const OrgPage: PageComponent = () => {
 
         reader.readAsDataURL(file);
       } else {
-        // Display a message or handle the case where the file type is not allowed
         alert("Invalid file type. Please upload a valid image file.");
       }
     }
   };
 
-  // Create a style for boxes
-  const boxStyle: React.CSSProperties = {
-    width: "100%", // Use the same width as the input box
-    height: "200px", // Fixed Height
-    border: "1px solid rgba(0, 0, 110, .075)",
-    borderRadius: "8px", // Rounded
-    overflow: "hidden",
-    position: "relative",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.05)", // Add a small shadow
-  };
-
-  // Create a style for images
-  const imageStyle: React.CSSProperties = {
-    maxWidth: "100%",
-    maxHeight: "100%",
-    objectFit: "contain",
-  };
-
-  // Create a form with the schema and default values
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: organization?.title, // Set the default value to the current organization's title
+      title: organization?.title,
     },
   });
 
-  // When the organization changes, update the form's default values
-  useEffect(() => {
-    if (!!organization) {
-      form.setValue("title", organization.title || ""); // Set the default value to the current organization's title
-    }
-  }, [organization]);
+  const { mutate: updateOrganization, isPending } = useUpdateOrganization();
 
-  // Get the updateOrganization function from the hook
-  const {
-    mutate: updateOrganization,
-    isPending,
-    isSuccess,
-  } = useUpdateOrganization();
-
-  // addState for dataUrl (Ex: const [dataUrl, setDataUrl] = useState<string | null>(null);)
   const [dataUrl, setDataUrl] = useState<string | undefined>(undefined);
 
-  // PRIMARY/HEADER FONT
-  // addState for headerFont
-  const [headerFont, setHeaderFont] = useState<string | undefined>(undefined);
-
-  // Create a use effect for headerFont
   useEffect(() => {
     if (!!organization) {
-      setHeaderFont(organization.headerFont || "inter"); // This pulls the headerFont from the organization
-      form.setValue("headerFont", organization.headerFont || "inter"); // Set the default value to the current organization's headerFont
+      form.reset(organization);
     }
   }, [organization]);
-
-  // Create a use effect for headerFont -- have it update the form's default values
-  useEffect(() => {
-    if (headerFont === "inter" || headerFont === "notoSerif") {
-      form.setValue("headerFont", headerFont as Font);
-    }
-  }, [headerFont]);
-
-  // SECONDARY/BODY FONT
-  // addState for bodyFont
-  const [bodyFont, setBodyFont] = useState<string | undefined>(undefined);
-
-  // Create a use effect for bodyFont
-  useEffect(() => {
-    if (!!organization) {
-      setBodyFont(organization.bodyFont || "inter"); // This pulls the bodyFont from the organization
-      form.setValue("bodyFont", organization.bodyFont || "inter"); // Set the default value to the current organization's bodyFont
-    }
-  }, [organization]);
-
-  // Create a use effect for bodyFont -- have it update the form's default values
-  useEffect(() => {
-    if (bodyFont === "inter" || bodyFont === "notoSerif") {
-      form.setValue("bodyFont", bodyFont as Font);
-    }
-  }, [bodyFont]);
-
-  // PRIMARY COLOR
-  // Add state for primaryColor
-  const [primaryColor, setPrimaryColor] = useState<string | undefined>(undefined);
-
-  // Create a use effect for primaryColor
-  useEffect(() => {
-    if (!!organization) {
-      setPrimaryColor(organization.primaryColor || ""); // This pulls the primaryColor from the organization
-      form.setValue("primaryColor", organization.primaryColor || ""); // Set the default value to the current organization's primaryColor
-    }
-  }, [organization]);
-
-  // Create a use effect for primaryColor -- have it update the form's default values
-  useEffect(() => {
-    form.setValue("primaryColor", primaryColor || "");
-  }, [primaryColor]);
-
-  // SECONDARY COLOR
-  // Add state for secondaryColor
-  const [secondaryColor, setSecondaryColor] = useState<string | undefined>(undefined);
-
-  // Create a use effect for secondaryColor
-  useEffect(() => {
-    if (!!organization) {
-      setSecondaryColor(organization.secondaryColor || ""); // This pulls the secondaryColor from the organization
-      form.setValue("secondaryColor", organization.secondaryColor || ""); // Set the default value to the current organization's secondaryColor
-    }
-  }, [organization]);
-
-  // Create a use effect for secondaryColor -- have it update the form's default values
-  useEffect(() => {
-    form.setValue("secondaryColor", secondaryColor || "");
-  }, [secondaryColor]);
-
-  // DESCRIPTION
-  // Add state for description
-  const [description, setDescription] = useState<string | undefined>(undefined);
-
-  // Create a use effect for description
-  useEffect(() => {
-    if (!!organization) {
-      setDescription(organization.description || ""); // This pulls the description from the organization
-      form.setValue("description", organization.description || ""); // Set the default value to the current organization's description
-    }
-  }, [organization]);
-
-  // Create a use effect for description -- have it update the form's default values
-  useEffect(() => {
-    form.setValue("description", description || "");
-  }, [description]);
-
-  // LONG DESCRIPTION
-  // Add state for longDescription
-  const [longDescription, setLongDescription] = useState<string | undefined>(undefined);
-
-  // Create a use effect for longDescription
-  useEffect(() => {
-    if (!!organization) {
-      setLongDescription(organization.longDescription || ""); // This pulls the longDescription from the organization
-      form.setValue("longDescription", organization.longDescription || ""); // Set the default value to the current organization's longDescription
-    }
-  }, [organization]);
-
-  // Create a use effect for longDescription -- have it update the form's default values
-  useEffect(() => {
-    form.setValue("longDescription", longDescription || "");
-  }, [longDescription]);
-
 
   // Handle the form submission -- this will be called when the form is submitted
   const handleUpdate = (values: z.infer<typeof formSchema>) => {
@@ -236,12 +93,8 @@ const OrgPage: PageComponent = () => {
       body: {
         dataUrl, // Add this line for uploading image (Ex: data:image/png;base64,....)
         imageURL: image, // Pass the base64 image directly to the request
-        headerFont: headerFont as Font, // Ensure headerFont is of type Font
-        bodyFont: bodyFont as Font, // Ensure bodyFont is of type Font
-        primaryColor: primaryColor || "", // Pass the primaryColor to the request
-        secondaryColor: secondaryColor || "", // Pass the secondaryColor to the request
-        description: description || "", // Pass the description to the request
-        longDescription: longDescription || "", // Pass the longDescription to the request
+        headerFont: form.getValues("headerFont") as Font,
+        bodyFont: form.getValues("headerFont") as Font,
         ...values,
       }, // Pass the form values to the request
       organizationId: organization?.id || "", // Pass the organization ID to the request
@@ -271,7 +124,7 @@ const OrgPage: PageComponent = () => {
               rel="noreferrer"
               className={cn(
                 buttonVariants({ variant: "secondary" }),
-                "gap-x-1",
+                "gap-x-1"
               )}
             >
               View <ExternalLinkIcon className="h-4 w-4 " />
@@ -289,7 +142,6 @@ const OrgPage: PageComponent = () => {
           onSubmit={form.handleSubmit(handleUpdate)}
           className="max-w-2xl space-y-3 mt-3"
         >
-
           <FormField
             control={form.control}
             name="title"
@@ -323,21 +175,20 @@ const OrgPage: PageComponent = () => {
           />
           {/* LOGIC: If the user uploads an image, it will display the image they uploaded. */}
           {/* If they don't hit save and they refresh the page, it will pull the one from S3 if it exists */}
-          <div style={boxStyle}>
+          <div className="w-full h-[200px] border rounded overflow-hidden relative flex justify-center items-center shadow">
             {dataUrl ? (
-              <img src={dataUrl} alt="Uploaded" style={imageStyle} />
+              <img
+                src={dataUrl}
+                alt="Uploaded"
+                className="max-w-full max-h-full object-contain"
+              />
             ) : organization?.logo?.url ? (
-              <img src={organization.logo.url} style={imageStyle} />
+              <img
+                src={organization.logo.url}
+                className="max-w-full max-h-full object-contain"
+              />
             ) : (
-              <div
-                style={{
-                  height: "100%",
-                  backgroundColor: "transparent",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
+              <div className="h-full bg-transparent flex justify-center items-center">
                 Company Logo
               </div>
             )}
@@ -358,9 +209,11 @@ const OrgPage: PageComponent = () => {
                       gap: "10px",
                     }}
                   >
-                    <Select 
-                      value={headerFont} 
-                      onValueChange={setHeaderFont}
+                    <Select
+                      value={field.value}
+                      onValueChange={(value) =>
+                        form.setValue("headerFont", value as Font)
+                      }
                     >
                       <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Select a Font" />
@@ -369,26 +222,17 @@ const OrgPage: PageComponent = () => {
                         <SelectGroup>
                           <SelectLabel>Select a Font</SelectLabel>
                           <SelectItem value="inter">San Serif</SelectItem>
-                          <SelectItem value="notoSerif" className="!font-serif">Serif</SelectItem>
+                          <SelectItem value="notoSerif" className="!font-serif">
+                            Serif
+                          </SelectItem>
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-                    <div
-                      style={{
-                        fontFamily: headerFont,
-                        fontSize: "16px",
-                        height: "25px",
-                        width: "100%", // Use the same width as the input box
-                        overflow: "hidden",
-                        position: "relative",
-                        display: "flex",
-                        justifyContent: "left",
-                        padding: "10px",
-                        alignItems: "center",
-                      }}
-                    >
-                      {headerFont ? (
-                        <p>{organization?.title}</p>
+                    <div className="h-[25px] w-full overflow-hidden relative flex justify-start p-3 items-center">
+                      {field.value === Font.notoSerif ? (
+                        <p className="font-serif"> {organization?.title}</p>
+                      ) : field.value === Font.inter ? (
+                        <p className="font-sans"> {organization?.title}</p>
                       ) : (
                         <p style={{ color: "gray" }}>No font selected</p>
                       )}
@@ -415,9 +259,11 @@ const OrgPage: PageComponent = () => {
                       gap: "10px",
                     }}
                   >
-                    <Select 
-                      value={bodyFont} 
-                      onValueChange={setBodyFont}
+                    <Select
+                      value={field.value}
+                      onValueChange={(value) =>
+                        form.setValue("bodyFont", value as Font)
+                      }
                     >
                       <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Select a Font" />
@@ -426,26 +272,17 @@ const OrgPage: PageComponent = () => {
                         <SelectGroup>
                           <SelectLabel>Select a Font</SelectLabel>
                           <SelectItem value="inter">San Serif</SelectItem>
-                          <SelectItem value="notoSerif" className="!font-serif">Serif</SelectItem>
+                          <SelectItem value="notoSerif" className="!font-serif">
+                            Serif
+                          </SelectItem>
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-                    <div
-                      style={{
-                        fontFamily: bodyFont,
-                        fontSize: "16px",
-                        height: "25px",
-                        width: "100%", // Use the same width as the input box
-                        overflow: "hidden",
-                        position: "relative",
-                        display: "flex",
-                        justifyContent: "left",
-                        padding: "10px",
-                        alignItems: "center",
-                      }}
-                    >
-                      {bodyFont ? (
-                        <p>{organization?.title}</p>
+                    <div className="h-[25px] w-full overflow-hidden relative flex justify-start p-3 items-center">
+                      {field.value === Font.notoSerif ? (
+                        <p className="font-serif"> {organization?.title}</p>
+                      ) : field.value === Font.inter ? (
+                        <p className="font-sans"> {organization?.title}</p>
                       ) : (
                         <p style={{ color: "gray" }}>No font selected</p>
                       )}
@@ -464,16 +301,20 @@ const OrgPage: PageComponent = () => {
               <FormItem>
                 <FormLabel>Primary Color</FormLabel>
                 <FormControl>
-                  <div style={{ height: "25px", display: "flex", gap: "10px", alignItems: "center" }}>
-                    <input 
-                      type="color" 
-                      value={primaryColor} 
-                      onChange={(event) => setPrimaryColor(event.target.value)} 
-                    />
-                    <input style={{ fontSize: "14px" }}
-                      type="text" 
-                      value={primaryColor} 
-                      readOnly 
+                  <div
+                    style={{
+                      height: "25px",
+                      display: "flex",
+                      gap: "10px",
+                      alignItems: "center",
+                    }}
+                  >
+                    <input type="color" {...field} />
+                    <input
+                      className="text-[14px]"
+                      type="text"
+                      value={field.value}
+                      readOnly
                     />
                   </div>
                 </FormControl>
@@ -489,16 +330,49 @@ const OrgPage: PageComponent = () => {
               <FormItem>
                 <FormLabel>Secondary Color</FormLabel>
                 <FormControl>
-                  <div style={{ height: "25px", display: "flex", gap: "10px", alignItems: "center", }}>
-                    <input 
-                      type="color" 
-                      value={secondaryColor} 
-                      onChange={(event) => setSecondaryColor(event.target.value)} 
+                  <div
+                    style={{
+                      height: "25px",
+                      display: "flex",
+                      gap: "10px",
+                      alignItems: "center",
+                    }}
+                  >
+                    <input type="color" {...field} />
+                    <input
+                      style={{ fontSize: "14px" }}
+                      type="text"
+                      value={field.value}
+                      readOnly
                     />
-                    <input style={{ fontSize: "14px" }}
-                      type="text" 
-                      value={secondaryColor} 
-                      readOnly 
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="accentColor"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Accent Color</FormLabel>
+                <FormControl>
+                  <div
+                    style={{
+                      height: "25px",
+                      display: "flex",
+                      gap: "10px",
+                      alignItems: "center",
+                    }}
+                  >
+                    <input type="color" {...field} />
+                    <input
+                      style={{ fontSize: "14px" }}
+                      type="text"
+                      value={field.value}
+                      readOnly
                     />
                   </div>
                 </FormControl>
@@ -514,7 +388,10 @@ const OrgPage: PageComponent = () => {
               <FormItem>
                 <FormLabel>Organization Description</FormLabel>
                 <FormControl>
-                  <Input placeholder="We make the best widgets in the world" {...field} />
+                  <Input
+                    placeholder="We make the best widgets in the world"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -529,13 +406,12 @@ const OrgPage: PageComponent = () => {
                 <FormLabel>Long Organization Description</FormLabel>
                 <FormControl>
                   <div>
-                    <textarea style={{ ...boxStyle, paddingLeft: '10px', paddingTop: '5px', fontSize: '14px'}}
-                      placeholder="Our company values are..." 
+                    <textarea
+                      placeholder="Our company values are..."
                       rows={5} // Set the number of rows
                       {...field}
                     />
                   </div>
-
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -552,4 +428,3 @@ const OrgPage: PageComponent = () => {
 };
 
 export default OrgPage;
-
