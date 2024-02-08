@@ -12,11 +12,11 @@ interface UpdateOrganizationProps {
     dataUrl?: string;
     headerFont: Font;
     bodyFont: Font;
-    primaryColor: string;
-    secondaryColor: string;
-    accentColor: string;
-    description: string;
-    longDescription: string;
+    primaryColor?: string;
+    secondaryColor?: string;
+    accentColor?: string;
+    description?: string;
+    longDescription?: string;
   };
   organizationId: string;
 }
