@@ -14,6 +14,7 @@ interface UpdateOrganizationProps {
     bodyFont: Font;
     primaryColor: string;
     secondaryColor: string;
+    accentColor: string;
     description: string;
     longDescription: string;
   };

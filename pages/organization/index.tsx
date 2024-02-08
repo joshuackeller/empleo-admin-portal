@@ -30,6 +30,7 @@ import {
 } from "@/src/components/shadcn/Select";
 import { Font } from "@/src/utilities/interfaces";
 import { d } from "@tanstack/react-query-devtools/build/legacy/devtools-0Hr18ibL";
+import { access } from "fs";
 
 // Create a schema for the form -- this will be used to validate the form's values
 const formSchema = z.object({
@@ -39,6 +40,7 @@ const formSchema = z.object({
   bodyFont: z.nativeEnum(Font).optional(), 
   primaryColor: z.string().optional(),
   secondaryColor: z.string().optional(),
+  accentColor: z.string().optional(),
   description: z.string().optional(),
   longDescription: z.string().optional(),
 });
@@ -195,6 +197,23 @@ const OrgPage: PageComponent = () => {
     form.setValue("secondaryColor", secondaryColor || "");
   }, [secondaryColor]);
 
+  // ACCENT COLOR
+  // Add state for accentColor
+  const [accentColor, setAccentColor] = useState<string | undefined>(undefined);
+
+  // Create a use effect for accentColor
+  useEffect(() => {
+    if (!!organization) {
+      setAccentColor(organization.accentColor || ""); // This pulls the accentColor from the organization
+      form.setValue("accentColor", organization.accentColor || ""); // Set the default value to the current organization's accentColor
+    }
+  }, [organization]);
+
+  // Create a use effect for accentColor -- have it update the form's default values
+  useEffect(() => {
+    form.setValue("accentColor", accentColor || "");
+  }, [accentColor]);
+
   // DESCRIPTION
   // Add state for description
   const [description, setDescription] = useState<string | undefined>(undefined);
@@ -230,6 +249,40 @@ const OrgPage: PageComponent = () => {
   }, [longDescription]);
 
 
+  // PREVIEW
+  // Add state for preview
+  const [preview, setPreview] = useState<z.infer<typeof formSchema>>({
+    title: organization?.title || "", 
+    imageURL: organization?.logo?.url || "", 
+    headerFont: headerFont as Font, 
+    bodyFont: bodyFont as Font, 
+    primaryColor: primaryColor || "", 
+    secondaryColor: secondaryColor || "", 
+    accentColor: accentColor || "",
+    description: description || "", 
+    longDescription: longDescription || "", 
+  });
+
+  // Create a use effect for preview
+  useEffect(() => {
+    setPreview({
+      title: form.getValues("title"), 
+      imageURL: image || organization?.logo?.url || "", 
+      // headerFont: headerFont || "inter", 
+      // bodyFont: bodyFont || "inter", 
+      headerFont: headerFont as Font,
+      bodyFont: bodyFont as Font,
+      primaryColor: primaryColor || "", 
+      secondaryColor: secondaryColor || "", 
+      accentColor: accentColor || "",
+      description: description || "", 
+      longDescription: longDescription || "", 
+    });
+  }, [form.getValues(), image, headerFont, bodyFont, primaryColor, secondaryColor, description, longDescription]);
+
+  // Add state for showPreview
+  const [showPreview, setShowPreview] = useState<boolean>(false);
+
   // Handle the form submission -- this will be called when the form is submitted
   const handleUpdate = (values: z.infer<typeof formSchema>) => {
     updateOrganization({
@@ -240,6 +293,7 @@ const OrgPage: PageComponent = () => {
         bodyFont: bodyFont as Font, // Ensure bodyFont is of type Font
         primaryColor: primaryColor || "", // Pass the primaryColor to the request
         secondaryColor: secondaryColor || "", // Pass the secondaryColor to the request
+        accentColor: accentColor || "", // Pass the accentColor to the request
         description: description || "", // Pass the description to the request
         longDescription: longDescription || "", // Pass the longDescription to the request
         ...values,
@@ -509,6 +563,31 @@ const OrgPage: PageComponent = () => {
 
           <FormField
             control={form.control}
+            name="accentColor"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Accent Color</FormLabel>
+                <FormControl>
+                  <div style={{ height: "25px", display: "flex", gap: "10px", alignItems: "center", }}>
+                    <input 
+                      type="color" 
+                      value={accentColor} 
+                      onChange={(event) => setAccentColor(event.target.value)} 
+                    />
+                    <input style={{ fontSize: "14px" }}
+                      type="text" 
+                      value={accentColor} 
+                      readOnly 
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
             name="description"
             render={({ field }) => (
               <FormItem>
@@ -541,6 +620,141 @@ const OrgPage: PageComponent = () => {
               </FormItem>
             )}
           />
+
+          <div>
+            <Button 
+              variant="secondary" 
+              onClick={(event) => {
+                event.preventDefault();
+                setShowPreview(true);
+              }}
+            >
+              Preview
+              <ExternalLinkIcon className="h-4 w-4" style={{ marginLeft: '4px' }} />
+            </Button>
+
+            {showPreview && (
+              <div style={{ 
+                position: 'fixed', 
+                top: 0, 
+                left: 0, 
+                width: '100%', 
+                height: '100%', 
+                backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+                display: 'flex', 
+                justifyContent: 'center', 
+                alignItems: 'center' 
+              }}>
+                <div style={{ 
+                  fontFamily: preview.bodyFont, 
+                  color: 'black',
+                  backgroundColor: preview.secondaryColor,
+                  position: 'relative', 
+                  width: '80%', 
+                  maxHeight: '80%', 
+                  // overflow: 'scroll',
+                  // overflow: 'auto',
+                  // overflowY: 'scroll',
+                  // overflowX: 'hidden',
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  justifyContent: 'center', 
+                  alignItems: 'center',
+                  borderRadius: '10px',
+                }}>
+                {/* Button for the x in the top right corner */}
+                <button 
+                  onClick={() => setShowPreview(false)} 
+                  style={{ 
+                    position: 'absolute', 
+                    top: '0px', 
+                    right: '0px', 
+                    background: 'white', 
+                    border: '1px solid black', 
+                    borderRadius: '50%', 
+                    fontSize: '1em', 
+                    cursor: 'pointer', 
+                    color: 'black', 
+                    width: '20px', 
+                    height: '20px', 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    alignItems: 'center', 
+                    padding: '0',
+                  }}
+                >
+                  &times;
+                </button>
+                <div style={{
+                  width: '100%',
+                  display: 'flex',
+                  // justifyContent: 'flex-start',
+                  justifyContent: 'space-between', 
+                  alignItems: 'center',
+                  padding: '10px',
+                  borderBottom: `3px solid ${preview.primaryColor}`,
+                  // backgroundColor: 'white'
+                }}>
+                  <img src={preview.imageURL} alt="Logo" style={{ height: '50px' }} />
+
+                  <div style={{ 
+                    background: preview.accentColor,  // Use the accent color for the background
+                    borderRadius: '5px', 
+                    fontSize: '1em', 
+                    color: 'white', 
+                    padding: '10px 20px',
+                    cursor: 'pointer'
+                  }}>
+                    View Jobs
+                  </div>
+
+                </div>
+
+                <div style={{
+                  width: '100%',
+                  backgroundColor: preview.primaryColor,
+                  color: 'white',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  paddingTop: '30px',
+                  paddingBottom: '20px',
+                  height: '100px',
+                  overflow: 'hidden',
+                }}>
+                  <div><h1 style={{ fontFamily: preview.headerFont }}>{preview.title}</h1></div>
+                  <div><p style={{ fontFamily: preview.bodyFont }}>{preview.description}</p></div>
+                </div>
+
+                {/* <div style={{ marginTop: '10px' }}> */}
+                <div style={{ marginTop: '10px', paddingBottom: '50px' }}>
+                  <h3 style={{ textAlign: 'center', fontFamily: preview.headerFont }}>About Us</h3>
+                  {preview.longDescription?.split('\n').map((line, index) => (
+                    <React.Fragment key={index}>
+                      <span style={{ display: 'block', fontFamily: preview.bodyFont }}>
+                        {line}
+                      </span>
+                    </React.Fragment>
+
+                  ))}
+                </div>
+
+                <div style={{
+                    width: '100%',
+                    height: '30px',
+                    backgroundColor: preview.accentColor, 
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    borderRadius: '0 0 10px 10px',
+                  }}>
+                </div>
+
+                </div>
+              </div>
+            )}
+          </div>
 
           <Button className="!mt-2" disabled={isPending} type="submit">
             Update
