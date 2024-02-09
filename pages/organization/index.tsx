@@ -30,7 +30,20 @@ import {
 } from "@/src/components/shadcn/Select";
 import { Font } from "@/src/utilities/interfaces";
 import { ChromePicker } from "react-color";
-import { SketchPicker } from "react-color";
+import { Textarea } from "@/src/components/shadcn/Textarea";
+
+// const formSchema = z.object({
+//   title: z.string().min(1),
+//   imageURL: z.string().url().optional(),
+//   imageURLBanner: z.string().url().optional(),
+//   headerFont: z.nativeEnum(Font).optional(),
+//   bodyFont: z.nativeEnum(Font).optional(),
+//   primaryColor: z.string().optional(),
+//   secondaryColor: z.string().optional(),
+//   accentColor: z.string().optional(),
+//   description: z.string().optional(),
+//   longDescription: z.string().optional(),
+// });
 
 const formSchema = z.object({
   title: z.string().min(1),
@@ -38,11 +51,11 @@ const formSchema = z.object({
   imageURLBanner: z.string().url().optional(),
   headerFont: z.nativeEnum(Font).optional(),
   bodyFont: z.nativeEnum(Font).optional(),
-  primaryColor: z.string().optional(),
-  secondaryColor: z.string().optional(),
-  accentColor: z.string().optional(),
-  description: z.string().optional(),
-  longDescription: z.string().optional(),
+  primaryColor: z.string().nullable().optional(),
+  secondaryColor: z.string().nullable().optional(),
+  accentColor: z.string().nullable().optional(),
+  description: z.string().nullable().optional(),
+  longDescription: z.string().nullable().optional(),
 });
 
 const OrgPage: PageComponent = () => {
@@ -118,6 +131,19 @@ const OrgPage: PageComponent = () => {
     }
   }, [organization]);
 
+  // useEffect(() => {
+  //   if (!!organization) {
+  //     form.reset({
+  //       ...organization,
+  //       primaryColor: organization.primaryColor || undefined,
+  //       secondaryColor: organization.secondaryColor || undefined,
+  //       accentColor: organization.accentColor || undefined,
+  //       description: organization.description || undefined,
+  //       longDescription: organization.longDescription || undefined,
+  //     });
+  //   }
+  // }, [organization]);
+
   // Handle the form submission -- this will be called when the form is submitted
   const handleUpdate = (values: z.infer<typeof formSchema>) => {
     updateOrganization({
@@ -129,6 +155,11 @@ const OrgPage: PageComponent = () => {
         headerFont: form.getValues("headerFont") as Font,
         bodyFont: form.getValues("headerFont") as Font,
         ...values,
+        primaryColor: values.primaryColor || null || undefined,
+        secondaryColor: values.secondaryColor || null || undefined,
+        accentColor: values.accentColor || null || undefined,
+        description: values.description || null || undefined,
+        longDescription: values.longDescription || null || undefined,
       }, // Pass the form values to the request
       organizationId: organization?.id || "", // Pass the organization ID to the request
     });
@@ -387,7 +418,7 @@ const OrgPage: PageComponent = () => {
                 <FormControl>
                   <div className="h-6 flex items-center gap-2">
                     <div 
-                      style={{ backgroundColor: field.value }}
+                      style={{ backgroundColor: field.value || undefined }}
                       className="w-9 h-5 border border-black rounded cursor-pointer"
                       onClick={handlePrimaryColorClick}
                     />
@@ -411,7 +442,7 @@ const OrgPage: PageComponent = () => {
                     <input
                       className="text-[14px]"
                       type="text"
-                      value={field.value}
+                      value={field.value  || undefined}
                       readOnly
                     />
                   </div>
@@ -430,7 +461,7 @@ const OrgPage: PageComponent = () => {
                 <FormControl>
                    <div className="h-6 flex items-center gap-2">
                    <div 
-                      style={{ backgroundColor: field.value }}
+                      style={{ backgroundColor: field.value || undefined }}
                       className="w-9 h-5 border border-black rounded cursor-pointer"
                       onClick={handleSecondaryColorClick}
                     />
@@ -454,7 +485,7 @@ const OrgPage: PageComponent = () => {
                     <input
                       className="text-[14px]"
                       type="text"
-                      value={field.value}
+                      value={field.value || undefined}
                       readOnly
                     />
                   </div>
@@ -473,7 +504,7 @@ const OrgPage: PageComponent = () => {
                 <FormControl>
                   <div className="h-6 flex items-center gap-2">
                     <div 
-                      style={{ backgroundColor: field.value }}
+                      style={{ backgroundColor: field.value || undefined }}
                       className="w-9 h-5 border border-black rounded cursor-pointer"
                       onClick={handleAccentColorClick}
                     />
@@ -497,7 +528,7 @@ const OrgPage: PageComponent = () => {
                     <input
                       className="text-[14px]"
                       type="text"
-                      value={field.value}
+                      value={field.value || undefined}
                       readOnly
                     />
                   </div>
@@ -517,6 +548,7 @@ const OrgPage: PageComponent = () => {
                   <Input
                     placeholder="We make the best widgets in the world"
                     {...field}
+                    value={field.value || ''}
                   />
                 </FormControl>
                 <FormMessage />
@@ -532,10 +564,11 @@ const OrgPage: PageComponent = () => {
                 <FormLabel>Long Organization Description</FormLabel>
                 <FormControl>
                   <div>
-                    <textarea
+                    <Textarea
                       placeholder="Our company values are..."
                       rows={5} // Set the number of rows
                       {...field}
+                      value={field.value || ''}
                     />
                   </div>
                 </FormControl>
