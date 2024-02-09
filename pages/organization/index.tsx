@@ -29,23 +29,41 @@ import {
   SelectValue,
 } from "@/src/components/shadcn/Select";
 import { Font } from "@/src/utilities/interfaces";
+import { ChromePicker } from "react-color";
+import { Textarea } from "@/src/components/shadcn/Textarea";
+
+// const formSchema = z.object({
+//   title: z.string().min(1),
+//   imageURL: z.string().url().optional(),
+//   imageURLBanner: z.string().url().optional(),
+//   headerFont: z.nativeEnum(Font).optional(),
+//   bodyFont: z.nativeEnum(Font).optional(),
+//   primaryColor: z.string().optional(),
+//   secondaryColor: z.string().optional(),
+//   accentColor: z.string().optional(),
+//   description: z.string().optional(),
+//   longDescription: z.string().optional(),
+// });
 
 const formSchema = z.object({
   title: z.string().min(1),
   imageURL: z.string().url().optional(),
+  imageURLBanner: z.string().url().optional(),
   headerFont: z.nativeEnum(Font).optional(),
   bodyFont: z.nativeEnum(Font).optional(),
-  primaryColor: z.string().optional(),
-  secondaryColor: z.string().optional(),
-  accentColor: z.string().optional(),
-  description: z.string().optional(),
-  longDescription: z.string().optional(),
+  primaryColor: z.string().nullable().optional(),
+  secondaryColor: z.string().nullable().optional(),
+  accentColor: z.string().nullable().optional(),
+  description: z.string().nullable().optional(),
+  longDescription: z.string().nullable().optional(),
 });
 
 const OrgPage: PageComponent = () => {
   const { data: organization } = useGetCurrentOrganization();
 
   const [image, setImage] = useState<string | null>(null);
+
+  const [banner, setBanner] = useState<string | null>(null);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -70,6 +88,30 @@ const OrgPage: PageComponent = () => {
     }
   };
 
+  const handleBannerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const bannerFile = e.target.files?.[0];
+
+    if (bannerFile) {
+      const allowedBannerFileTypes = ["image/jpeg", "image/png", "image/gif"];
+      if (allowedBannerFileTypes.includes(bannerFile.type)) {
+        const bannerReader = new FileReader();
+
+        bannerReader.onload = (bannerReaderEvent) => {
+          if (bannerReaderEvent.target) {
+            const dataUrlBannerData = bannerReaderEvent.target.result as string;
+            setDataUrlBanner(dataUrlBannerData);
+            setBanner(dataUrlBannerData);
+          }
+        };
+
+        bannerReader.readAsDataURL(bannerFile);
+      } else {
+        alert("Invalid file type. Please upload a valid image file.");
+      }
+    }
+  }
+
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -81,11 +123,26 @@ const OrgPage: PageComponent = () => {
 
   const [dataUrl, setDataUrl] = useState<string | undefined>(undefined);
 
+  const [dataUrlBanner, setDataUrlBanner] = useState<string | undefined>(undefined);
+
   useEffect(() => {
     if (!!organization) {
       form.reset(organization);
     }
   }, [organization]);
+
+  // useEffect(() => {
+  //   if (!!organization) {
+  //     form.reset({
+  //       ...organization,
+  //       primaryColor: organization.primaryColor || undefined,
+  //       secondaryColor: organization.secondaryColor || undefined,
+  //       accentColor: organization.accentColor || undefined,
+  //       description: organization.description || undefined,
+  //       longDescription: organization.longDescription || undefined,
+  //     });
+  //   }
+  // }, [organization]);
 
   // Handle the form submission -- this will be called when the form is submitted
   const handleUpdate = (values: z.infer<typeof formSchema>) => {
@@ -93,12 +150,47 @@ const OrgPage: PageComponent = () => {
       body: {
         dataUrl, // Add this line for uploading image (Ex: data:image/png;base64,....)
         imageURL: image, // Pass the base64 image directly to the request
+        dataUrlBanner,
+        imageURLBanner: banner,
         headerFont: form.getValues("headerFont") as Font,
         bodyFont: form.getValues("headerFont") as Font,
         ...values,
+        primaryColor: values.primaryColor || null || undefined,
+        secondaryColor: values.secondaryColor || null || undefined,
+        accentColor: values.accentColor || null || undefined,
+        description: values.description || null || undefined,
+        longDescription: values.longDescription || null || undefined,
       }, // Pass the form values to the request
       organizationId: organization?.id || "", // Pass the organization ID to the request
     });
+  };
+
+  const [displayPrimaryColorPicker, setDisplayPrimaryColorPicker] = useState(false);
+  const [displaySecondaryColorPicker, setDisplaySecondaryColorPicker] = useState(false);
+  const [displayAccentColorPicker, setDisplayAccentColorPicker] = useState(false);
+
+  const handlePrimaryColorClick = () => {
+    setDisplayPrimaryColorPicker(!displayPrimaryColorPicker);
+  };
+  
+  const handlePrimaryClose = () => {
+    setDisplayPrimaryColorPicker(false);
+  };
+
+  const handleSecondaryColorClick = () => {
+    setDisplaySecondaryColorPicker(!displaySecondaryColorPicker);
+  };
+
+  const handleSecondaryClose = () => {
+    setDisplaySecondaryColorPicker(false);
+  };
+
+  const handleAccentColorClick = () => {
+    setDisplayAccentColorPicker(!displayAccentColorPicker);
+  };
+
+  const handleAccentClose = () => {
+    setDisplayAccentColorPicker(false);
   };
 
   // Render the page
@@ -196,19 +288,49 @@ const OrgPage: PageComponent = () => {
 
           <FormField
             control={form.control}
+            name="imageURLBanner" // Add this line for the image URL
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Organization Banner</FormLabel>
+                <FormControl>
+                  <Input
+                    id="banner"
+                    type="file"
+                    onChange={handleBannerChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="w-full h-[200px] border rounded overflow-hidden relative flex justify-center items-center shadow">
+            {dataUrlBanner ? (
+              <img
+                src={dataUrlBanner}
+                alt="Uploaded"
+                className="max-w-full max-h-full object-contain"
+              />
+            ) : organization?.banner?.url ? (
+              <img
+                src={organization.banner.url}
+                className="max-w-full max-h-full object-contain"
+              />
+            ) : (
+              <div className="h-full bg-transparent flex justify-center items-center">
+                Company Banner
+              </div>
+            )}
+          </div>
+
+          <FormField
+            control={form.control}
             name="headerFont"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Primary/Header Font</FormLabel>
                 <FormControl>
-                  {/* <div> */}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "10px",
-                    }}
-                  >
+                  <div className="flex items-center gap-2">
                     <Select
                       value={field.value}
                       onValueChange={(value) =>
@@ -234,7 +356,7 @@ const OrgPage: PageComponent = () => {
                       ) : field.value === Font.inter ? (
                         <p className="font-sans"> {organization?.title}</p>
                       ) : (
-                        <p style={{ color: "gray" }}>No font selected</p>
+                        <p className="text-gray-500">No font selected</p>
                       )}
                     </div>
                   </div>
@@ -251,14 +373,7 @@ const OrgPage: PageComponent = () => {
               <FormItem>
                 <FormLabel>Secondary/Body Font</FormLabel>
                 <FormControl>
-                  {/* <div> */}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "10px",
-                    }}
-                  >
+                  <div className="flex items-center gap-2">
                     <Select
                       value={field.value}
                       onValueChange={(value) =>
@@ -284,7 +399,7 @@ const OrgPage: PageComponent = () => {
                       ) : field.value === Font.inter ? (
                         <p className="font-sans"> {organization?.title}</p>
                       ) : (
-                        <p style={{ color: "gray" }}>No font selected</p>
+                        <p className="text-gray-500">No font selected</p>
                       )}
                     </div>
                   </div>
@@ -301,19 +416,33 @@ const OrgPage: PageComponent = () => {
               <FormItem>
                 <FormLabel>Primary Color</FormLabel>
                 <FormControl>
-                  <div
-                    style={{
-                      height: "25px",
-                      display: "flex",
-                      gap: "10px",
-                      alignItems: "center",
-                    }}
-                  >
-                    <input type="color" {...field} />
+                  <div className="h-6 flex items-center gap-2">
+                    <div 
+                      style={{ backgroundColor: field.value || undefined }}
+                      className="w-9 h-5 border border-black rounded cursor-pointer"
+                      onClick={handlePrimaryColorClick}
+                    />
+
+                    {displayPrimaryColorPicker ? <div className="absolute z-10">
+
+                    <div className="fixed inset-0"
+                      onClick={handlePrimaryClose}
+                    />
+
+                    <ChromePicker
+                      color={field.value || "#ffffff"}
+                      onChange={(updatedColor) => {
+                        if (updatedColor && updatedColor.hex) {
+                          form.setValue("primaryColor", updatedColor.hex);
+                        }
+                      }}
+                    />
+                    </div> : null}
+
                     <input
                       className="text-[14px]"
                       type="text"
-                      value={field.value}
+                      value={field.value  || undefined}
                       readOnly
                     />
                   </div>
@@ -330,19 +459,33 @@ const OrgPage: PageComponent = () => {
               <FormItem>
                 <FormLabel>Secondary Color</FormLabel>
                 <FormControl>
-                  <div
-                    style={{
-                      height: "25px",
-                      display: "flex",
-                      gap: "10px",
-                      alignItems: "center",
-                    }}
-                  >
-                    <input type="color" {...field} />
+                   <div className="h-6 flex items-center gap-2">
+                   <div 
+                      style={{ backgroundColor: field.value || undefined }}
+                      className="w-9 h-5 border border-black rounded cursor-pointer"
+                      onClick={handleSecondaryColorClick}
+                    />
+
+                    {displaySecondaryColorPicker ? <div className="absolute z-10">
+
+                    <div className="fixed inset-0"
+                      onClick={handleSecondaryClose}
+                    />
+
+                    <ChromePicker
+                      color={field.value || "#ffffff"}
+                      onChange={(updatedColor) => {
+                        if (updatedColor && updatedColor.hex) {
+                          form.setValue("secondaryColor", updatedColor.hex);
+                        }
+                      }}
+                    />
+                    </div> : null}
+
                     <input
-                      style={{ fontSize: "14px" }}
+                      className="text-[14px]"
                       type="text"
-                      value={field.value}
+                      value={field.value || undefined}
                       readOnly
                     />
                   </div>
@@ -359,19 +502,33 @@ const OrgPage: PageComponent = () => {
               <FormItem>
                 <FormLabel>Accent Color</FormLabel>
                 <FormControl>
-                  <div
-                    style={{
-                      height: "25px",
-                      display: "flex",
-                      gap: "10px",
-                      alignItems: "center",
-                    }}
-                  >
-                    <input type="color" {...field} />
+                  <div className="h-6 flex items-center gap-2">
+                    <div 
+                      style={{ backgroundColor: field.value || undefined }}
+                      className="w-9 h-5 border border-black rounded cursor-pointer"
+                      onClick={handleAccentColorClick}
+                    />
+
+                    {displayAccentColorPicker ? <div className="absolute z-10">
+
+                    <div className="fixed inset-0"
+                      onClick={handleAccentClose}
+                    />
+
+                    <ChromePicker
+                      color={field.value || "#ffffff"}
+                      onChange={(updatedColor) => {
+                        if (updatedColor && updatedColor.hex) {
+                          form.setValue("accentColor", updatedColor.hex);
+                        }
+                      }}
+                    />
+                    </div> : null}
+
                     <input
-                      style={{ fontSize: "14px" }}
+                      className="text-[14px]"
                       type="text"
-                      value={field.value}
+                      value={field.value || undefined}
                       readOnly
                     />
                   </div>
@@ -391,6 +548,7 @@ const OrgPage: PageComponent = () => {
                   <Input
                     placeholder="We make the best widgets in the world"
                     {...field}
+                    value={field.value || ''}
                   />
                 </FormControl>
                 <FormMessage />
@@ -406,10 +564,11 @@ const OrgPage: PageComponent = () => {
                 <FormLabel>Long Organization Description</FormLabel>
                 <FormControl>
                   <div>
-                    <textarea
+                    <Textarea
                       placeholder="Our company values are..."
                       rows={5} // Set the number of rows
                       {...field}
+                      value={field.value || ''}
                     />
                   </div>
                 </FormControl>

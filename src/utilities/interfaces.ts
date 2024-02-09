@@ -32,13 +32,31 @@ export interface BaseOrganization {
     id: string;
     url: string;
   } | null;
+  banner: {
+    id: string;
+    url: string;
+  } | null;
   headerFont: Font;
   bodyFont: Font;
-  primaryColor: string;
-  secondaryColor: string;
-  accentColor: string;
-  description: string;
-  longDescription: string;
+
+  primaryColor: string | null;
+  secondaryColor: string | null;
+  accentColor: string | null;
+  description: string | null;
+  longDescription: string | null;
+
+  // primaryColor: string;
+  // secondaryColor: string;
+  // accentColor: string;
+  // description: string;
+  // longDescription: string;
+
+  // primaryColor?: string;
+  // secondaryColor?: string;
+  // accentColor?: string;
+  // description?: string;
+  // longDescription?: string;
+
   createdAt: string;
   updatedAt: string;
 }
