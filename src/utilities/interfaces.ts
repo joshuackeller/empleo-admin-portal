@@ -32,6 +32,10 @@ export interface BaseOrganization {
     id: string;
     url: string;
   } | null;
+  banner: {
+    id: string;
+    url: string;
+  } | null;
   headerFont: Font;
   bodyFont: Font;
   primaryColor: string;

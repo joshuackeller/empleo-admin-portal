@@ -10,6 +10,7 @@ interface UpdateOrganizationProps {
   body: {
     title: string;
     dataUrl?: string;
+    dataUrlBanner?: string;
     headerFont: Font;
     bodyFont: Font;
     primaryColor?: string;
