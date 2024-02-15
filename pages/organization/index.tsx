@@ -281,7 +281,7 @@ const OrgPage: PageComponent = () => {
               />
             ) : (
               <div className="h-full bg-transparent flex justify-center items-center">
-                Company Logo
+                Organization Logo
               </div>
             )}
           </div>
@@ -318,7 +318,7 @@ const OrgPage: PageComponent = () => {
               />
             ) : (
               <div className="h-full bg-transparent flex justify-center items-center">
-                Company Banner
+                Organization Banner
               </div>
             )}
           </div>
