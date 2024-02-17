@@ -64,3 +64,15 @@ export interface BaseListing {
 }
 
 export interface Listing extends BaseListing {}
+
+export interface BaseApplication {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Application extends BaseApplication {}

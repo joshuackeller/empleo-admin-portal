@@ -15,8 +15,10 @@ import {
 } from "@/src/components/shadcn/Table";
 import { cn } from "@/src/utilities/cn";
 import { useRouter } from "next/router";
+import { Application } from "@/src/utilities/interfaces";
 
 interface DataTableProps<TData, TValue> {
+  applications?: Application[];
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   isFetching?: boolean;
