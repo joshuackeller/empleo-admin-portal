@@ -3,6 +3,7 @@ import { z } from "zod";
 import ApplicationsTable from "@/src/components/tables/ApplicationsTable";
 import { useRouter } from "next/router";
 import useGetListingApplications from "@/src/requests/listings/useGetListingApplications";
+import ListingWrapper from "@/src/layout/wrappers/ListingWrapper";
 
 const formSchema = z.object({
   firstName: z.string(),
@@ -30,9 +31,14 @@ const ApplicationsPage: PageComponent = () => {
   );
 
   return (
-    <div className="mt-3">
-      <ApplicationsTable applications={applications} isFetching={isFetching} />
-    </div>
+    <ListingWrapper>
+      <div className="mt-3">
+        <ApplicationsTable
+          applications={applications}
+          isFetching={isFetching}
+        />
+      </div>
+    </ListingWrapper>
   );
 };
 export default ApplicationsPage;
