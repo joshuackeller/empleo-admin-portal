@@ -18,6 +18,7 @@ export default function Document() {
           href="https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap"
           rel="stylesheet"
         />
+        <link rel="icon" type="image/png" href="/favicon.png" />
       </Head>
 
       <body>

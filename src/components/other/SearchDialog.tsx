@@ -10,7 +10,6 @@ import {
   CommandList,
 } from "@/src/components/shadcn/Command";
 import {
-  BackpackIcon,
   HomeIcon,
   NewspaperIcon,
   SearchIcon,
