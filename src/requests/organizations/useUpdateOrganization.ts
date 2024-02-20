@@ -5,6 +5,7 @@ import OrganizationKeys from ".";
 import { useToast } from "@/src/components/shadcn/use-toast";
 import useCustomMutation from "../useCustomMutation";
 import { Font } from "@/src/utilities/interfaces";
+import { Layout } from "@/src/utilities/interfaces";
 
 interface UpdateOrganizationProps {
   body: {
@@ -16,6 +17,7 @@ interface UpdateOrganizationProps {
     primaryColor?: string;
     secondaryColor?: string;
     accentColor?: string;
+    layout?: Layout;
     description?: string;
     longDescription?: string;
   };
