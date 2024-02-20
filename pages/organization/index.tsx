@@ -15,7 +15,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/src/components/shadcn/Form";
-import { ExternalLinkIcon, MonitorIcon } from "lucide-react";
+import {
+  ExternalLinkIcon,
+  MonitorIcon,
+  PenSquare,
+  MousePointerSquare,
+} from "lucide-react";
 import OrganizationWrapper from "@/src/layout/wrappers/OrganizationWrapper";
 import { cn } from "@/src/utilities/cn";
 import Link from "next/link";
@@ -29,21 +34,10 @@ import {
   SelectValue,
 } from "@/src/components/shadcn/Select";
 import { Font } from "@/src/utilities/interfaces";
+import { Layout } from "@/src/utilities/interfaces";
 import { ChromePicker } from "react-color";
 import { Textarea } from "@/src/components/shadcn/Textarea";
-
-// const formSchema = z.object({
-//   title: z.string().min(1),
-//   imageURL: z.string().url().optional(),
-//   imageURLBanner: z.string().url().optional(),
-//   headerFont: z.nativeEnum(Font).optional(),
-//   bodyFont: z.nativeEnum(Font).optional(),
-//   primaryColor: z.string().optional(),
-//   secondaryColor: z.string().optional(),
-//   accentColor: z.string().optional(),
-//   description: z.string().optional(),
-//   longDescription: z.string().optional(),
-// });
+import { Separator } from "@/src/components/shadcn/Separator";
 
 const formSchema = z.object({
   title: z.string().min(1),
@@ -54,6 +48,7 @@ const formSchema = z.object({
   primaryColor: z.string().nullable().optional(),
   secondaryColor: z.string().nullable().optional(),
   accentColor: z.string().nullable().optional(),
+  layout: z.nativeEnum(Layout).optional(),
   description: z.string().nullable().optional(),
   longDescription: z.string().nullable().optional(),
 });
@@ -109,8 +104,7 @@ const OrgPage: PageComponent = () => {
         alert("Invalid file type. Please upload a valid image file.");
       }
     }
-  }
-
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -123,26 +117,95 @@ const OrgPage: PageComponent = () => {
 
   const [dataUrl, setDataUrl] = useState<string | undefined>(undefined);
 
-  const [dataUrlBanner, setDataUrlBanner] = useState<string | undefined>(undefined);
+  const [dataUrlBanner, setDataUrlBanner] = useState<string | undefined>(
+    undefined
+  );
+
+  const layoutToNumber = {
+    one: 1,
+    two: 2,
+    three: 3,
+    four: 4,
+    five: 5,
+    "Layout 1": 1,
+    "Layout 2": 2,
+    "Layout 3": 3,
+    "Layout 4": 4,
+    "Layout 5": 5,
+  };
+
+  const [layout, setLayout] = useState<Layout | null>(null);
+  const [selectedLayout, setSelectedLayout] = useState(organization?.layout);
+  const [open, setOpen] = useState(false);
+  const layoutValue = selectedLayout || organization?.layout || "one";
+  const [page, setPage] = useState(layoutToNumber[layoutValue]);
+
+  useEffect(() => {
+    setPage(layoutToNumber[layoutValue]);
+  }, [layoutValue]);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    const layoutValue = organization?.layout || "one";
+    setPage(layoutToNumber[layoutValue]);
+    setSelectedLayout(layoutValue as Layout | undefined);
+  };
+
+  const handlePageChange = (newPage: React.SetStateAction<number>) => {
+    setPage(newPage);
+    setSelectedLayout(numberToString(newPage) as Layout);
+  };
+
+  const numberToString = (num: any) => {
+    switch (num) {
+      case 1:
+        return "one";
+      case 2:
+        return "two";
+      case 3:
+        return "three";
+      case 4:
+        return "four";
+      case 5:
+        return "five";
+      default:
+        return "one";
+    }
+  };
+
+  const mapLayoutToString = (layout: any) => {
+    switch (layout) {
+      case Layout.one:
+        return "Layout 1";
+      case Layout.two:
+        return "Layout 2";
+      case Layout.three:
+        return "Layout 3";
+      case Layout.four:
+        return "Layout 4";
+      case Layout.five:
+        return "Layout 5";
+      default:
+        return layout;
+    }
+  };
+
+  useEffect(() => {
+    if (layout) {
+      form.setValue("layout", layout);
+      setOpen(false);
+    }
+  }, [layout]);
 
   useEffect(() => {
     if (!!organization) {
       form.reset(organization);
     }
   }, [organization]);
-
-  // useEffect(() => {
-  //   if (!!organization) {
-  //     form.reset({
-  //       ...organization,
-  //       primaryColor: organization.primaryColor || undefined,
-  //       secondaryColor: organization.secondaryColor || undefined,
-  //       accentColor: organization.accentColor || undefined,
-  //       description: organization.description || undefined,
-  //       longDescription: organization.longDescription || undefined,
-  //     });
-  //   }
-  // }, [organization]);
 
   // Handle the form submission -- this will be called when the form is submitted
   const handleUpdate = (values: z.infer<typeof formSchema>) => {
@@ -158,6 +221,7 @@ const OrgPage: PageComponent = () => {
         primaryColor: values.primaryColor || null || undefined,
         secondaryColor: values.secondaryColor || null || undefined,
         accentColor: values.accentColor || null || undefined,
+        layout: form.getValues("layout") as Layout,
         description: values.description || null || undefined,
         longDescription: values.longDescription || null || undefined,
       }, // Pass the form values to the request
@@ -165,14 +229,17 @@ const OrgPage: PageComponent = () => {
     });
   };
 
-  const [displayPrimaryColorPicker, setDisplayPrimaryColorPicker] = useState(false);
-  const [displaySecondaryColorPicker, setDisplaySecondaryColorPicker] = useState(false);
-  const [displayAccentColorPicker, setDisplayAccentColorPicker] = useState(false);
+  const [displayPrimaryColorPicker, setDisplayPrimaryColorPicker] =
+    useState(false);
+  const [displaySecondaryColorPicker, setDisplaySecondaryColorPicker] =
+    useState(false);
+  const [displayAccentColorPicker, setDisplayAccentColorPicker] =
+    useState(false);
 
   const handlePrimaryColorClick = () => {
     setDisplayPrimaryColorPicker(!displayPrimaryColorPicker);
   };
-  
+
   const handlePrimaryClose = () => {
     setDisplayPrimaryColorPicker(false);
   };
@@ -281,7 +348,7 @@ const OrgPage: PageComponent = () => {
               />
             ) : (
               <div className="h-full bg-transparent flex justify-center items-center">
-                Company Logo
+                Organization Logo
               </div>
             )}
           </div>
@@ -318,7 +385,7 @@ const OrgPage: PageComponent = () => {
               />
             ) : (
               <div className="h-full bg-transparent flex justify-center items-center">
-                Company Banner
+                Organization Banner
               </div>
             )}
           </div>
@@ -414,35 +481,37 @@ const OrgPage: PageComponent = () => {
             name="primaryColor"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Primary Color</FormLabel>
+                <FormLabel>Primary/Background Color</FormLabel>
                 <FormControl>
                   <div className="h-6 flex items-center gap-2">
-                    <div 
+                    <div
                       style={{ backgroundColor: field.value || undefined }}
                       className="w-9 h-5 border border-black rounded cursor-pointer"
                       onClick={handlePrimaryColorClick}
                     />
 
-                    {displayPrimaryColorPicker ? <div className="absolute z-10">
+                    {displayPrimaryColorPicker ? (
+                      <div className="absolute z-10">
+                        <div
+                          className="fixed inset-0"
+                          onClick={handlePrimaryClose}
+                        />
 
-                    <div className="fixed inset-0"
-                      onClick={handlePrimaryClose}
-                    />
-
-                    <ChromePicker
-                      color={field.value || "#ffffff"}
-                      onChange={(updatedColor) => {
-                        if (updatedColor && updatedColor.hex) {
-                          form.setValue("primaryColor", updatedColor.hex);
-                        }
-                      }}
-                    />
-                    </div> : null}
+                        <ChromePicker
+                          color={field.value || "#ffffff"}
+                          onChange={(updatedColor) => {
+                            if (updatedColor && updatedColor.hex) {
+                              form.setValue("primaryColor", updatedColor.hex);
+                            }
+                          }}
+                        />
+                      </div>
+                    ) : null}
 
                     <input
                       className="text-[14px]"
                       type="text"
-                      value={field.value  || undefined}
+                      value={field.value || undefined}
                       readOnly
                     />
                   </div>
@@ -459,28 +528,30 @@ const OrgPage: PageComponent = () => {
               <FormItem>
                 <FormLabel>Secondary Color</FormLabel>
                 <FormControl>
-                   <div className="h-6 flex items-center gap-2">
-                   <div 
+                  <div className="h-6 flex items-center gap-2">
+                    <div
                       style={{ backgroundColor: field.value || undefined }}
                       className="w-9 h-5 border border-black rounded cursor-pointer"
                       onClick={handleSecondaryColorClick}
                     />
 
-                    {displaySecondaryColorPicker ? <div className="absolute z-10">
+                    {displaySecondaryColorPicker ? (
+                      <div className="absolute z-10">
+                        <div
+                          className="fixed inset-0"
+                          onClick={handleSecondaryClose}
+                        />
 
-                    <div className="fixed inset-0"
-                      onClick={handleSecondaryClose}
-                    />
-
-                    <ChromePicker
-                      color={field.value || "#ffffff"}
-                      onChange={(updatedColor) => {
-                        if (updatedColor && updatedColor.hex) {
-                          form.setValue("secondaryColor", updatedColor.hex);
-                        }
-                      }}
-                    />
-                    </div> : null}
+                        <ChromePicker
+                          color={field.value || "#ffffff"}
+                          onChange={(updatedColor) => {
+                            if (updatedColor && updatedColor.hex) {
+                              form.setValue("secondaryColor", updatedColor.hex);
+                            }
+                          }}
+                        />
+                      </div>
+                    ) : null}
 
                     <input
                       className="text-[14px]"
@@ -503,27 +574,29 @@ const OrgPage: PageComponent = () => {
                 <FormLabel>Accent Color</FormLabel>
                 <FormControl>
                   <div className="h-6 flex items-center gap-2">
-                    <div 
+                    <div
                       style={{ backgroundColor: field.value || undefined }}
                       className="w-9 h-5 border border-black rounded cursor-pointer"
                       onClick={handleAccentColorClick}
                     />
 
-                    {displayAccentColorPicker ? <div className="absolute z-10">
+                    {displayAccentColorPicker ? (
+                      <div className="absolute z-10">
+                        <div
+                          className="fixed inset-0"
+                          onClick={handleAccentClose}
+                        />
 
-                    <div className="fixed inset-0"
-                      onClick={handleAccentClose}
-                    />
-
-                    <ChromePicker
-                      color={field.value || "#ffffff"}
-                      onChange={(updatedColor) => {
-                        if (updatedColor && updatedColor.hex) {
-                          form.setValue("accentColor", updatedColor.hex);
-                        }
-                      }}
-                    />
-                    </div> : null}
+                        <ChromePicker
+                          color={field.value || "#ffffff"}
+                          onChange={(updatedColor) => {
+                            if (updatedColor && updatedColor.hex) {
+                              form.setValue("accentColor", updatedColor.hex);
+                            }
+                          }}
+                        />
+                      </div>
+                    ) : null}
 
                     <input
                       className="text-[14px]"
@@ -548,7 +621,7 @@ const OrgPage: PageComponent = () => {
                   <Input
                     placeholder="We make the best widgets in the world"
                     {...field}
-                    value={field.value || ''}
+                    value={field.value || ""}
                   />
                 </FormControl>
                 <FormMessage />
@@ -568,7 +641,7 @@ const OrgPage: PageComponent = () => {
                       placeholder="Our company values are..."
                       rows={5} // Set the number of rows
                       {...field}
-                      value={field.value || ''}
+                      value={field.value || ""}
                     />
                   </div>
                 </FormControl>
@@ -577,7 +650,599 @@ const OrgPage: PageComponent = () => {
             )}
           />
 
-          <Button className="!mt-2" disabled={isPending} type="submit">
+          <span className="flex items-center">
+            <Button variant="secondary" onClick={handleClickOpen} type="button">
+              Select Layout
+              <MousePointerSquare className="h-4 w-4 ml-1" />
+            </Button>
+            <p style={{ margin: 0 }} className="mb-5 ml-4 text-sm">
+              {(() => {
+                if (!selectedLayout) {
+                  return mapLayoutToString(organization?.layout);
+                }
+                switch (selectedLayout) {
+                  case Layout.one:
+                    return "Layout 1";
+                  case Layout.two:
+                    return "Layout 2";
+                  case Layout.three:
+                    return "Layout 3";
+                  case Layout.four:
+                    return "Layout 4";
+                  case Layout.five:
+                    return "Layout 5";
+                  default:
+                    return selectedLayout;
+                }
+              })()}
+            </p>
+          </span>
+
+          {open && (
+            <>
+              <div className="fixed inset-0 w-full h-full bg-black bg-opacity-50 z-50"></div>
+              <div
+                style={{
+                  position: "fixed",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  backgroundColor: "white",
+                  padding: "20px",
+                  zIndex: 1000,
+                  width: "90%",
+                  height: "90%",
+                  overflow: "auto",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <div className="mb-2">
+                  <Button
+                    variant="secondary"
+                    onClick={() => handlePageChange(1)}
+                    type="button"
+                    style={
+                      page === 1
+                        ? { backgroundColor: "#1c4966", color: "#fff" }
+                        : {}
+                    }
+                  >
+                    Layout 1
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    onClick={() => handlePageChange(2)}
+                    type="button"
+                    className="ml-10"
+                    style={
+                      page === 2
+                        ? { backgroundColor: "#1c4966", color: "#fff" }
+                        : {}
+                    }
+                  >
+                    Layout 2
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    onClick={() => handlePageChange(3)}
+                    type="button"
+                    className="ml-10"
+                    style={
+                      page === 3
+                        ? { backgroundColor: "#1c4966", color: "#fff" }
+                        : {}
+                    }
+                  >
+                    Layout 3
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    onClick={() => handlePageChange(4)}
+                    type="button"
+                    className="ml-10"
+                    style={
+                      page === 4
+                        ? { backgroundColor: "#1c4966", color: "#fff" }
+                        : {}
+                    }
+                  >
+                    Layout 4
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    onClick={() => handlePageChange(5)}
+                    type="button"
+                    className="ml-10"
+                    style={
+                      page === 5
+                        ? { backgroundColor: "#1c4966", color: "#fff" }
+                        : {}
+                    }
+                  >
+                    Layout 5
+                  </Button>
+                </div>
+
+                <div
+                  style={{ backgroundColor: organization?.primaryColor || "" }}
+                  className="w-full flex-1"
+                >
+                  {page === 1 && (
+                    <div>
+                      <div className="flex justify-between items-center p-2">
+                        <img
+                          src={organization?.logo?.url}
+                          alt="Organization Logo"
+                          className="w-12 h-12"
+                        />
+                        <div>
+                          <Button
+                            variant="outline"
+                            className="mr-4"
+                            style={{
+                              borderColor:
+                                organization?.accentColor || undefined,
+                            }}
+                          >
+                            About
+                          </Button>
+                          <Button
+                            variant="outline"
+                            style={{
+                              borderColor:
+                                organization?.accentColor || undefined,
+                            }}
+                          >
+                            Job Listings
+                          </Button>
+                        </div>
+                      </div>
+
+                      <Separator
+                        className="w-full mb-2"
+                        style={{
+                          backgroundColor: organization?.accentColor || "",
+                        }}
+                      />
+
+                      <div className="relative">
+                        <img
+                          src={organization?.banner?.url}
+                          alt="Organization Banner"
+                          className="w-full h-48 object-cover"
+                        />
+                        <header
+                          className={`text-${organization?.headerFont} p-2 w-full absolute top-0 bottom-0 left-0 right-0 flex flex-col justify-center items-center text-white mx-auto"`}
+                        >
+                          <h1>{organization?.title}</h1>
+                          <p style={{ marginTop: "4px" }}>
+                            {organization?.description}
+                          </p>
+                        </header>
+                      </div>
+
+                      <Separator
+                        className="w-full mt-2"
+                        style={{
+                          backgroundColor: organization?.accentColor || "",
+                        }}
+                      />
+
+                      <main className="container mx-auto mt-4 text-center">
+                        <section>
+                          <h2
+                            className={`text-2xl font-bold text-${organization?.bodyFont}`}
+                          >
+                            Current Job Openings
+                          </h2>
+                          <Button
+                            className="!mt-2"
+                            style={{
+                              backgroundColor:
+                                organization?.secondaryColor || "",
+                            }}
+                            type="button"
+                          >
+                            View All Job Listings
+                          </Button>
+                        </section>
+                      </main>
+                      <footer
+                        className={`mt-8 py-4 text-${organization?.bodyFont} text-center w-full`}
+                      >
+                        <p className={`text-sm`}>
+                          &copy; {new Date().getFullYear()}{" "}
+                          {organization?.title}. All rights reserved.
+                        </p>
+                      </footer>
+                    </div>
+                  )}
+
+                  {page === 2 && (
+                    <div>
+                      <div>
+                        <div className="relative flex justify-between items-center p-2">
+                          <img
+                            src={organization?.logo?.url}
+                            alt="Organization Logo"
+                            className="w-12 h-12"
+                          />
+                          <div
+                            className="absolute inset-0 flex justify-center items-center"
+                            style={{ pointerEvents: "none" }}
+                          >
+                            <h1
+                              className={`text-${organization?.bodyFont}`}
+                              style={{ pointerEvents: "auto" }}
+                            >
+                              {organization?.title}
+                            </h1>
+                          </div>
+                          <div>
+                            <Button
+                              variant="outline"
+                              className="mr-4"
+                              style={{
+                                borderColor:
+                                  organization?.accentColor || undefined,
+                              }}
+                            >
+                              About
+                            </Button>
+                            <Button
+                              variant="outline"
+                              style={{
+                                borderColor:
+                                  organization?.accentColor || undefined,
+                              }}
+                            >
+                              Job Listings
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <Separator
+                        className="w-full mb-2"
+                        style={{
+                          backgroundColor: organization?.accentColor || "",
+                        }}
+                      />
+
+                      <div className="relative">
+                        <img
+                          src={organization?.banner?.url}
+                          alt="Organization Banner"
+                          className="w-full h-48 object-cover"
+                        />
+                        <header
+                          className={`text-${organization?.headerFont} p-2 w-full absolute top-0 bottom-0 left-0 right-0 flex flex-col justify-center items-center text-white mx-auto`}
+                        >
+                          <h4 style={{ marginTop: "4px" }}>
+                            {organization?.description}
+                          </h4>
+                        </header>
+                      </div>
+
+                      <Separator
+                        className="w-full mt-2"
+                        style={{
+                          backgroundColor: organization?.accentColor || "",
+                        }}
+                      />
+
+                      <main className="container mx-auto mt-4 text-center">
+                        <section>
+                          <h2
+                            className={`text-2xl font-bold text-${organization?.bodyFont}`}
+                          >
+                            Current Job Openings
+                          </h2>
+                          <Button
+                            className="!mt-2"
+                            style={{
+                              backgroundColor:
+                                organization?.secondaryColor || "",
+                            }}
+                            type="button"
+                          >
+                            View All Job Listings
+                          </Button>
+                        </section>
+                      </main>
+                      <footer
+                        className={`mt-8 py-4 text-${organization?.bodyFont} text-center w-full`}
+                      >
+                        <p className={`text-sm`}>
+                          &copy; {new Date().getFullYear()}{" "}
+                          {organization?.title}. All rights reserved.
+                        </p>
+                      </footer>
+                    </div>
+                  )}
+
+                  {page === 3 && (
+                    <div>
+                      <div className="flex justify-between items-center p-2">
+                        <img
+                          src={organization?.logo?.url}
+                          alt="Organization Logo"
+                          className="w-12 h-12"
+                        />
+                        <div>
+                          <Button
+                            variant="outline"
+                            className="mr-4"
+                            style={{
+                              borderColor:
+                                organization?.accentColor || undefined,
+                            }}
+                          >
+                            About
+                          </Button>
+                          <Button
+                            variant="outline"
+                            style={{
+                              borderColor:
+                                organization?.accentColor || undefined,
+                            }}
+                          >
+                            Job Listings
+                          </Button>
+                        </div>
+                      </div>
+
+                      <Separator
+                        className="w-full mb-2"
+                        style={{
+                          backgroundColor: organization?.accentColor || "",
+                        }}
+                      />
+
+                      <header className="text-center">
+                        <h1 className="mb-0">{organization?.title}</h1>
+                        <p style={{ marginTop: "4px" }}>
+                          {organization?.description}
+                        </p>
+                      </header>
+
+                      <section className="flex flex-col items-center justify-center mt-16">
+                        <h2
+                          className={`text-2xl font-bold text-${organization?.bodyFont}`}
+                        >
+                          Current Job Openings
+                        </h2>
+                        <Button
+                          className="!mt-2"
+                          style={{
+                            backgroundColor: organization?.secondaryColor || "",
+                          }}
+                          type="button"
+                        >
+                          View All Job Listings
+                        </Button>
+                      </section>
+                      <footer
+                        className={`mt-8 py-4 text-${organization?.bodyFont} text-center w-full`}
+                      >
+                        <p className={`text-sm`}>
+                          &copy; {new Date().getFullYear()}{" "}
+                          {organization?.title}. All rights reserved.
+                        </p>
+                      </footer>
+                    </div>
+                  )}
+
+                  {page === 4 && (
+                    <div>
+                      <div className="flex justify-between items-center p-2">
+                        <img
+                          src={organization?.logo?.url}
+                          alt="Organization Logo"
+                          className="w-12 h-12"
+                        />
+                        <div>
+                          <Button
+                            variant="outline"
+                            className="mr-4"
+                            style={{
+                              borderColor:
+                                organization?.accentColor || undefined,
+                            }}
+                          >
+                            About
+                          </Button>
+                          <Button
+                            variant="outline"
+                            style={{
+                              borderColor:
+                                organization?.accentColor || undefined,
+                            }}
+                          >
+                            Job Listings
+                          </Button>
+                        </div>
+                      </div>
+
+                      <Separator
+                        className="w-full mb-2"
+                        style={{
+                          backgroundColor: organization?.accentColor || "",
+                        }}
+                      />
+
+                      <div className="relative">
+                        <img
+                          src={organization?.banner?.url}
+                          alt="Organization Banner"
+                          className="w-full h-48 object-cover"
+                        />
+                        <header
+                          className={`text-${organization?.headerFont} p-2 w-full absolute top-0 bottom-0 left-0 right-0 flex flex-col justify-center items-center`}
+                          style={{ color: "black", margin: "auto" }}
+                        >
+                          <h1>{organization?.title}</h1>
+                        </header>
+                      </div>
+
+                      <Separator
+                        className="w-full mt-2"
+                        style={{
+                          backgroundColor: organization?.accentColor || "",
+                        }}
+                      />
+
+                      <main className="container mx-auto mt-1 text-center">
+                        <section>
+                          <p style={{ marginTop: "4px" }}>
+                            "{organization?.description}"
+                          </p>
+
+                          <h2
+                            className={`mt-10 text-2xl font-bold text-${organization?.bodyFont}`}
+                          >
+                            Current Job Openings
+                          </h2>
+                          <Button
+                            className="!mt-2"
+                            style={{
+                              backgroundColor:
+                                organization?.secondaryColor || "",
+                            }}
+                            type="button"
+                          >
+                            View All Job Listings
+                          </Button>
+                        </section>
+                      </main>
+                      <footer
+                        className={`mt-8 py-4 text-${organization?.bodyFont} text-center w-full`}
+                      >
+                        <p className={`text-sm`}>
+                          &copy; {new Date().getFullYear()}{" "}
+                          {organization?.title}. All rights reserved.
+                        </p>
+                      </footer>
+                    </div>
+                  )}
+
+                  {page === 5 && (
+                    <div>
+                      <div className="flex justify-between items-center p-2">
+                        <img
+                          src={organization?.logo?.url}
+                          alt="Organization Logo"
+                          className="w-12 h-12"
+                        />
+                        <div>
+                          <Button
+                            variant="outline"
+                            className="mr-4"
+                            style={{
+                              borderColor:
+                                organization?.accentColor || undefined,
+                            }}
+                          >
+                            About
+                          </Button>
+                          <Button
+                            variant="outline"
+                            style={{
+                              borderColor:
+                                organization?.accentColor || undefined,
+                            }}
+                          >
+                            Job Listings
+                          </Button>
+                        </div>
+                      </div>
+
+                      <Separator
+                        className="w-full mb-2"
+                        style={{
+                          backgroundColor: organization?.accentColor || "",
+                        }}
+                      />
+
+                      <header
+                        style={{ color: "white" }}
+                        className="text-center mb-8 mt-8"
+                      >
+                        <h1 className="mb-0">{organization?.title}</h1>
+                        <p style={{ marginTop: "4px" }}>
+                          {organization?.description}
+                        </p>
+                      </header>
+
+                      <Separator
+                        className="w-full mb-2"
+                        style={{
+                          backgroundColor: organization?.accentColor || "",
+                        }}
+                      />
+
+                      <section className="flex flex-col items-center justify-center mt-4">
+                        <h2
+                          className={`text-2xl font-bold text-${organization?.bodyFont}`}
+                        >
+                          Current Job Openings
+                        </h2>
+                        <Button
+                          className="!mt-2"
+                          style={{
+                            backgroundColor: organization?.secondaryColor || "",
+                          }}
+                          type="button"
+                        >
+                          View All Job Listings
+                        </Button>
+                      </section>
+                      <footer
+                        className={`mt-8 py-4 text-${organization?.bodyFont} text-center w-full`}
+                      >
+                        <p className={`text-sm`}>
+                          &copy; {new Date().getFullYear()}{" "}
+                          {organization?.title}. All rights reserved.
+                        </p>
+                      </footer>
+                    </div>
+                  )}
+                </div>
+                <div
+                  className="mt-2"
+                  style={{ bottom: "20px", alignSelf: "flex-start" }}
+                >
+                  <Button
+                    style={{ backgroundColor: "#ff3b58" }}
+                    onClick={handleClose}
+                    type="button"
+                  >
+                    Close
+                  </Button>
+                  <Button
+                    style={{ backgroundColor: "#50a88b" }}
+                    onClick={() => {
+                      const newLayout = `Layout ${page}` as Layout | undefined;
+                      if (newLayout === selectedLayout) {
+                        handleClose();
+                      } else {
+                        setLayout(Layout[numberToString(page)]);
+                        setSelectedLayout(newLayout);
+                      }
+                    }}
+                    type="button"
+                    className="ml-4"
+                  >
+                    Select Layout
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
+
+          <Button className="!mt-3" disabled={isPending} type="submit">
             Update
           </Button>
         </form>

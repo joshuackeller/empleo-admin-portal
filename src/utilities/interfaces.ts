@@ -24,6 +24,14 @@ export enum Font {
   notoSerif = "notoSerif",
 }
 
+export enum Layout {
+  one = "one",
+  two = "two",
+  three = "three",
+  four = "four",
+  five = "five",
+}
+
 export interface BaseOrganization {
   id: string;
   slug: string;
@@ -42,6 +50,9 @@ export interface BaseOrganization {
   primaryColor: string | null;
   secondaryColor: string | null;
   accentColor: string | null;
+
+  layout: Layout;
+
   description: string | null;
   longDescription: string | null;
 
