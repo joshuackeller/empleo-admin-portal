@@ -655,7 +655,7 @@ const OrgPage: PageComponent = () => {
               Select Layout
               <MousePointerSquare className="h-4 w-4 ml-1" />
             </Button>
-            <p style={{ margin: 0 }} className="mb-5 ml-4 text-sm">
+            <p style={{ margin: 0, marginLeft: 16 }} className="mb-5 text-sm">
               {(() => {
                 if (!selectedLayout) {
                   return mapLayoutToString(organization?.layout);
