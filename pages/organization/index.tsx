@@ -779,6 +779,7 @@ const OrgPage: PageComponent = () => {
                         />
                         <div>
                           <Button
+                            type="button"
                             variant="outline"
                             className="mr-4"
                             style={{
@@ -789,6 +790,7 @@ const OrgPage: PageComponent = () => {
                             About
                           </Button>
                           <Button
+                            type="button"
                             variant="outline"
                             style={{
                               borderColor:
@@ -882,6 +884,7 @@ const OrgPage: PageComponent = () => {
                           </div>
                           <div>
                             <Button
+                              type="button"
                               variant="outline"
                               className="mr-4"
                               style={{
@@ -892,6 +895,7 @@ const OrgPage: PageComponent = () => {
                               About
                             </Button>
                             <Button
+                              type="button"
                               variant="outline"
                               style={{
                                 borderColor:
@@ -973,6 +977,7 @@ const OrgPage: PageComponent = () => {
                         />
                         <div>
                           <Button
+                            type="button"
                             variant="outline"
                             className="mr-4"
                             style={{
@@ -983,6 +988,7 @@ const OrgPage: PageComponent = () => {
                             About
                           </Button>
                           <Button
+                            type="button"
                             variant="outline"
                             style={{
                               borderColor:
@@ -1045,6 +1051,7 @@ const OrgPage: PageComponent = () => {
                         />
                         <div>
                           <Button
+                            type="button"
                             variant="outline"
                             className="mr-4"
                             style={{
@@ -1055,6 +1062,7 @@ const OrgPage: PageComponent = () => {
                             About
                           </Button>
                           <Button
+                            type="button"
                             variant="outline"
                             style={{
                               borderColor:
@@ -1138,6 +1146,7 @@ const OrgPage: PageComponent = () => {
                         />
                         <div>
                           <Button
+                            type="button"
                             variant="outline"
                             className="mr-4"
                             style={{
@@ -1148,6 +1157,7 @@ const OrgPage: PageComponent = () => {
                             About
                           </Button>
                           <Button
+                            type="button"
                             variant="outline"
                             style={{
                               borderColor:
