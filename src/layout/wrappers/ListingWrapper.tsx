@@ -21,7 +21,7 @@ const ListingWrapper = ({ children }: ListingWrapperProps) => {
           href={`/listings/${listingId}`}
           className={cn(
             `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
-            pathname === "/listings" && "text-primary"
+            pathname === `/listings/${listingId}` && "text-primary font-bold"
           )}
         >
           Details
@@ -30,7 +30,8 @@ const ListingWrapper = ({ children }: ListingWrapperProps) => {
           href={`/listings/${listingId}/applications`}
           className={cn(
             `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
-            pathname === "/listings/applications" && "text-primary"
+            pathname === `/listings/${listingId}/applications` &&
+              "text-primary font-bold"
           )}
         >
           Applications

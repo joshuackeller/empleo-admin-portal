@@ -23,6 +23,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   isFetching?: boolean;
   isClickable?: boolean;
+  linkBaseRoute?: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -30,9 +31,10 @@ export function DataTable<TData, TValue>({
   data,
   isFetching = false,
   isClickable = false,
+  linkBaseRoute,
 }: DataTableProps<TData, TValue>) {
   const router = useRouter();
-  const baseRoute = router.pathname;
+  const baseRoute = linkBaseRoute || router.pathname;
   const table = useReactTable({
     data,
     columns,

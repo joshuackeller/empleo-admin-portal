@@ -1,4 +1,4 @@
-import { PageComponent } from "../../_app";
+import { PageComponent } from "../../../_app";
 import { z } from "zod";
 import ApplicationsTable from "@/src/components/tables/ApplicationsTable";
 import { useRouter } from "next/router";
@@ -37,6 +37,7 @@ const ApplicationsPage: PageComponent = () => {
     <ListingWrapper>
       <div className="mt-3">
         <ApplicationsTable
+          listingId={listingId as string}
           applications={applications}
           isFetching={isFetching}
         />

@@ -87,11 +87,13 @@ const columns: ColumnDef<Application>[] = [
 interface ApplicationsTableProps {
   applications: Application[] | undefined;
   isFetching: boolean;
+  listingId: string;
 }
 
 const ApplicationsTable = ({
   applications,
   isFetching,
+  listingId,
 }: ApplicationsTableProps) => {
   const isClickable = true;
 
@@ -102,6 +104,7 @@ const ApplicationsTable = ({
       data={applications}
       columns={columns}
       isClickable={isClickable}
+      linkBaseRoute={`/listings/${listingId}/applications`}
     />
   );
 };
