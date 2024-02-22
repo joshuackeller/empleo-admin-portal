@@ -10,60 +10,46 @@ import {
 } from "@/src/components/shadcn/DropdownMenu";
 import { Button } from "../shadcn/Button";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-import useRemoveListing from "@/src/requests/listings/useRemoveListing";
-import useGetListings from "@/src/requests/listings/useGetListings";
+import useGetApplication from "@/src/requests/applications/useGetApplication";
 import { ColumnDef } from "@tanstack/react-table";
-import { Listing } from "@/src/utilities/interfaces";
-import useUpdateListing from "@/src/requests/listings/useUpdateListing";
+import { Application } from "@/src/utilities/interfaces";
+import useUpdateApplication from "@/src/requests/applications/useUpdateApplication";
 import Link from "next/link";
+import useGetApplications from "@/src/requests/applications/useGetApplications";
+import useRemoveApplication from "@/src/requests/applications/useRemoveApplication";
+import { useRouter } from "next/router";
 
-const columns: ColumnDef<Listing>[] = [
+const columns: ColumnDef<Application>[] = [
   {
-    accessorKey: "jobTitle",
-    header: "Job Title",
+    accessorKey: "firstName",
+    header: "First Name",
   },
   {
-    accessorKey: "jobDescription",
-    header: "Job Description",
+    accessorKey: "lastName",
+    header: "Last Name",
   },
   {
-    accessorKey: "jobRequirements",
-    header: "Job Requirements",
+    accessorKey: "address",
+    header: "Street Address",
   },
   {
-    accessorKey: "employmentType",
-    header: "Employment Type",
-  },
-  {
-    accessorKey: "location",
-    header: "Location",
-  },
-  {
-    accessorKey: "salaryRange",
-    header: "Salary Range",
-  },
-  {
-    accessorKey: "published",
-    header: "Published?",
+    accessorKey: "phone",
+    header: "phone",
   },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const listingId = row.original.id;
+      const applicationId = row.original.id;
 
-      const { mutate: removeListing, isPending: isRemoving } =
-        useRemoveListing();
-      const { mutate: updateListing, isPending: isUpdating } =
-        useUpdateListing();
+      const { mutate: removeApplication, isPending: isRemoving } =
+        useRemoveApplication();
+      const { mutate: updateApplication, isPending: isUpdating } =
+        useUpdateApplication();
 
-      const handleRemoveListing = () => {
-        removeListing({ listingId });
+      const handleRemoveApplication = () => {
+        removeApplication({ applicationId });
       };
-
-      // const handleUpdateListing = () => {
-      //   updateListing({ listingId });
-      // };
 
       return (
         <div>
@@ -79,13 +65,13 @@ const columns: ColumnDef<Listing>[] = [
                 //className="!text-red-500 cursor-pointer"
                 asChild
               >
-                <Link href={`/listings/${listingId}`}>Update</Link>
+                <Link href={`/applications/${applicationId}`}>Update</Link>
               </DropdownMenuLabel>
 
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 disabled={isRemoving}
-                onClick={handleRemoveListing}
+                onClick={handleRemoveApplication}
                 className="!text-red-500 cursor-pointer"
               >
                 Remove
@@ -98,20 +84,29 @@ const columns: ColumnDef<Listing>[] = [
   },
 ];
 
-const ListingsTable = () => {
-  const { data, isFetching } = useGetListings();
+interface ApplicationsTableProps {
+  applications: Application[] | undefined;
+  isFetching: boolean;
+  listingId: string;
+}
+
+const ApplicationsTable = ({
+  applications,
+  isFetching,
+  listingId,
+}: ApplicationsTableProps) => {
   const isClickable = true;
 
-  if (!data) return <Skeleton className="h-24 w-full" />;
-
+  if (!applications) return <Skeleton className="h-24 w-full" />;
   return (
     <DataTable
       isFetching={isFetching}
-      data={data}
+      data={applications}
       columns={columns}
       isClickable={isClickable}
+      linkBaseRoute={`/listings/${listingId}/applications`}
     />
   );
 };
 
-export default ListingsTable;
+export default ApplicationsTable;
