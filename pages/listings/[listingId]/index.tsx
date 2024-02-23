@@ -33,8 +33,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import ListingQueryKeys from "@/src/requests/listings";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import { ChevronLeftIcon } from "lucide-react";
-import { Textarea } from "@/src/components/shadcn/textarea";
 import ListingWrapper from "@/src/layout/wrappers/ListingWrapper";
+import { Textarea } from "@/src/components/shadcn/textarea";
 
 const formSchema = z.object({
   jobTitle: z.string(),
