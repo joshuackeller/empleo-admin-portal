@@ -36,7 +36,7 @@ import {
 import { Font } from "@/src/utilities/interfaces";
 import { Layout } from "@/src/utilities/interfaces";
 import { ChromePicker } from "react-color";
-import { Textarea } from "@/src/components/shadcn/Textare";
+import { Textarea } from "@/src/components/shadcn/Textarea";
 import { Separator } from "@/src/components/shadcn/Separator";
 
 const formSchema = z.object({
