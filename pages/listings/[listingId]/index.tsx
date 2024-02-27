@@ -1,14 +1,6 @@
 import { useRouter } from "next/router";
 import { PageComponent } from "../../_app";
-import {
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-} from "@radix-ui/react-dialog";
 import { Button } from "@/src/components/shadcn/Button";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
-import { DialogHeader } from "@/src/components/shadcn/Dialog";
 import { useForm } from "react-hook-form";
 import {
   FormControl,
@@ -18,23 +10,16 @@ import {
   FormMessage,
   Form,
 } from "@/src/components/shadcn/Form";
-import ListingsTable from "@/src/components/tables/ListingsTable";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import useUpdateListing from "@/src/requests/listings/useUpdateListing";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Input } from "@/src/components/shadcn/Input";
 import { Switch } from "@/src/components/shadcn/Switch";
-import useGetListings from "@/src/requests/listings/useGetListings";
 import useGetListing from "@/src/requests/listings/useGetListing";
 import { Skeleton } from "@/src/components/shadcn/Skeleton";
-import { routeModule } from "next/dist/build/templates/app-page";
-import { useQueryClient } from "@tanstack/react-query";
-import ListingQueryKeys from "@/src/requests/listings";
-import { ChevronRightIcon } from "@radix-ui/react-icons";
-import { ChevronLeftIcon } from "lucide-react";
-import { Textarea } from "@/src/components/shadcn/textarea";
 import ListingWrapper from "@/src/layout/wrappers/ListingWrapper";
+import { Textarea } from "@/src/components/shadcn/Textarea";
 
 const formSchema = z.object({
   jobTitle: z.string(),
