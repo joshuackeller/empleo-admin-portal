@@ -18,8 +18,8 @@ import { Input } from "@/src/components/shadcn/Input";
 import { Switch } from "@/src/components/shadcn/Switch";
 import useGetListing from "@/src/requests/listings/useGetListing";
 import { Skeleton } from "@/src/components/shadcn/Skeleton";
-import { Textarea } from "@/src/components/shadcn/Textarea";
 import ListingWrapper from "@/src/layout/wrappers/ListingWrapper";
+import { Textarea } from "@/src/components/shadcn/Textarea";
 
 const formSchema = z.object({
   jobTitle: z.string(),
