@@ -89,6 +89,8 @@ export interface BaseApplication {
   lastName: string;
   phone: string;
   email: string;
+  Status: string;
+  ApplicationNote: string;
   createdAt: string;
   updatedAt: string;
 }
