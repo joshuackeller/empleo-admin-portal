@@ -34,7 +34,7 @@ import ListingQueryKeys from "@/src/requests/listings";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import { ChevronLeftIcon } from "lucide-react";
 import ListingWrapper from "@/src/layout/wrappers/ListingWrapper";
-import { Textarea } from "@/src/components/shadcn/textarea";
+import { Textarea } from "@/src/components/shadcn/Textarea";
 
 const formSchema = z.object({
   jobTitle: z.string(),
