@@ -33,6 +33,15 @@ const OrganizationWrapper = ({ children }: OrganizationWrapperProps) => {
         >
           Subdomain
         </Link>
+        <Link
+          href="/organization/eeoc"
+          className={cn(
+            `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
+            pathname === "/organization/eeoc" && "text-primary",
+          )}
+        >
+          EEOC
+        </Link>
       </div>
       <Separator className="mb-2 mt-1" />
       {children}
