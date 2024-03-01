@@ -53,6 +53,13 @@ const OrgPage: PageComponent = () => {
 
   // Handle the form submission -- this will be called when the form is submitted
   const handleUpdate = (values: z.infer<typeof formSchema>) => {
+    if (!values.eeocEnabled) {
+      values.veteranEnabled = false;
+      values.disabilityEnabled = false;
+      values.raceEnabled = false;
+      values.genderEnabled = false;
+    }
+    
     updateOrganization({
       body: {
         title: organization?.title || "",
