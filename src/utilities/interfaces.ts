@@ -52,6 +52,11 @@ export interface BaseOrganization {
   layout: Layout;
   description: string | null;
   longDescription: string | null;
+  eeocEnabled: boolean;
+  veteranEnabled: boolean;
+  disabilityEnabled: boolean;
+  raceEnabled: boolean;
+  genderEnabled: boolean;
   createdAt: string;
   updatedAt: string;
 }

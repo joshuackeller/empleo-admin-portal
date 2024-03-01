@@ -20,6 +20,11 @@ interface UpdateOrganizationProps {
     layout?: Layout;
     description?: string;
     longDescription?: string;
+    eeocEnabled: boolean;
+    veteranEnabled: boolean;
+    disabilityEnabled: boolean;
+    raceEnabled: boolean;
+    genderEnabled: boolean;
   };
   organizationId: string;
 }
