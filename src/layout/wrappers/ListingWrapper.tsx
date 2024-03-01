@@ -27,6 +27,16 @@ const ListingWrapper = ({ children }: ListingWrapperProps) => {
           Details
         </Link>
         <Link
+          href={`/listings/${listingId}/fields`}
+          className={cn(
+            `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
+            pathname === `/listings/${listingId}/fields` &&
+              "text-primary font-bold"
+          )}
+        >
+          Application Fields
+        </Link>
+        <Link
           href={`/listings/${listingId}/applications`}
           className={cn(
             `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
