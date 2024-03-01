@@ -17,6 +17,13 @@ import OrganizationWrapper from "@/src/layout/wrappers/OrganizationWrapper";
 import { Font } from "@/src/utilities/interfaces";
 import { Separator } from "@/src/components/shadcn/Separator";
 import { Switch } from "@/src/components/shadcn/Switch";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/src/components/shadcn/Tooltip";
+import { Info } from "lucide-react";
 
 const formSchema = z.object({
   eeocEnabled: z.boolean(),
@@ -71,20 +78,46 @@ const OrgPage: PageComponent = () => {
                 name="eeocEnabled"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="align-middle">Enable EEOC Questions</FormLabel>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={(newValue) => {
-                          field.onChange(newValue);
-                          handleUpdate({
-                            ...form.getValues(),
-                            eeocEnabled: newValue,
-                          });
-                        }}
-                        className="ml-2 align-top"
-                      />
-                    </FormControl>
+                    <div className="flex items-center">
+                      <FormLabel className="align-middle">
+                        Enable EEOC Questions
+                      </FormLabel>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={(newValue) => {
+                            field.onChange(newValue);
+                            handleUpdate({
+                              ...form.getValues(),
+                              eeocEnabled: newValue,
+                            });
+                          }}
+                          className="ml-2 align-top"
+                        />
+                      </FormControl>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Info size={18} className="ml-2" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p
+                              style={{
+                                maxWidth: "300px",
+                                wordWrap: "break-word",
+                              }}
+                            >
+                              The Equal Employment Opportunity Commission (EEOC)
+                              questions are a set of questions designed to
+                              gather information about an individual's
+                              background in the context of employment. These
+                              questions aim to promote diversity, equal
+                              opportunity, and fair treatment in the workplace.
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
