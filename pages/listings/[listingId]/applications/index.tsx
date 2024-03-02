@@ -8,21 +8,8 @@ import { Button } from "@/src/components/shadcn/Button";
 import useUpdateListing from "@/src/requests/listings/useUpdateListing";
 
 const formSchema = z.object({
-  firstName: z.string(),
-  lastName: z.string(),
-  phone: z.string().optional(),
-  //gender: z.string().optional(),
-  address: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  zip: z.string().optional(),
-  usCitizen: z.boolean().optional(),
-  workVisa: z.boolean().optional(),
-  workVisaType: z.string().optional(),
-  language: z.string().optional(),
-  availableStartDate: z.date().optional(),
-  note: z.string().optional(),
-  relocate: z.boolean().optional(),
+  status: z.string().optional(),
+  applicationNote: z.string().optional(),
 });
 
 const ApplicationsPage: PageComponent = () => {

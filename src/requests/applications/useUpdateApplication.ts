@@ -7,22 +7,18 @@ import ApplicationQueryKeys from ".";
 
 interface UpdateApplicationProps {
   body: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    listingId: string;
-    resumeUrl: string;
-    coverLetter?: string;
+    status?: string;
+    applicationNote?: string;
   };
-  ApplicationId: string;
+  applicationId: string;
 }
 
 const UpdateApplication = async ({
   body,
-  ApplicationId,
+  applicationId,
 }: UpdateApplicationProps): Promise<Application> => {
   const api = useEmpleoApi();
-  const { data } = await api.put(`/applications/${ApplicationId}`, body);
+  const { data } = await api.put(`/applications/${applicationId}`, body);
 
   return data;
 };
@@ -34,7 +30,7 @@ const useUpdateApplication = () => {
     mutationFn: UpdateApplication,
     onSuccess: (response) => {
       toast({
-        title: "Updated Application Details",
+        title: "Updated Application Status",
         description: "nice work",
       });
       queryClient.invalidateQueries({
