@@ -88,16 +88,36 @@ export interface BaseListing {
 
 export interface Listing extends BaseListing {}
 
+enum Status {
+  new = "new",
+  in_review = "in_review",
+  rejected = "rejected",
+  interview = "interview",
+  offer_pending = "offer_pending",
+  offer_accepted = "offer_accepted",
+  offer_rejected = "offer_rejected",
+}
+
 export interface BaseApplication {
   id: string;
   firstName: string;
   lastName: string;
   phone: string;
   email: string;
-  Status: string;
-  ApplicationNote: string;
+  status: Status;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface Application extends BaseApplication {}
+
+export interface BaseApplicationNote {
+  id: string;
+  applicationId: string;
+  admin: BaseAdmin;
+  text: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ApplicationNote extends BaseApplicationNote {}
