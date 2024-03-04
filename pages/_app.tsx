@@ -10,56 +10,58 @@ import { NextComponentType } from "next";
 import type { AppProps as NextAppProps } from "next/app";
 import { Inter } from "next/font/google";
 import Head from "next/head";
+import { useState } from "react";
 
 const inter = Inter({
-	subsets: ["latin"],
-	display: "swap",
-	variable: "--font-inter",
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
 });
 
 export type PageComponent = NextComponentType & {
-	layout?: "auth" | "normal";
-	title?: string;
+  layout?: "auth" | "normal";
+  title?: string;
 };
 
 interface AppProps extends NextAppProps {
-	Component: PageComponent;
-	pageProps: any;
+  Component: PageComponent;
+  pageProps: any;
 }
 
-const queryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			staleTime: 1000 * 60 * 5, // 5 minutes
-			gcTime: 1000 * 60 * 2, // 2 minutes
-		},
-	},
-});
-
 export default function App({ Component, pageProps }: AppProps) {
-	return (
-		<>
-			<Head>
-				<title>{`Empleo ${Component.title || pageProps.title || ""}`}</title>
-			</Head>
-			<main className={cn("font-sans", inter.variable)}>
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="system"
-					enableSystem
-					disableTransitionOnChange
-				>
-					<AuthContextProvider>
-						<QueryClientProvider client={queryClient}>
-							<MainLayout layout={Component?.layout || "normal"}>
-								<Component {...pageProps} />
-							</MainLayout>
-							<Toaster />
-							<ReactQueryDevtools />
-						</QueryClientProvider>
-					</AuthContextProvider>
-				</ThemeProvider>
-			</main>
-		</>
-	);
+  const [queryClient] = useState(
+    new QueryClient({
+      defaultOptions: {
+        queries: {
+          staleTime: 20, // 5 minutes
+          gcTime: 5, // 2 minutes
+        },
+      },
+    })
+  );
+  return (
+    <>
+      <Head>
+        <title>{`Empleo ${Component.title || pageProps.title || ""}`}</title>
+      </Head>
+      <main className={cn("font-sans", inter.variable)}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AuthContextProvider>
+            <QueryClientProvider client={queryClient}>
+              <MainLayout layout={Component?.layout || "normal"}>
+                <Component {...pageProps} />
+              </MainLayout>
+              <Toaster />
+              <ReactQueryDevtools />
+            </QueryClientProvider>
+          </AuthContextProvider>
+        </ThemeProvider>
+      </main>
+    </>
+  );
 }
