@@ -1,5 +1,5 @@
 import AdminTable from "@/src/components/tables/AdminTable";
-import { PageComponent } from "./_app";
+import { PageComponent } from "../_app";
 import { Separator } from "@/src/components/shadcn/Separator";
 import { Button } from "@/src/components/shadcn/Button";
 import { Input } from "@/src/components/shadcn/Input";

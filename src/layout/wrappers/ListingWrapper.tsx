@@ -5,42 +5,46 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
 
-interface OrganizationWrapperProps {
+interface ListingWrapperProps {
   children: ReactNode;
 }
 
-const OrganizationWrapper = ({ children }: OrganizationWrapperProps) => {
+const ListingWrapper = ({ children }: ListingWrapperProps) => {
   const { pathname } = useRouter();
+  const router = useRouter();
+  const listingId = router.query.listingId;
   return (
     <div>
-      <h4>Organization</h4>
+      <h4>Listing</h4>
       <div className="flex items-center gap-x-5 my-2">
         <Link
-          href="/organization"
+          href={`/listings/${listingId}`}
           className={cn(
             `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
-            pathname === "/organization" && "text-primary",
+            pathname === `/listings/${listingId}` && "text-primary font-bold"
           )}
         >
           Details
         </Link>
         <Link
-          href="/organization/subdomain"
+          href={`/listings/${listingId}/fields`}
           className={cn(
             `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
-            pathname === "/organization/subdomain" && "text-primary",
+            pathname === `/listings/${listingId}/fields` &&
+              "text-primary font-bold"
           )}
         >
-          Subdomain
+          Application Fields
         </Link>
         <Link
-          href="/organization/eeoc"
+          href={`/listings/${listingId}/applications`}
           className={cn(
             `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
-            pathname === "/organization/eeoc" && "text-primary",
+            pathname === `/listings/${listingId}/applications` &&
+              "text-primary font-bold"
           )}
         >
-          EEOC
+          Applications
         </Link>
       </div>
       <Separator className="mb-2 mt-1" />
@@ -49,4 +53,4 @@ const OrganizationWrapper = ({ children }: OrganizationWrapperProps) => {
   );
 };
 
-export default OrganizationWrapper;
+export default ListingWrapper;

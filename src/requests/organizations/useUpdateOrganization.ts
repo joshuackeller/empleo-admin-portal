@@ -4,12 +4,27 @@ import { Organization } from "@/src/utilities/interfaces";
 import OrganizationKeys from ".";
 import { useToast } from "@/src/components/shadcn/use-toast";
 import useCustomMutation from "../useCustomMutation";
+import { Font } from "@/src/utilities/interfaces";
+import { Layout } from "@/src/utilities/interfaces";
 
 interface UpdateOrganizationProps {
   body: {
     title: string;
     dataUrl?: string;
-    selectedFont?: string;
+    dataUrlBanner?: string;
+    headerFont: Font;
+    bodyFont: Font;
+    primaryColor?: string;
+    secondaryColor?: string;
+    accentColor?: string;
+    layout?: Layout;
+    description?: string;
+    longDescription?: string;
+    eeocEnabled: boolean;
+    veteranEnabled: boolean;
+    disabilityEnabled: boolean;
+    raceEnabled: boolean;
+    genderEnabled: boolean;
   };
   organizationId: string;
 }
