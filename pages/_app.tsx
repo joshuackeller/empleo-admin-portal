@@ -33,8 +33,8 @@ export default function App({ Component, pageProps }: AppProps) {
     new QueryClient({
       defaultOptions: {
         queries: {
-          staleTime: 20, // 5 minutes
-          gcTime: 5, // 2 minutes
+          staleTime: 1000 * 60 * 5, // 5 minutes
+          gcTime: 1000 * 60 * 2, // 2 minutes
         },
       },
     })
@@ -43,7 +43,6 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <title>{`Empleo ${Component.title || pageProps.title || ""}`}</title>
-  
       </Head>
       <main className={cn("font-sans", inter.variable)}>
         <ThemeProvider

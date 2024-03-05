@@ -1,4 +1,3 @@
-import { buttonVariants } from "@/src/components/shadcn/Button";
 import { Separator } from "@/src/components/shadcn/Separator";
 import { cn } from "@/src/utilities/cn";
 import Link from "next/link";
@@ -19,7 +18,7 @@ const OrganizationWrapper = ({ children }: OrganizationWrapperProps) => {
           href="/organization"
           className={cn(
             `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
-            pathname === "/organization" && "text-primary",
+            pathname === "/organization" && "text-primary"
           )}
         >
           Details
@@ -28,7 +27,7 @@ const OrganizationWrapper = ({ children }: OrganizationWrapperProps) => {
           href="/organization/subdomain"
           className={cn(
             `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
-            pathname === "/organization/subdomain" && "text-primary",
+            pathname === "/organization/subdomain" && "text-primary"
           )}
         >
           Subdomain
@@ -37,7 +36,7 @@ const OrganizationWrapper = ({ children }: OrganizationWrapperProps) => {
           href="/organization/eeoc"
           className={cn(
             `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
-            pathname === "/organization/eeoc" && "text-primary",
+            pathname === "/organization/eeoc" && "text-primary"
           )}
         >
           EEOC

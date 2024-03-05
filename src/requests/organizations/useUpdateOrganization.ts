@@ -9,22 +9,22 @@ import { Layout } from "@/src/utilities/interfaces";
 
 interface UpdateOrganizationProps {
   body: {
-    title: string;
+    title?: string;
     dataUrl?: string;
     dataUrlBanner?: string;
-    headerFont: Font;
-    bodyFont: Font;
+    headerFont?: Font;
+    bodyFont?: Font;
     primaryColor?: string;
     secondaryColor?: string;
     accentColor?: string;
     layout?: Layout;
     description?: string;
     longDescription?: string;
-    eeocEnabled: boolean;
-    veteranEnabled: boolean;
-    disabilityEnabled: boolean;
-    raceEnabled: boolean;
-    genderEnabled: boolean;
+    eeocEnabled?: boolean;
+    veteranEnabled?: boolean;
+    disabilityEnabled?: boolean;
+    raceEnabled?: boolean;
+    genderEnabled?: boolean;
   };
   organizationId: string;
 }
@@ -39,19 +39,46 @@ const UpdateOrganization = async ({
   return data;
 };
 
-const useUpdateOrganization = () => {
+const useUpdateOrganization = (
+  showToast: boolean = true,
+  invalidateQuery: boolean = true
+) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
+
   return useCustomMutation({
     mutationFn: UpdateOrganization,
     onSuccess: () => {
-      toast({
-        title: "Updated Organization Details",
-        description: "nice work",
-      });
-      queryClient.invalidateQueries({
-        queryKey: OrganizationKeys.current,
-      });
+      if (showToast) {
+        toast({
+          title: "Updated Organization Details",
+          description: "nice work",
+        });
+      }
+      if (invalidateQuery) {
+        queryClient.invalidateQueries({ queryKey: OrganizationKeys.current });
+      }
+    },
+    onMutate: (data: UpdateOrganizationProps) => {
+      queryClient.setQueryData(
+        OrganizationKeys.current,
+        (previousData: Organization) => {
+          const newData = { ...data.body };
+          const oldData = { ...previousData };
+          if (typeof newData.eeocEnabled !== "boolean") {
+            if (newData.eeocEnabled === false) {
+              newData.veteranEnabled = false;
+              newData.disabilityEnabled = false;
+              newData.raceEnabled = false;
+              newData.genderEnabled = false;
+            }
+          }
+          return {
+            ...oldData,
+            ...newData,
+          };
+        }
+      );
     },
   });
 };

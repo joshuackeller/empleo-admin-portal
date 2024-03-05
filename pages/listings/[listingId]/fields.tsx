@@ -1,31 +1,9 @@
-import { useRouter } from "next/router";
 import { PageComponent } from "../../_app";
-import { Button } from "@/src/components/shadcn/Button";
-import { Switch } from "@/src/components/shadcn/Switch";
-import { useForm } from "react-hook-form";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Form,
-} from "@/src/components/shadcn/Form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import useUpdateListing from "@/src/requests/listings/useUpdateListing";
-import { useState, useEffect } from "react";
-import { Input } from "@/src/components/shadcn/Input";
-import useGetListing from "@/src/requests/listings/useGetListing";
-import { Skeleton } from "@/src/components/shadcn/Skeleton";
 import ListingWrapper from "@/src/layout/wrappers/ListingWrapper";
-import { Textarea } from "@/src/components/shadcn/Textarea";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -39,180 +17,219 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/src/components/shadcn/Tooltip";
-
-const formSchema = z.object({
-  firstName: z.string(),
-  lastName: z.string(),
-  linkedInUrl: z.string().url().optional(),
-  note: z.string().optional(),
-  resume: z.any().optional(),
-  coverLetter: z.any().optional(),
-  availableStartDate: z.string().optional(),
-  phone: z.string().optional(),
-  address: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  zip: z.string().optional(),
-  usAuthorized: z.boolean().optional(),
-  eeocVeteranStatus: z.string().optional(),
-  eeocDisabilityStatus: z.string().optional(),
-  eeocRace: z.string().optional(),
-  eeocGender: z.string().optional(),
-});
+import useGetListing from "@/src/requests/listings/useGetListing";
+import { useRouter } from "next/router";
+import { Listing, Organization } from "@/src/utilities/interfaces";
+import Link from "next/link";
+import useUpdateListing from "@/src/requests/listings/useUpdateListing";
+import { cn } from "@/src/utilities/cn";
 
 const ApplicationFieldsPage: PageComponent = () => {
-  const { data: organization } = useGetCurrentOrganization();
+  const {
+    query: { listingId },
+  } = useRouter();
+  const { data: organization, isLoading: isLoadingOrg } =
+    useGetCurrentOrganization();
+  const { data: listing, isLoading: isLoadingListing } = useGetListing(
+    listingId as string
+  );
 
-  const eeocFieldMapping = {
-    eeocVeteranStatus: "veteranEnabled",
-    eeocDisabilityStatus: "disabilityEnabled",
-    eeocRace: "raceEnabled",
-    eeocGender: "genderEnabled",
-  };
+  const isLoading = isLoadingOrg || isLoadingListing;
 
-  const [checkedFields, setCheckedFields] = useState<{
-    [key: string]: boolean;
-  }>({});
-
-  useEffect(() => {
-    if (organization) {
-      const initialCheckedFields = Object.keys(formSchema.shape).reduce(
-        (acc, curr) => {
-          // If the field starts with 'eeoc', check the organization's EEOC settings
-          if (curr.startsWith("eeoc")) {
-            const orgField =
-              eeocFieldMapping[curr as keyof typeof eeocFieldMapping];
-            return {
-              ...acc,
-              [curr]: organization[orgField as keyof typeof organization],
-            };
-          }
-          // If the field is 'firstName' or 'lastName', default to true
-          if (curr === "firstName" || curr === "lastName") {
-            return { ...acc, [curr]: true };
-          }
-          // Otherwise, default to false
-          return { ...acc, [curr]: false };
-        },
-        {}
-      );
-      setCheckedFields(initialCheckedFields);
-    }
-  }, [organization]);
-
-  const handleCheck = (field: string) => {
-    setCheckedFields((prevCheckedFields) => ({
-      ...prevCheckedFields,
-      [field]: !prevCheckedFields[field],
-    }));
-  };
-
-  const totalChecked = Object.values(checkedFields).filter(Boolean).length;
-
-  const fields = Object.keys(formSchema.shape).map((field) => ({
-    include: checkedFields[field] || false,
-    fieldName: field,
-  }));
-
-  const toReadableFormat = (str: string) => {
-    let result = str.replace(/([A-Z])/g, " $1");
-    result = result.charAt(0).toUpperCase() + result.slice(1);
-
-    if (result.includes("Eeoc")) {
-      result = result.replace("Eeoc", "EEOC");
-    }
-
-    if (result.includes("Linked In Url")) {
-      result = result.replace("Linked In Url", "LinkedIn URL");
-    }
-
-    if (result.includes("Us")) {
-      result = result.replace("Us", "US");
-    }
-
-    return result;
-  };
-
-  const getTooltipMessage = (fieldName: string) => {
-    if (fieldName.startsWith("eeoc")) {
-      return "The EEOC values can't be changed here. Please go to Organization page and click the EEOC tab to change these values.";
-    } else if (fieldName === "firstName" || fieldName === "lastName") {
-      return "This is a required field.";
-    }
-    return "";
-  };
+  const { mutate: updateListing } = useUpdateListing({
+    listingId: listingId as string,
+    showToast: false,
+    optimistic: true,
+  });
 
   return (
     <ListingWrapper>
       <Table>
-        <TableCaption>Application Fields</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">Include?</TableHead>
-            <TableHead>Application Field Name</TableHead>
+            <TableHead>Field Name on Application</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {fields.map((field) => {
+          {FIELDS.map((field) => {
             return (
-              <TableRow key={field.fieldName}>
+              <TableRow
+                key={field.displayName}
+                className={cn(isLoading && "bg-gray-100 animate-pulse")}
+              >
                 <TableCell>
                   <div className="flex items-center">
-                    {field.fieldName === "firstName" ||
-                    field.fieldName === "lastName" ||
-                    field.fieldName.startsWith("eeoc") ? (
-                      <Checkbox
-                        checked={field.include}
-                        onChange={() => handleCheck(field.fieldName)}
-                        className="ml-4"
-                        disabled={
-                          field.fieldName === "firstName" ||
-                          field.fieldName === "lastName" ||
-                          field.fieldName.startsWith("eeoc")
+                    <Checkbox
+                      checked={
+                        field.required
+                          ? true
+                          : field.eeoc
+                            ? !!organization?.[
+                                field.fieldName as keyof Organization
+                              ] || false
+                            : !!listing?.[field.fieldName as keyof Listing] ||
+                              false
+                      }
+                      onCheckedChange={(val) => {
+                        if (!field.eeoc && !field.required) {
+                          updateListing({
+                            body: {
+                              [field.fieldName as keyof Listing]: val,
+                            },
+                            listingId: listingId as string,
+                          });
                         }
-                      />
-                    ) : (
-                      <Checkbox className="ml-4" />
-                    )}
-                    {(field.fieldName.startsWith("eeoc") ||
-                      field.fieldName === "firstName" ||
-                      field.fieldName === "lastName") && (
+                      }}
+                      className="ml-4"
+                      disabled={isLoading || field.eeoc || field.required}
+                    />
+                    {(field.eeoc || field.required) && (
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Lock size="16" className="ml-2" />
                           </TooltipTrigger>
                           <TooltipContent>
-                            <p
-                              style={{
-                                maxWidth: "300px",
-                                wordWrap: "break-word",
-                              }}
-                            >
-                              {getTooltipMessage(field.fieldName)}
-                            </p>
+                            {field.eeoc ? (
+                              <p>
+                                The EEOC values can't be changed here. Please go
+                                to Organization page and click the EEOC tab to
+                                change these values.
+                              </p>
+                            ) : (
+                              field.required && <p>This is a required field.</p>
+                            )}
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
                     )}
                   </div>
                 </TableCell>
-                <TableCell className="font-medium">
-                  {toReadableFormat(field.fieldName)}
-                </TableCell>
+                {field.eeoc ? (
+                  <TableCell className="font-medium">
+                    <Link href="/organization/eeoc" className="hover:underline">
+                      {field.displayName}
+                    </Link>
+                  </TableCell>
+                ) : (
+                  <TableCell className="font-medium">
+                    {field.displayName}
+                  </TableCell>
+                )}
               </TableRow>
             );
           })}
         </TableBody>
-        <TableFooter>
+        {/* <TableFooter>
           <TableRow>
             <TableCell colSpan={2}>Application Fields Being Used</TableCell>
             <TableCell className="text-right">{totalChecked}</TableCell>
           </TableRow>
-        </TableFooter>
+        </TableFooter> */}
       </Table>
     </ListingWrapper>
   );
 };
 
 export default ApplicationFieldsPage;
+
+const FIELDS = [
+  {
+    fieldName: "firstName",
+    displayName: "First Name",
+    required: true,
+    eeoc: false,
+  },
+  {
+    fieldName: "lastName",
+    displayName: "Last Name",
+    required: true,
+    eeoc: false,
+  },
+  {
+    fieldName: "linkedInUrlEnabled",
+    displayName: "LinkedIn Url",
+    required: false,
+    eeoc: false,
+  },
+  {
+    fieldName: "noteEnabled",
+    displayName: "Feel free to add anything else we should know!",
+    required: false,
+    eeoc: false,
+  },
+  {
+    fieldName: "resumeEnabled",
+    displayName: "Resume",
+    required: false,
+    eeoc: false,
+  },
+  {
+    fieldName: "coverLetterEnabled",
+    displayName: "Cover Letter",
+    required: false,
+    eeoc: false,
+  },
+  {
+    fieldName: "availableStartDateEnabled",
+    displayName: "Available Start Date",
+    required: false,
+    eeoc: false,
+  },
+  {
+    fieldName: "phoneEnabled",
+    displayName: "Phone",
+    required: false,
+    eeoc: false,
+  },
+  {
+    fieldName: "addressEnabled",
+    displayName: "Address",
+    required: false,
+    eeoc: false,
+  },
+  {
+    fieldName: "cityEnabled",
+    displayName: "City",
+    required: false,
+    eeoc: false,
+  },
+  {
+    fieldName: "stateEnabled",
+    displayName: "State",
+    required: false,
+    eeoc: false,
+  },
+  { fieldName: "zipEnabled", displayName: "Zip", required: false, eeoc: false },
+  {
+    fieldName: "usAuthorizedEnabled",
+    displayName: "Authorized to work in US?",
+    required: false,
+    eeoc: false,
+  },
+  {
+    fieldName: "veteranEnabled",
+    displayName: "EEOC Veteran",
+    required: false,
+    eeoc: true,
+  },
+  {
+    fieldName: "disabilityEnabled",
+    displayName: "EEOC Disability Enabled",
+    required: false,
+    eeoc: true,
+  },
+  {
+    fieldName: "raceEnabled",
+    displayName: "EEOC Race",
+    required: false,
+    eeoc: true,
+  },
+  {
+    fieldName: "genderEnabled",
+    displayName: "EEOC Gender",
+    required: false,
+    eeoc: true,
+  },
+];

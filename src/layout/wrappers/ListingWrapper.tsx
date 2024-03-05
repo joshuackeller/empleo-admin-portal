@@ -1,4 +1,3 @@
-import { buttonVariants } from "@/src/components/shadcn/Button";
 import { Separator } from "@/src/components/shadcn/Separator";
 import { cn } from "@/src/utilities/cn";
 import Link from "next/link";
@@ -21,7 +20,7 @@ const ListingWrapper = ({ children }: ListingWrapperProps) => {
           href={`/listings/${listingId}`}
           className={cn(
             `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
-            pathname === `/listings/${listingId}` && "text-primary font-bold"
+            pathname === `/listings/[listingId]` && "text-primary"
           )}
         >
           Details
@@ -30,21 +29,19 @@ const ListingWrapper = ({ children }: ListingWrapperProps) => {
           href={`/listings/${listingId}/fields`}
           className={cn(
             `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
-            pathname === `/listings/${listingId}/fields` &&
-              "text-primary font-bold"
+            pathname === `/listings/[listingId]/fields` && "text-primary"
           )}
         >
-          Application Fields
+          Fields
         </Link>
         <Link
           href={`/listings/${listingId}/applications`}
           className={cn(
             `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
-            pathname === `/listings/${listingId}/applications` &&
-              "text-primary font-bold"
+            pathname === `/listings/[listingId]/applications` && "text-primary"
           )}
         >
-          Applications
+          Applicants
         </Link>
       </div>
       <Separator className="mb-2 mt-1" />

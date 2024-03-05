@@ -7,17 +7,14 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/src/components/shadcn/Dialog";
 import useAddAdmin from "@/src/requests/admins/useAddAdmin";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useToast } from "@/src/components/shadcn/use-toast";
 import {
   Form,
   FormControl,
@@ -44,8 +41,6 @@ const TeamPage: PageComponent = () => {
     },
   });
 
-  const { toast } = useToast();
-
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     addAdmin(
       { body: values },
@@ -60,7 +55,7 @@ const TeamPage: PageComponent = () => {
   return (
     <div>
       <div>
-        <div className="flex justify-between items-start ">
+        <div className="flex justify-between items-start">
           <h4>Team</h4>
           <div className="!font-sans">
             <Dialog open={open} onOpenChange={setOpen}>
@@ -109,9 +104,9 @@ const TeamPage: PageComponent = () => {
             </Dialog>
           </div>
         </div>
-        <Separator className="mb-2 mt-1" />
+        <Separator className="mb-3 mt-1" />
       </div>
-      <div className="mt-3">
+      <div>
         <AdminTable />
       </div>
     </div>

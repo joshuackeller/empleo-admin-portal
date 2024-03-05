@@ -1,19 +1,29 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useEmpleoApi from "../useEmpleoApi";
-import { Listing, Organization } from "@/src/utilities/interfaces";
-import OrganizationKeys from ".";
+import { Listing } from "@/src/utilities/interfaces";
 import { useToast } from "@/src/components/shadcn/use-toast";
 import ListingQueryKeys from ".";
 
 interface UpdateListingProps {
   body: {
-    jobTitle: string;
+    jobTitle?: string;
     jobDescription?: string;
     jobRequirements?: string;
     employmentType?: string;
     location?: string;
     salaryRange?: string;
-    published: boolean;
+    published?: boolean;
+    linkedInUrlEnabled?: boolean;
+    noteEnabled?: boolean;
+    resumeEnabled?: boolean;
+    coverLetterEnabled?: boolean;
+    availableStartDateEnabled?: boolean;
+    phoneEnabled?: boolean;
+    addressEnabled?: boolean;
+    cityEnabled?: boolean;
+    stateEnabled?: boolean;
+    zipEnabled?: boolean;
+    usAuthorizedEnabled?: boolean;
   };
   listingId: string;
 }
@@ -28,20 +38,48 @@ const UpdateListing = async ({
   return data;
 };
 
-const useUpdateListing = () => {
+interface useUpdateListingProps {
+  listingId?: string;
+  optimistic?: boolean;
+  showToast?: boolean;
+}
+
+const useUpdateListing = ({
+  listingId,
+  optimistic = false,
+  showToast = true,
+}: useUpdateListingProps = {}) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   return useMutation({
     mutationFn: UpdateListing,
+    onMutate: (newData: UpdateListingProps) => {
+      if (optimistic && listingId) {
+        queryClient.setQueryData(
+          ListingQueryKeys.single(listingId),
+          (previousData: Listing) => ({
+            ...previousData,
+            ...newData.body,
+          })
+        );
+      }
+    },
     onSuccess: (response) => {
-      toast({
-        title: "Updated Listing Details",
-        description: "nice work",
-      });
-      queryClient.invalidateQueries({
-        queryKey: ListingQueryKeys.all,
-      });
-      queryClient.setQueryData(ListingQueryKeys.single(response.id), response);
+      if (showToast) {
+        toast({
+          title: "Updated Listing Details",
+          description: "nice work",
+        });
+      }
+      if (!optimistic || !listingId) {
+        queryClient.invalidateQueries({
+          queryKey: ListingQueryKeys.all,
+        });
+        queryClient.setQueryData(
+          ListingQueryKeys.single(response.id),
+          response
+        );
+      }
     },
   });
 };
