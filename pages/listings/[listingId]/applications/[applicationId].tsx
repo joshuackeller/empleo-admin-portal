@@ -25,7 +25,6 @@ import { Router, useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { FormEvent, useState } from "react";
-import useAddApplicationNote from "@/src/requests/applications/useCreateApplicationNote";
 import useCreateApplicationNote from "@/src/requests/applications/useCreateApplicationNote";
 
 const formSchema = z.object({
