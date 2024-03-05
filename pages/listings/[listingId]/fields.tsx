@@ -44,7 +44,7 @@ const ApplicationFieldsPage: PageComponent = () => {
 
   return (
     <ListingWrapper>
-      <Table>
+      <Table className="max-w-2xl">
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">Include?</TableHead>

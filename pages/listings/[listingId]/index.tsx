@@ -87,7 +87,7 @@ const ListingPage: PageComponent = () => {
           <Skeleton className="h-8 w-full" />
         </div>
       ) : (
-        <>
+        <div className="max-w-2xl">
           {listing?.published && (
             <div className="flex justify-between gap-x-2 p-3 border rounded-lg mt-3 mb-3">
               <div className="flex gap-x-3">
@@ -116,6 +116,7 @@ const ListingPage: PageComponent = () => {
               </div>
             </div>
           )}
+
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
               <FormField
@@ -223,7 +224,7 @@ const ListingPage: PageComponent = () => {
               </div>
             </form>
           </Form>
-        </>
+        </div>
       )}
     </ListingWrapper>
   );
