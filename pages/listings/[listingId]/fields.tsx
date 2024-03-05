@@ -93,8 +93,8 @@ const ApplicationFieldsPage: PageComponent = () => {
                           <TooltipContent>
                             {field.eeoc ? (
                               <p>
-                                The EEOC values can't be changed here. Please go
-                                to Organization page and click the EEOC tab to
+                                The EEOC values can't be changed here. Please go <br />
+                                to the Organization page and click the EEOC tab to <br />
                                 change these values.
                               </p>
                             ) : (
