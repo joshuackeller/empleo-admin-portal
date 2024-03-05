@@ -82,6 +82,17 @@ export interface BaseListing {
   salaryRange: string | null;
   jobDescription: string | null;
   jobRequirements: string | null;
+  linkedInUrlEnabled: boolean;
+  noteEnabled: boolean;
+  resumeEnabled: boolean;
+  coverLetterEnabled: boolean;
+  availableStartDateEnabled: boolean;
+  phoneEnabled: boolean;
+  addressEnabled: boolean;
+  cityEnabled: boolean;
+  stateEnabled: boolean;
+  zipEnabled: boolean;
+  usAuthorizedEnabled: boolean;
   createdAt: string;
   updatedAt: string;
 }

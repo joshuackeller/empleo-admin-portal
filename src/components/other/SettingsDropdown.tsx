@@ -13,7 +13,7 @@ import {
 } from "@/src/components/shadcn/DropdownMenu";
 import useExitOrganization from "@/src/requests/auth/useExitOrganization";
 import useSignOut from "@/src/requests/auth/useSignOut";
-import { ArrowLeftRight, Link, LogOutIcon, SettingsIcon } from "lucide-react";
+import { ArrowLeftRight, LogOutIcon, SettingsIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/router";
 

@@ -15,12 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/src/components/shadcn/Form";
-import {
-  ExternalLinkIcon,
-  MonitorIcon,
-  PenSquare,
-  MousePointerSquare,
-} from "lucide-react";
+import { ExternalLinkIcon, MonitorIcon } from "lucide-react";
 import OrganizationWrapper from "@/src/layout/wrappers/OrganizationWrapper";
 import { cn } from "@/src/utilities/cn";
 import Link from "next/link";
@@ -34,11 +29,8 @@ import {
   SelectValue,
 } from "@/src/components/shadcn/Select";
 import { Font } from "@/src/utilities/interfaces";
-import { Layout } from "@/src/utilities/interfaces";
 import { ChromePicker } from "react-color";
 import { Textarea } from "@/src/components/shadcn/Textarea";
-import { Separator } from "@/src/components/shadcn/Separator";
-import { randomBytes } from "crypto";
 
 const formSchema = z.object({
   title: z.string().min(1),
@@ -235,7 +227,6 @@ const OrgPage: PageComponent = () => {
         disabilityEnabled: organization?.disabilityEnabled || false,
         raceEnabled: organization?.raceEnabled || false,
         genderEnabled: organization?.genderEnabled || false,
-
       }, // Pass the form values to the request
       organizationId: organization?.id || "", // Pass the organization ID to the request
     });
