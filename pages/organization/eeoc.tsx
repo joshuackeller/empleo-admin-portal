@@ -65,152 +65,154 @@ const OrgPage: PageComponent = () => {
     });
   };
 
-  if (!organization) {
-    return <Skeleton className="h-64 w-full max-w-lg" />;
-  }
-
   return (
     <OrganizationWrapper>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(handleUpdate)}
-          className="space-y-3 mt-3 w-full max-w-lg"
-        >
-          <FormField
-            control={form.control}
-            name="eeocEnabled"
-            render={({ field }) => (
-              <FormItem className="flex justify-between items-center">
-                <FormLabel>Enable EEOC Questions</FormLabel>
-                <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={(newValue) => {
-                      field.onChange(newValue);
-                      handleUpdate({
-                        ...form.getValues(),
-                        eeocEnabled: newValue,
-                      });
-                    }}
-                    className="ml-24 align-top"
-                    // disabled={isPending}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+      {!organization ? (
+        <Skeleton className="h-64 w-full max-w-lg" />
+      ) : (
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleUpdate)}
+            className="space-y-3 mt-3 w-full max-w-lg"
+          >
+            <FormField
+              control={form.control}
+              name="eeocEnabled"
+              render={({ field }) => (
+                <FormItem className="flex justify-between items-center">
+                  <FormLabel>Enable EEOC Questions</FormLabel>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={(newValue) => {
+                        field.onChange(newValue);
+                        handleUpdate({
+                          ...form.getValues(),
+                          eeocEnabled: newValue,
+                        });
+                      }}
+                      className="ml-24 align-top"
+                      // disabled={isPending}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Separator />
+
+            {organization?.eeocEnabled && (
+              <div className="space-y-3">
+                <FormField
+                  control={form.control}
+                  name="veteranEnabled"
+                  render={({ field }) => (
+                    <FormItem className="flex justify-between">
+                      <FormLabel className="align-middle">
+                        Include Veteran Status
+                      </FormLabel>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={(newValue) => {
+                            field.onChange(newValue);
+                            handleUpdate({
+                              ...form.getValues(),
+                              veteranEnabled: newValue,
+                            });
+                          }}
+                          className="ml-24 align-top"
+                          // disabled={isPending}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="disabilityEnabled"
+                  render={({ field }) => (
+                    <FormItem className="flex justify-between">
+                      <FormLabel className="align-middle">
+                        Include Disability Status
+                      </FormLabel>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={(newValue) => {
+                            field.onChange(newValue);
+                            handleUpdate({
+                              ...form.getValues(),
+                              disabilityEnabled: newValue,
+                            });
+                          }}
+                          className="ml-24 align-top"
+                          // disabled={isPending}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="raceEnabled"
+                  render={({ field }) => (
+                    <FormItem className="flex justify-between">
+                      <FormLabel className="align-middle">
+                        Include Race
+                      </FormLabel>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={(newValue) => {
+                            field.onChange(newValue);
+                            handleUpdate({
+                              ...form.getValues(),
+                              raceEnabled: newValue,
+                            });
+                          }}
+                          className="ml-24 align-top"
+                          // disabled={isPending}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="genderEnabled"
+                  render={({ field }) => (
+                    <FormItem className="flex justify-between">
+                      <FormLabel className="align-middle">
+                        Include Gender
+                      </FormLabel>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={(newValue) => {
+                            field.onChange(newValue);
+                            handleUpdate({
+                              ...form.getValues(),
+                              genderEnabled: newValue,
+                            });
+                          }}
+                          className="ml-24 align-top"
+                          // disabled={isPending}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             )}
-          />
-
-          <Separator />
-
-          {organization?.eeocEnabled && (
-            <div className="space-y-3">
-              <FormField
-                control={form.control}
-                name="veteranEnabled"
-                render={({ field }) => (
-                  <FormItem className="flex justify-between">
-                    <FormLabel className="align-middle">
-                      Include Veteran Status
-                    </FormLabel>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={(newValue) => {
-                          field.onChange(newValue);
-                          handleUpdate({
-                            ...form.getValues(),
-                            veteranEnabled: newValue,
-                          });
-                        }}
-                        className="ml-24 align-top"
-                        // disabled={isPending}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="disabilityEnabled"
-                render={({ field }) => (
-                  <FormItem className="flex justify-between">
-                    <FormLabel className="align-middle">
-                      Include Disability Status
-                    </FormLabel>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={(newValue) => {
-                          field.onChange(newValue);
-                          handleUpdate({
-                            ...form.getValues(),
-                            disabilityEnabled: newValue,
-                          });
-                        }}
-                        className="ml-24 align-top"
-                        // disabled={isPending}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="raceEnabled"
-                render={({ field }) => (
-                  <FormItem className="flex justify-between">
-                    <FormLabel className="align-middle">Include Race</FormLabel>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={(newValue) => {
-                          field.onChange(newValue);
-                          handleUpdate({
-                            ...form.getValues(),
-                            raceEnabled: newValue,
-                          });
-                        }}
-                        className="ml-24 align-top"
-                        // disabled={isPending}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="genderEnabled"
-                render={({ field }) => (
-                  <FormItem className="flex justify-between">
-                    <FormLabel className="align-middle">
-                      Include Gender
-                    </FormLabel>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={(newValue) => {
-                          field.onChange(newValue);
-                          handleUpdate({
-                            ...form.getValues(),
-                            genderEnabled: newValue,
-                          });
-                        }}
-                        className="ml-24 align-top"
-                        // disabled={isPending}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          )}
-        </form>
-      </Form>
+          </form>
+        </Form>
+      )}
 
       <Alert className="mt-5">
         <AlertTriangleIcon className="h-4 w-4" />

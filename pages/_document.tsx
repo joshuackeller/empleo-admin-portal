@@ -21,7 +21,7 @@ export default function Document() {
         <link rel="icon" type="image/png" href="/favicon.png" />
       </Head>
 
-      <body>
+      <body style={{ backgroundColor: "#191919" }}>
         <Main />
         <NextScript />
       </body>
