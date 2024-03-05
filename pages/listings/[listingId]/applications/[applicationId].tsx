@@ -20,13 +20,18 @@ import useGetApplication from "@/src/requests/applications/useGetApplication";
 import useUpdateApplication from "@/src/requests/applications/useUpdateApplication";
 import useGetApplicationNotes from "@/src/requests/applications/useGetApplicationNotes";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeftIcon, ChevronLeft } from "lucide-react";
+import { ArrowLeftIcon, ChevronLeft, Terminal } from "lucide-react";
 import { Router, useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { FormEvent, useState } from "react";
 import useAddApplicationNote from "@/src/requests/applications/useCreateApplicationNote";
 import useCreateApplicationNote from "@/src/requests/applications/useCreateApplicationNote";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/src/components/shadcn/Alert";
 
 const formSchema = z.object({
   // applicationId: z.string(),
@@ -179,12 +184,12 @@ const ListingDetails = () => {
           </div>
         </form>
         {notes?.map((note) => (
-          <div>
-            <div>
+          <Alert variant="default" key={note.id}>
+            <AlertTitle color="grey">
               {note.admin.firstName} {note.admin.lastName}
-            </div>
-            <div>{note.text}</div>
-          </div>
+            </AlertTitle>
+            <AlertDescription>{note.text}</AlertDescription>
+          </Alert>
         ))}
       </div>
     </div>
