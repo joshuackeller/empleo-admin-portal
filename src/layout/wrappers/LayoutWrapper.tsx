@@ -12,34 +12,34 @@ const OrganizationWrapper = ({ children }: OrganizationWrapperProps) => {
   const { pathname } = useRouter();
   return (
     <div>
-      <h4>Organization</h4>
+      <h4>Select Layout</h4>
       <div className="flex items-center gap-x-5 my-2">
         <Link
-          href="/organization"
+          href="/organization/layout"
           className={cn(
             `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
-            pathname === "/organization" && "text-primary"
+            pathname === "/organization/layout" && "text-primary"
           )}
         >
-          Details
+          Layout 1
         </Link>
         <Link
-          href="/organization/subdomain"
+          href="/organization/layout_2"
           className={cn(
             `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
-            pathname === "/organization/subdomain" && "text-primary"
+            pathname === "/organization/layout_2" && "text-primary"
           )}
         >
-          Subdomain
+          Layout 2
         </Link>
         <Link
-          href="/organization/eeoc"
+          href="/organization/layout_3"
           className={cn(
             `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
-            pathname === "/organization/eeoc" && "text-primary"
+            pathname === "/organization/layout_3" && "text-primary"
           )}
         >
-          EEOC
+          Layout 3
         </Link>
       </div>
       <Separator className="mb-2 mt-1" />
@@ -47,5 +47,7 @@ const OrganizationWrapper = ({ children }: OrganizationWrapperProps) => {
     </div>
   );
 };
+
+//
 
 export default OrganizationWrapper;

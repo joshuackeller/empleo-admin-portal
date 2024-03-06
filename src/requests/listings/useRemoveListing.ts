@@ -1,18 +1,18 @@
-import { Admin } from "@/src/utilities/interfaces";
+import { Admin, Listing } from "@/src/utilities/interfaces";
 import useEmpleoApi from "../useEmpleoApi";
 import { useQueryClient } from "@tanstack/react-query";
 import ListingQueryKeys from ".";
 import useCustomMutation from "../useCustomMutation";
 
 interface RemoveListingProps {
-  adminId: string;
+  listingId: string;
 }
 
 const RemoveListing = async ({
-  adminId,
-}: RemoveListingProps): Promise<Admin> => {
+  listingId,
+}: RemoveListingProps): Promise<Listing> => {
   const api = useEmpleoApi();
-  const { data } = await api.delete(`/admins/${adminId}`);
+  const { data } = await api.delete(`/listings/${listingId}`);
 
   return data;
 };

@@ -10,6 +10,7 @@ import { NextComponentType } from "next";
 import type { AppProps as NextAppProps } from "next/app";
 import { Inter } from "next/font/google";
 import Head from "next/head";
+import { useState } from "react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,26 +28,21 @@ interface AppProps extends NextAppProps {
   pageProps: any;
 }
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      gcTime: 1000 * 60 * 2, // 2 minutes
-    },
-  },
-});
-
 export default function App({ Component, pageProps }: AppProps) {
+  const [queryClient] = useState(
+    new QueryClient({
+      defaultOptions: {
+        queries: {
+          staleTime: 1000 * 60 * 5, // 5 minutes
+          gcTime: 1000 * 60 * 2, // 2 minutes
+        },
+      },
+    })
+  );
   return (
     <>
       <Head>
         <title>{`Empleo ${Component.title || pageProps.title || ""}`}</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap"
-          rel="stylesheet"
-        />
       </Head>
       <main className={cn("font-sans", inter.variable)}>
         <ThemeProvider

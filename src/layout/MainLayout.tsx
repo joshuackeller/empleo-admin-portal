@@ -41,7 +41,7 @@ const MainLayout = ({ children, layout = "normal" }: MainLayoutProps) => {
     return (
       <div className="max-w-[1500px] mx-auto">
         <div className="mx-5">
-          <div className="flex w-full max-w-[1500px] fixed z-10 h-[55px] bg-background">
+          <div className="flex w-full max-w-[1500px] fixed z-10 h-[55px]">
             <div>
               <Link href="/">
                 <div className="w-[180px] px-5 py-1 ml-2 mr-5">
@@ -65,7 +65,7 @@ const MainLayout = ({ children, layout = "normal" }: MainLayoutProps) => {
                       buttonVariants({ variant: "ghost" }),
                       " flex items-center gap-1 justify-start !h-7 hover:bg-gray-200 dark:hover:bg-gray-800/70",
                       pathname.startsWith(item.href) &&
-                        "text-indigo-500 font-semibold hover:text-indigo-500 hover:bg-indigo-100 dark:hover:bg-indigo-950/80",
+                        "text-indigo-500 font-semibold hover:text-indigo-500 hover:bg-indigo-100 dark:hover:bg-indigo-950/80"
                     )}
                     key={item.name}
                   >

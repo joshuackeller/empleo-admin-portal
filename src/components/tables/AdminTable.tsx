@@ -14,6 +14,7 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import useRemoveAdmin from "@/src/requests/admins/useRemoveAdmin";
 import useAuthContext from "@/src/utilities/useAuthContext";
 import ReadJWTData from "@/src/utilities/ReadJWTData";
+import { boolean } from "zod";
 
 const AdminTable = () => {
   const { data, isFetching } = useGetAdmins();

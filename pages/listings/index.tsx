@@ -1,5 +1,4 @@
-import AdminTable from "@/src/components/tables/AdminTable";
-import { PageComponent } from "./_app";
+import { PageComponent } from "../_app";
 import { Separator } from "@/src/components/shadcn/Separator";
 import { Button } from "@/src/components/shadcn/Button";
 import { Input } from "@/src/components/shadcn/Input";
@@ -7,16 +6,13 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/src/components/shadcn/Dialog";
-import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useToast } from "@/src/components/shadcn/use-toast";
 import {
   Form,
   FormControl,
@@ -28,6 +24,7 @@ import {
 import { useState } from "react";
 import useAddListing from "@/src/requests/listings/useAddListing";
 import ListingsTable from "@/src/components/tables/ListingsTable";
+import { PlusIcon } from "lucide-react";
 
 const formSchema = z.object({
   jobTitle: z.string(),
@@ -56,8 +53,6 @@ const ListingsPage: PageComponent = () => {
     },
   });
 
-  const { toast } = useToast();
-
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     addListing(
       { body: values },
@@ -72,14 +67,14 @@ const ListingsPage: PageComponent = () => {
   return (
     <div>
       <div>
-        <div className="flex justify-between items-center mb-2">
+        <div className="flex justify-between items-start">
           <h4>Listing</h4>
-          <div className="!font-sans">
+          <div>
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
-                <Button className="gap-1">
-                  Add Listing <PlusCircledIcon />
-                </Button>
+                <button className="p-1 rounded-full bg-indigo-500">
+                  <PlusIcon className="h-4 w-4 text-white" />
+                </button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
@@ -196,9 +191,9 @@ const ListingsPage: PageComponent = () => {
             </Dialog>
           </div>
         </div>
-        <Separator />
+        <Separator className="mb-3 mt-1" />
       </div>
-      <div className="mt-3">
+      <div>
         <ListingsTable />
       </div>
     </div>

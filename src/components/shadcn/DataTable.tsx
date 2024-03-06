@@ -14,23 +14,44 @@ import {
   TableRow,
 } from "@/src/components/shadcn/Table";
 import { cn } from "@/src/utilities/cn";
+import { useRouter } from "next/router";
+import { Application } from "@/src/utilities/interfaces";
 
 interface DataTableProps<TData, TValue> {
+  applications?: Application[];
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   isFetching?: boolean;
+  isClickable?: boolean;
+  linkBaseRoute?: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   isFetching = false,
+  isClickable = false,
+  linkBaseRoute,
 }: DataTableProps<TData, TValue>) {
+  const router = useRouter();
+  const baseRoute = linkBaseRoute || router.pathname;
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  //emily's attempt at routing function for all tables.
+
+  const handleRowClick = (
+    baseRoute: string,
+    id: string,
+    isClickable: boolean
+  ) => {
+    if (isClickable) {
+      router.push(`${baseRoute}/${id}`);
+    }
+  };
 
   return (
     <div
@@ -42,7 +63,7 @@ export function DataTable<TData, TValue>({
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} className="hover:bg-inherit">
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead key={header.id}>
@@ -62,6 +83,16 @@ export function DataTable<TData, TValue>({
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
+                onClick={() =>
+                  handleRowClick(
+                    baseRoute,
+                    (row.original as any).id,
+                    isClickable
+                  )
+                }
+                className={cn(
+                  isClickable ? "cursor-pointer" : "hover:bg-inherit"
+                )}
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
