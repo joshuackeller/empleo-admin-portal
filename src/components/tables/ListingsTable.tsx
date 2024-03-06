@@ -23,8 +23,8 @@ const columns: ColumnDef<Listing>[] = [
     header: "Job Title",
   },
   {
-    accessorKey: "jobDescription",
-    header: "Job Description",
+    accessorKey: "shortDescription",
+    header: "Short Description",
   },
   {
     accessorKey: "jobRequirements",
