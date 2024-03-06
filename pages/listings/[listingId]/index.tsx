@@ -29,6 +29,7 @@ import { ExternalLinkIcon } from "@radix-ui/react-icons";
 const formSchema = z.object({
   jobTitle: z.string(),
   jobDescription: z.string().optional(),
+  shortDescription: z.string().optional(),
   jobRequirements: z.string().optional(),
   employmentType: z.string().optional(),
   location: z.string().optional(),
@@ -50,6 +51,7 @@ const ListingPage: PageComponent = () => {
     defaultValues: {
       jobTitle: listing?.jobTitle || "",
       jobDescription: listing?.jobDescription || "",
+      shortDescription: listing?.shortDescription || "",
       jobRequirements: listing?.jobRequirements || "",
       employmentType: listing?.employmentType || "",
       location: listing?.location || "",
@@ -63,6 +65,7 @@ const ListingPage: PageComponent = () => {
       form.reset({
         jobTitle: listing?.jobTitle || "",
         jobDescription: listing?.jobDescription || "",
+        shortDescription: listing?.shortDescription || "",
         jobRequirements: listing?.jobRequirements || "",
         employmentType: listing?.employmentType || "",
         location: listing?.location || "",
@@ -125,6 +128,19 @@ const ListingPage: PageComponent = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Job Title</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="shortDescription"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Short Description</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
