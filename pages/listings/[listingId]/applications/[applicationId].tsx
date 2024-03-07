@@ -24,6 +24,7 @@ import {
 } from "@/src/components/shadcn/Alert";
 import { Label } from "@/src/components/shadcn/Label";
 import DisabledInput from "@/src/components/other/DisabledInput";
+import { Input } from "@/src/components/shadcn/Input";
 
 const formSchema = z.object({
   // applicationId: z.string(),
@@ -146,7 +147,7 @@ const ListingDetails = () => {
             </div>
             <div>
               <Label>First Name</Label>
-              <DisabledInput value={application?.firstName} />
+              <Input disabled value={application?.firstName} />
             </div>
           </form>
         </div>
