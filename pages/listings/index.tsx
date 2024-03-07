@@ -58,6 +58,7 @@ const ListingsPage: PageComponent = () => {
       { body: values },
       {
         onSuccess: () => {
+          form.setValue("jobTitle", "");
           setOpen(false);
         },
       }
@@ -68,7 +69,7 @@ const ListingsPage: PageComponent = () => {
     <div>
       <div>
         <div className="flex justify-between items-start">
-          <h4>Listing</h4>
+          <h4>Listings</h4>
           <div>
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
@@ -76,9 +77,9 @@ const ListingsPage: PageComponent = () => {
                   <PlusIcon className="h-4 w-4 text-white" />
                 </button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
+              <DialogContent className="max-w-lg">
                 <DialogHeader>
-                  <DialogTitle>Add Listing</DialogTitle>
+                  <DialogTitle>Create Listing</DialogTitle>
                   <DialogDescription
                     className="!font-sans"
                     style={{ fontFamily: "sans-serif" }}
@@ -93,13 +94,13 @@ const ListingsPage: PageComponent = () => {
                         <FormItem>
                           <FormLabel>Job Title</FormLabel>
                           <FormControl>
-                            <Input placeholder="Software Engineer" {...field} />
+                            <Input placeholder="Manager" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                    <FormField
+                    {/* <FormField
                       control={form.control}
                       name="jobDescription"
                       render={({ field }) => (
@@ -179,10 +180,10 @@ const ListingsPage: PageComponent = () => {
                           <FormMessage />
                         </FormItem>
                       )}
-                    />
+                    /> */}
                     <div className="flex justify-end mt-3">
                       <Button disabled={isPending} type="submit">
-                        Add
+                        Create Listing
                       </Button>
                     </div>
                   </form>
