@@ -8,6 +8,7 @@ interface UpdateListingProps {
   body: {
     jobTitle?: string;
     jobDescription?: string;
+    shortDescription?: string;
     jobRequirements?: string;
     employmentType?: string;
     location?: string;
