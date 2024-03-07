@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import AuthLayout from "./AuthLayout";
 import { HomeIcon, Newspaper, UserIcon } from "lucide-react";
-import { Button, buttonVariants } from "../components/shadcn/Button";
+import { buttonVariants } from "../components/shadcn/Button";
 import { cn } from "../utilities/cn";
 import Link from "next/link";
 import EmpleoLogo from "../components/EmpleoLogo";
@@ -53,16 +53,16 @@ const MainLayout = ({ children, layout = "normal" }: MainLayoutProps) => {
               </Link>
             </div>
             <div className="pr-2 py-1 flex justify-end items-center gap-x-1 w-full mr-7">
+              <SearchDialog />
+              <SettingsDropdown />
               <Link
                 href="/organization"
                 className={
-                  "text-sm font-medium hover:bg-gray-50 rounded-md border px-2 py-0.5"
+                  "text-sm font-medium hover:bg-gray-50 rounded-md border px-2 py-0.5 max-w-[200px] truncate"
                 }
               >
                 {organization?.title || "Organization"}
               </Link>
-              <SearchDialog />
-              <SettingsDropdown />
             </div>
           </div>
           <div className="flex">

@@ -76,9 +76,9 @@ const ListingsPage: PageComponent = () => {
                   <PlusIcon className="h-4 w-4 text-white" />
                 </button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
+              <DialogContent className="sm:max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle>Add Listing</DialogTitle>
+                  <DialogTitle>Create Listing</DialogTitle>
                   <DialogDescription
                     className="!font-sans"
                     style={{ fontFamily: "sans-serif" }}
@@ -99,7 +99,7 @@ const ListingsPage: PageComponent = () => {
                         </FormItem>
                       )}
                     />
-                    <FormField
+                    {/* <FormField
                       control={form.control}
                       name="jobDescription"
                       render={({ field }) => (
@@ -179,10 +179,10 @@ const ListingsPage: PageComponent = () => {
                           <FormMessage />
                         </FormItem>
                       )}
-                    />
+                    /> */}
                     <div className="flex justify-end mt-3">
                       <Button disabled={isPending} type="submit">
-                        Add
+                        Create Listing
                       </Button>
                     </div>
                   </form>
