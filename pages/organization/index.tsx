@@ -31,6 +31,7 @@ import {
 import { Font } from "@/src/utilities/interfaces";
 import { ChromePicker } from "react-color";
 import { Textarea } from "@/src/components/shadcn/Textarea";
+import Editor from "@/src/components/textEditor/Editor";
 
 const formSchema = z.object({
   title: z.string().min(1),
@@ -1257,6 +1258,8 @@ const OrgPage: PageComponent = () => {
               </div>
             </>
           )} */}
+
+          <Editor />
 
           <Button className="!mt-3" disabled={isPending} type="submit">
             Update
