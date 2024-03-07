@@ -24,11 +24,14 @@ import { MonitorIcon } from "lucide-react";
 import Link from "next/link";
 import useGetCurrentOrganization from "@/src/requests/organizations/useGetCurrentOrganization";
 import { cn } from "@/src/utilities/cn";
-import { ExternalLinkIcon } from "@radix-ui/react-icons";
+import { ClipboardIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
+import { Label } from "@/src/components/shadcn/Label";
+import { useToast } from "@/src/components/shadcn/use-toast";
 
 const formSchema = z.object({
   jobTitle: z.string(),
   jobDescription: z.string().optional(),
+  shortDescription: z.string().optional(),
   jobRequirements: z.string().optional(),
   employmentType: z.string().optional(),
   location: z.string().optional(),
@@ -37,6 +40,8 @@ const formSchema = z.object({
 });
 
 const ListingPage: PageComponent = () => {
+  const { toast } = useToast();
+
   const router = useRouter();
   const listingId = router.query.listingId;
 
@@ -50,6 +55,7 @@ const ListingPage: PageComponent = () => {
     defaultValues: {
       jobTitle: listing?.jobTitle || "",
       jobDescription: listing?.jobDescription || "",
+      shortDescription: listing?.shortDescription || "",
       jobRequirements: listing?.jobRequirements || "",
       employmentType: listing?.employmentType || "",
       location: listing?.location || "",
@@ -63,6 +69,7 @@ const ListingPage: PageComponent = () => {
       form.reset({
         jobTitle: listing?.jobTitle || "",
         jobDescription: listing?.jobDescription || "",
+        shortDescription: listing?.shortDescription || "",
         jobRequirements: listing?.jobRequirements || "",
         employmentType: listing?.employmentType || "",
         location: listing?.location || "",
@@ -79,7 +86,7 @@ const ListingPage: PageComponent = () => {
   return (
     <ListingWrapper>
       {isLoading ? (
-        <div className="space-y-5">
+        <div className="space-y-5 max-w-2xl">
           <Skeleton className="h-8 w-full" />
           <Skeleton className="h-8 w-full" />
           <Skeleton className="h-8 w-full" />
@@ -119,12 +126,54 @@ const ListingPage: PageComponent = () => {
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+              {listing?.published && (
+                <div>
+                  <Label>Link</Label>
+                  <div className="relative !cursor-pointer z-10">
+                    <Input
+                      disabled
+                      value={`https://${organization?.slug}.empleo.work/listings/${listingId}`}
+                      className=" !cursor-pointer -z-10"
+                    />
+                    <div
+                      className="absolute inset-0 flex justify-end items-center"
+                      onClick={() => {
+                        navigator.clipboard.writeText(
+                          `https://${organization?.slug}.empleo.work/listings/${listingId}`
+                        );
+                        toast({
+                          title: "Link copied!",
+                          description: "Job listing link coppied to clipboard.",
+                        });
+                      }}
+                    >
+                      <div className="mr-2">
+                        <ClipboardIcon className="h-4 w-4" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <FormField
                 control={form.control}
                 name="jobTitle"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Job Title</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="shortDescription"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Short Description</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -145,7 +194,7 @@ const ListingPage: PageComponent = () => {
                   </FormItem>
                 )}
               />
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="jobRequirements"
                 render={({ field }) => (
@@ -157,7 +206,7 @@ const ListingPage: PageComponent = () => {
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
               <FormField
                 control={form.control}
                 name="employmentType"

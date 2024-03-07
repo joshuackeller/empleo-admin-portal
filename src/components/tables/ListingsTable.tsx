@@ -14,8 +14,6 @@ import useRemoveListing from "@/src/requests/listings/useRemoveListing";
 import useGetListings from "@/src/requests/listings/useGetListings";
 import { ColumnDef } from "@tanstack/react-table";
 import { Listing } from "@/src/utilities/interfaces";
-import useUpdateListing from "@/src/requests/listings/useUpdateListing";
-import Link from "next/link";
 
 const columns: ColumnDef<Listing>[] = [
   {
@@ -23,13 +21,13 @@ const columns: ColumnDef<Listing>[] = [
     header: "Job Title",
   },
   {
-    accessorKey: "jobDescription",
-    header: "Job Description",
+    accessorKey: "shortDescription",
+    header: "Short Description",
   },
-  {
-    accessorKey: "jobRequirements",
-    header: "Job Requirements",
-  },
+  // {
+  //   accessorKey: "jobRequirements",
+  //   header: "Job Requirements",
+  // },
   {
     accessorKey: "employmentType",
     header: "Employment Type",
@@ -52,18 +50,14 @@ const columns: ColumnDef<Listing>[] = [
     cell: ({ row }) => {
       const listingId = row.original.id;
 
-      const { mutate: removeListing, isPending: isRemoving } =
+      const { mutate: deleteListing, isPending: isRemoving } =
         useRemoveListing();
-      const { mutate: updateListing, isPending: isUpdating } =
-        useUpdateListing();
 
-      const handleRemoveListing = () => {
-        removeListing({ listingId });
+      const handleRemoveListing = (e: any) => {
+        e.preventDefault();
+        e.stopPropagation();
+        deleteListing({ listingId });
       };
-
-      // const handleUpdateListing = () => {
-      //   updateListing({ listingId });
-      // };
 
       return (
         <div>
@@ -75,12 +69,7 @@ const columns: ColumnDef<Listing>[] = [
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel
-                //className="!text-red-500 cursor-pointer"
-                asChild
-              >
-                <Link href={`/listings/${listingId}`}>Update</Link>
-              </DropdownMenuLabel>
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -88,7 +77,7 @@ const columns: ColumnDef<Listing>[] = [
                 onClick={handleRemoveListing}
                 className="!text-red-500 cursor-pointer"
               >
-                Remove
+                Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
