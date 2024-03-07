@@ -194,7 +194,7 @@ const ListingPage: PageComponent = () => {
                   </FormItem>
                 )}
               />
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="jobRequirements"
                 render={({ field }) => (
@@ -206,7 +206,7 @@ const ListingPage: PageComponent = () => {
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
               <FormField
                 control={form.control}
                 name="employmentType"

@@ -1,14 +1,5 @@
 import { Button } from "@/src/components/shadcn/Button";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/src/components/shadcn/Form";
-import { Input } from "@/src/components/shadcn/Input";
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -20,8 +11,8 @@ import useGetApplication from "@/src/requests/applications/useGetApplication";
 import useUpdateApplication from "@/src/requests/applications/useUpdateApplication";
 import useGetApplicationNotes from "@/src/requests/applications/useGetApplicationNotes";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeftIcon, ChevronLeft, Terminal } from "lucide-react";
-import { Router, useRouter } from "next/router";
+import { ArrowLeftIcon } from "lucide-react";
+import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { FormEvent, useState } from "react";
@@ -31,6 +22,8 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@/src/components/shadcn/Alert";
+import { Label } from "@/src/components/shadcn/Label";
+import DisabledInput from "@/src/components/other/DisabledInput";
 
 const formSchema = z.object({
   // applicationId: z.string(),
@@ -120,36 +113,40 @@ const ListingDetails = () => {
         <div className="text-sm">All Applicants</div>
       </div>
       <div className="mt-2">
-        <h2 className="!p-0 !m-0">
-          {data.firstName} {data.lastName}
-        </h2>
         <div>
-          <p>Phone: {data.phone}</p>
-          <p>Email: {data.email}</p>
-          <p>Updated At: {data.updatedAt}</p>
-
-          <form onSubmit={onSubmit} className="w-2/3 space-y-6">
-            <div className="flex justify-between gap-x-5">
-              <Select
-                onValueChange={(val) => form.setValue("status", val)}
-                defaultValue={data.status}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder={getPrettyStatus(data.status)} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="new">New</SelectItem>
-                  <SelectItem value="in_review">In Review</SelectItem>
-                  <SelectItem value="rejected">Rejected</SelectItem>
-                  <SelectItem value="interview">Interview</SelectItem>
-                  <SelectItem value="offer_pending">Offer Pending</SelectItem>
-                  <SelectItem value="offer_accepted">Offer Accepted</SelectItem>
-                  <SelectItem value="offer_rejected">Offer Rejected</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button type="submit" disabled={isPending}>
-                Update Status
-              </Button>
+          <form onSubmit={onSubmit} className="max-w-2xl space-y-2.5">
+            <div>
+              <Label>Status</Label>
+              <div className="flex justify-between gap-x-5">
+                <Select
+                  onValueChange={(val) => form.setValue("status", val)}
+                  defaultValue={data.status}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={getPrettyStatus(data.status)} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="new">New</SelectItem>
+                    <SelectItem value="in_review">In Review</SelectItem>
+                    <SelectItem value="rejected">Rejected</SelectItem>
+                    <SelectItem value="interview">Interview</SelectItem>
+                    <SelectItem value="offer_pending">Offer Pending</SelectItem>
+                    <SelectItem value="offer_accepted">
+                      Offer Accepted
+                    </SelectItem>
+                    <SelectItem value="offer_rejected">
+                      Offer Rejected
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button type="submit" disabled={isPending}>
+                  Update Status
+                </Button>
+              </div>
+            </div>
+            <div>
+              <Label>First Name</Label>
+              <DisabledInput value={application?.firstName} />
             </div>
           </form>
         </div>

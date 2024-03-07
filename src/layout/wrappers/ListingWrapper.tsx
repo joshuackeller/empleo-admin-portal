@@ -1,4 +1,5 @@
 import { Separator } from "@/src/components/shadcn/Separator";
+import useGetListing from "@/src/requests/listings/useGetListing";
 import { cn } from "@/src/utilities/cn";
 import Link from "next/link";
 import { useRouter } from "next/router";

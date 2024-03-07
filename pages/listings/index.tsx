@@ -58,6 +58,7 @@ const ListingsPage: PageComponent = () => {
       { body: values },
       {
         onSuccess: () => {
+          form.setValue("jobTitle", "");
           setOpen(false);
         },
       }
@@ -68,7 +69,7 @@ const ListingsPage: PageComponent = () => {
     <div>
       <div>
         <div className="flex justify-between items-start">
-          <h4>Listing</h4>
+          <h4>Listings</h4>
           <div>
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
@@ -76,7 +77,7 @@ const ListingsPage: PageComponent = () => {
                   <PlusIcon className="h-4 w-4 text-white" />
                 </button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-2xl">
+              <DialogContent className="max-w-lg">
                 <DialogHeader>
                   <DialogTitle>Create Listing</DialogTitle>
                   <DialogDescription
@@ -93,7 +94,7 @@ const ListingsPage: PageComponent = () => {
                         <FormItem>
                           <FormLabel>Job Title</FormLabel>
                           <FormControl>
-                            <Input placeholder="Software Engineer" {...field} />
+                            <Input placeholder="Manager" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
