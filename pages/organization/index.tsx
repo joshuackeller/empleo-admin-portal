@@ -32,6 +32,7 @@ import { Font } from "@/src/utilities/interfaces";
 import { ChromePicker } from "react-color";
 import { Textarea } from "@/src/components/shadcn/Textarea";
 import Editor from "@/src/components/textEditor/Editor";
+import { Label } from "@/src/components/shadcn/Label";
 
 const formSchema = z.object({
   title: z.string().min(1),
@@ -427,7 +428,7 @@ const OrgPage: PageComponent = () => {
             )}
           />
 
-          <FormField
+          {/* <FormField
             control={form.control}
             name="longDescription"
             render={({ field }) => (
@@ -446,9 +447,11 @@ const OrgPage: PageComponent = () => {
                 <FormMessage />
               </FormItem>
             )}
-          />
-
-          <Editor value={longDescription} setValue={setLongDescription} />
+          /> */}
+          <div>
+            <Label>Long Description</Label>
+            <Editor value={longDescription} setValue={setLongDescription} />
+          </div>
 
           <Button className="!mt-3" disabled={isPending} type="submit">
             Update

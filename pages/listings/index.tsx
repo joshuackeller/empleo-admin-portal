@@ -26,13 +26,18 @@ import ListingsTable from "@/src/components/tables/ListingsTable";
 import { PlusIcon } from "lucide-react";
 import useCreateListing from "@/src/requests/listings/useCreateListing";
 import { useRouter } from "next/router";
-import { Listing } from "@/src/utilities/interfaces";
+import { EmploymentType, Listing } from "@/src/utilities/interfaces";
 
 const formSchema = z.object({
   jobTitle: z.string(),
   jobDescription: z.string().optional(),
   jobRequirements: z.string().optional(),
-  employmentType: z.string().optional(),
+  employmentType: z
+    .enum([
+      Object.values(EmploymentType)[0],
+      ...Object.values(EmploymentType).slice(1),
+    ])
+    .optional(),
   location: z.string().optional(),
   salaryRange: z.string().optional(),
   published: z.boolean(),
@@ -48,9 +53,9 @@ const ListingsPage: PageComponent = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       jobTitle: "",
-      jobDescription: "",
+      jobDescription: undefined,
       jobRequirements: "",
-      employmentType: "",
+      employmentType: undefined,
       location: "",
       salaryRange: "",
       published: false,

@@ -1,4 +1,4 @@
-import { Admin } from "@/src/utilities/interfaces";
+import { Admin, EmploymentType } from "@/src/utilities/interfaces";
 import useEmpleoApi from "../useEmpleoApi";
 import useCustomMutation from "../useCustomMutation";
 import { useQueryClient } from "@tanstack/react-query";
@@ -11,7 +11,7 @@ interface CreateListingProps {
     jobDescription?: string;
     shortDescription?: string;
     jobRequirements?: string;
-    employmentType?: string;
+    employmentType?: EmploymentType;
     location?: string;
     salaryRange?: string;
     published: boolean;
