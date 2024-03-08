@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import ListingQueryKeys from ".";
 import { Listing } from "@/src/utilities/interfaces";
 
-interface AddListingProps {
+interface CreateListingProps {
   body: {
     jobTitle: string;
     jobDescription?: string;
@@ -18,17 +18,19 @@ interface AddListingProps {
   };
 }
 
-const AddListing = async ({ body }: AddListingProps): Promise<Listing> => {
+const CreateListing = async ({
+  body,
+}: CreateListingProps): Promise<Listing> => {
   const api = useEmpleoApi();
   const { data } = await api.post("/listings", body);
 
   return data;
 };
 
-const useAddListing = () => {
+const useCreateListing = () => {
   const queryClient = useQueryClient();
   return useCustomMutation({
-    mutationFn: AddListing,
+    mutationFn: CreateListing,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ListingQueryKeys.all,
@@ -37,4 +39,4 @@ const useAddListing = () => {
   });
 };
 
-export default useAddListing;
+export default useCreateListing;
