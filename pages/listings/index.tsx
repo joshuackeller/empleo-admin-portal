@@ -22,9 +22,11 @@ import {
   FormMessage,
 } from "@/src/components/shadcn/Form";
 import { useState } from "react";
-import useAddListing from "@/src/requests/listings/useAddListing";
 import ListingsTable from "@/src/components/tables/ListingsTable";
 import { PlusIcon } from "lucide-react";
+import useCreateListing from "@/src/requests/listings/useCreateListing";
+import { useRouter } from "next/router";
+import { Listing } from "@/src/utilities/interfaces";
 
 const formSchema = z.object({
   jobTitle: z.string(),
@@ -37,7 +39,9 @@ const formSchema = z.object({
 });
 
 const ListingsPage: PageComponent = () => {
-  const { mutate: addListing, isPending } = useAddListing();
+  const router = useRouter();
+
+  const { mutate: createListing, isPending } = useCreateListing();
   const [open, setOpen] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -54,12 +58,11 @@ const ListingsPage: PageComponent = () => {
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    addListing(
+    createListing(
       { body: values },
       {
-        onSuccess: () => {
-          form.setValue("jobTitle", "");
-          setOpen(false);
+        onSuccess: (response: Listing) => {
+          router.push(`/listings/${response.id}`);
         },
       }
     );
@@ -77,7 +80,7 @@ const ListingsPage: PageComponent = () => {
                   <PlusIcon className="h-4 w-4 text-white" />
                 </button>
               </DialogTrigger>
-              <DialogContent className="max-w-lg">
+              <DialogContent className="max-w-md">
                 <DialogHeader>
                   <DialogTitle>Create Listing</DialogTitle>
                   <DialogDescription
