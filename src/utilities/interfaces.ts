@@ -73,12 +73,21 @@ export interface BaseUser {
 }
 export interface User extends BaseUser {}
 
+export enum EmploymentType {
+  full_time = "full_time",
+  part_time = "part_time",
+  seasonal = "seasonal",
+  internship = "internship",
+  contract = "contract",
+  temporary = "temporary",
+}
+
 export interface BaseListing {
   id: string;
   published: boolean;
   jobTitle: string;
   location: string | null;
-  employmentType: string | null;
+  employmentType: EmploymentType | null;
   salaryRange: string | null;
   jobDescription: string | null;
   shortDescription: string | null;

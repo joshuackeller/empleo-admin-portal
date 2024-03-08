@@ -37,6 +37,7 @@ export default function Editor({ value, setValue }: EditorProps) {
   return (
     <>
       <DynamicRichTextEditor
+        className="shadow-sm tiptap"
         extensions={extensions}
         content={value}
         onUpdate={(content) => setValue(content.editor.getHTML())}
@@ -46,52 +47,52 @@ export default function Editor({ value, setValue }: EditorProps) {
           // The "outlined" variant is the default (shown here only as
           // example), but can be changed to "standard" to remove the outlined
           // field border from the editor
-          variant: "outlined",
+          // variant: "outlined",
           MenuBarProps: {
             hide: !showMenuBar,
           },
           // Below is an example of adding a toggle within the outlined field
           // for showing/hiding the editor menu bar, and a "submit" button for
           // saving/viewing the HTML content
-          footer: (
-            <Stack
-              direction="row"
-              spacing={2}
-              sx={{
-                borderTopStyle: "solid",
-                borderTopWidth: 1,
-                borderTopColor: (theme) => theme.palette.divider,
-                py: 1,
-                px: 1.5,
-              }}
-            >
-              <MenuButton
-                value="formatting"
-                tooltipLabel={showMenuBar ? "Hide toolbar" : "Show toolbar"}
-                size="small"
-                onClick={() => setShowMenuBar((currentState) => !currentState)}
-                selected={showMenuBar}
-                IconComponent={TextFields}
-              />
+          // footer: (
+          //   <Stack
+          //     direction="row"
+          //     spacing={2}
+          //     sx={{
+          //       borderTopStyle: "solid",
+          //       borderTopWidth: 1,
+          //       borderTopColor: (theme) => theme.palette.divider,
+          //       py: 1,
+          //       px: 1.5,
+          //     }}
+          //   >
+          //     <MenuButton
+          //       value="formatting"
+          //       tooltipLabel={showMenuBar ? "Hide toolbar" : "Show toolbar"}
+          //       size="small"
+          //       onClick={() => setShowMenuBar((currentState) => !currentState)}
+          //       selected={showMenuBar}
+          //       IconComponent={TextFields}
+          //     />
 
-              <MenuButton
-                value="formatting"
-                tooltipLabel={
-                  isEditable
-                    ? "Prevent edits (use read-only mode)"
-                    : "Allow edits"
-                }
-                size="small"
-                onClick={() => setIsEditable((currentState) => !currentState)}
-                selected={!isEditable}
-                IconComponent={isEditable ? LockOpen : Lock}
-              />
+          //     <MenuButton
+          //       value="formatting"
+          //       tooltipLabel={
+          //         isEditable
+          //           ? "Prevent edits (use read-only mode)"
+          //           : "Allow edits"
+          //       }
+          //       size="small"
+          //       onClick={() => setIsEditable((currentState) => !currentState)}
+          //       selected={!isEditable}
+          //       IconComponent={isEditable ? LockOpen : Lock}
+          //     />
 
-              <Button variant="outlined" size="small">
-                Save
-              </Button>
-            </Stack>
-          ),
+          //     <Button variant="outlined" size="small">
+          //       Save
+          //     </Button>
+          //   </Stack>
+          // ),
         }}
       >
         {() => (

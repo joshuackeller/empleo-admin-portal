@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useEmpleoApi from "../useEmpleoApi";
-import { Listing } from "@/src/utilities/interfaces";
+import { EmploymentType, Listing } from "@/src/utilities/interfaces";
 import { useToast } from "@/src/components/shadcn/use-toast";
 import ListingQueryKeys from ".";
 
@@ -10,7 +10,7 @@ interface UpdateListingProps {
     jobDescription?: string;
     shortDescription?: string;
     jobRequirements?: string;
-    employmentType?: string;
+    employmentType?: EmploymentType;
     location?: string;
     salaryRange?: string;
     published?: boolean;
