@@ -87,8 +87,12 @@ const columns: ColumnDef<Listing>[] = [
   },
 ];
 
-const ListingsTable = () => {
-  const { data, isFetching } = useGetListings();
+type ListingsTableProps = {
+  data: Listing[];
+};
+
+const ListingsTable: React.FC<ListingsTableProps> = ({ data }) => {
+  const { isFetching } = useGetListings();
   const isClickable = true;
 
   if (!data) return <Skeleton className="h-24 w-full" />;
