@@ -110,18 +110,52 @@ enum Status {
   offer_rejected = "offer_rejected",
 }
 
+export enum Gender {
+  male = "male",
+  female = "female",
+  prefer_not_to_say = "prefer_not_to_say",
+  other = "other",
+}
+
 export interface BaseApplication {
   id: string;
+  status: Status;
+  listingId: string;
   firstName: string;
   lastName: string;
-  phone: string;
-  email: string;
-  status: Status;
+  address: string | null;
+  city: string | null;
+  state: string | null;
+  zip: string | null;
+  phone: string | null;
+  note: string | null;
+  linkedInUrl: string | null;
+  resumeId: string | null;
+  coverLetterId: string | null;
+  usAuthorized: boolean | null;
+  availableStartDate: string | null;
+  eeocRace: string | null;
+  eeocVeteranStatus: string | null;
+  eeocDisabilityStatus: string | null;
+  eeocGender: Gender | null;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface Application extends BaseApplication {}
+export interface Application extends BaseApplication {
+  resume: BaseFile | null;
+  coverLetter: BaseFile | null;
+}
+
+export interface BaseFile {
+  id: string;
+  name: string;
+  url: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface File extends BaseFile {}
 
 export interface BaseApplicationNote {
   id: string;
