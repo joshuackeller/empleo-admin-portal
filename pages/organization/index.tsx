@@ -31,6 +31,8 @@ import {
 import { Font } from "@/src/utilities/interfaces";
 import { ChromePicker } from "react-color";
 import { Textarea } from "@/src/components/shadcn/Textarea";
+import Editor from "@/src/components/textEditor/Editor";
+import { Label } from "@/src/components/shadcn/Label";
 
 const formSchema = z.object({
   title: z.string().min(1),
@@ -55,6 +57,7 @@ const OrgPage: PageComponent = () => {
   const { data: organization } = useGetCurrentOrganization();
 
   const [image, setImage] = useState<string | null>(null);
+  const [longDescription, setLongDescription] = useState<string>("");
 
   // const [banner, setBanner] = useState<string | null>(null);
 
@@ -81,29 +84,6 @@ const OrgPage: PageComponent = () => {
     }
   };
 
-  // const handleBannerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const bannerFile = e.target.files?.[0];
-
-  //   if (bannerFile) {
-  //     const allowedBannerFileTypes = ["image/jpeg", "image/png", "image/gif"];
-  //     if (allowedBannerFileTypes.includes(bannerFile.type)) {
-  //       const bannerReader = new FileReader();
-
-  //       bannerReader.onload = (bannerReaderEvent) => {
-  //         if (bannerReaderEvent.target) {
-  //           const dataUrlBannerData = bannerReaderEvent.target.result as string;
-  //           setDataUrlBanner(dataUrlBannerData);
-  //           setBanner(dataUrlBannerData);
-  //         }
-  //       };
-
-  //       bannerReader.readAsDataURL(bannerFile);
-  //     } else {
-  //       alert("Invalid file type. Please upload a valid image file.");
-  //     }
-  //   }
-  // };
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -114,90 +94,6 @@ const OrgPage: PageComponent = () => {
   const { mutate: updateOrganization, isPending } = useUpdateOrganization();
 
   const [dataUrl, setDataUrl] = useState<string | undefined>(undefined);
-
-  // const [dataUrlBanner, setDataUrlBanner] = useState<string | undefined>(
-  //   undefined
-  // );
-
-  // const layoutToNumber = {
-  //   one: 1,
-  //   two: 2,
-  //   three: 3,
-  //   four: 4,
-  //   five: 5,
-  //   "Layout 1": 1,
-  //   "Layout 2": 2,
-  //   "Layout 3": 3,
-  //   "Layout 4": 4,
-  //   "Layout 5": 5,
-  // };
-
-  // const [layout, setLayout] = useState<Layout | null>(null);
-  // const [selectedLayout, setSelectedLayout] = useState(organization?.layout);
-  // const [open, setOpen] = useState(false);
-  // const layoutValue = selectedLayout || organization?.layout || "one";
-  // const [page, setPage] = useState(layoutToNumber[layoutValue]);
-
-  // useEffect(() => {
-  //   setPage(layoutToNumber[layoutValue]);
-  // }, [layoutValue]);
-
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
-
-  // const handleClose = () => {
-  //   setOpen(false);
-  //   const layoutValue = organization?.layout || "one";
-  //   setPage(layoutToNumber[layoutValue]);
-  //   setSelectedLayout(layoutValue as Layout | undefined);
-  // };
-
-  // const handlePageChange = (newPage: React.SetStateAction<number>) => {
-  //   setPage(newPage);
-  //   setSelectedLayout(numberToString(newPage) as Layout);
-  // };
-
-  // const numberToString = (num: any) => {
-  //   switch (num) {
-  //     case 1:
-  //       return "one";
-  //     case 2:
-  //       return "two";
-  //     case 3:
-  //       return "three";
-  //     case 4:
-  //       return "four";
-  //     case 5:
-  //       return "five";
-  //     default:
-  //       return "one";
-  //   }
-  // };
-
-  // const mapLayoutToString = (layout: any) => {
-  //   switch (layout) {
-  //     case Layout.one:
-  //       return "Layout 1";
-  //     case Layout.two:
-  //       return "Layout 2";
-  //     case Layout.three:
-  //       return "Layout 3";
-  //     case Layout.four:
-  //       return "Layout 4";
-  //     case Layout.five:
-  //       return "Layout 5";
-  //     default:
-  //       return layout;
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (layout) {
-  //     form.setValue("layout", layout);
-  //     setOpen(false);
-  //   }
-  // }, [layout]);
 
   useEffect(() => {
     if (!!organization) {
@@ -220,8 +116,8 @@ const OrgPage: PageComponent = () => {
         secondaryColor: values.secondaryColor || null || undefined,
         // accentColor: values.accentColor || null || undefined,
         // layout: form.getValues("layout") as Layout,
-        description: values.description || null || undefined,
-        longDescription: values.longDescription || null || undefined,
+        description: values.description || undefined,
+        longDescription: longDescription || undefined,
         eeocEnabled: organization?.eeocEnabled || false,
         veteranEnabled: organization?.veteranEnabled || false,
         disabilityEnabled: organization?.disabilityEnabled || false,
@@ -236,32 +132,6 @@ const OrgPage: PageComponent = () => {
     useState(false);
   const [displaySecondaryColorPicker, setDisplaySecondaryColorPicker] =
     useState(false);
-  // const [displayAccentColorPicker, setDisplayAccentColorPicker] =
-  //   useState(false);
-
-  const handlePrimaryColorClick = () => {
-    setDisplayPrimaryColorPicker(!displayPrimaryColorPicker);
-  };
-
-  const handlePrimaryClose = () => {
-    setDisplayPrimaryColorPicker(false);
-  };
-
-  const handleSecondaryColorClick = () => {
-    setDisplaySecondaryColorPicker(!displaySecondaryColorPicker);
-  };
-
-  const handleSecondaryClose = () => {
-    setDisplaySecondaryColorPicker(false);
-  };
-
-  // const handleAccentColorClick = () => {
-  //   setDisplayAccentColorPicker(!displayAccentColorPicker);
-  // };
-
-  // const handleAccentClose = () => {
-  //   setDisplayAccentColorPicker(false);
-  // };
 
   // Render the page
   return (
@@ -355,44 +225,6 @@ const OrgPage: PageComponent = () => {
               </div>
             )}
           </div>
-
-          {/* Comment out banner for now */}
-          {/* <FormField
-            control={form.control}
-            name="imageURLBanner" // Add this line for the image URL
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Organization Banner</FormLabel>
-                <FormControl>
-                  <Input
-                    id="banner"
-                    type="file"
-                    onChange={handleBannerChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="w-full h-[200px] border rounded overflow-hidden relative flex justify-center items-center shadow">
-            {dataUrlBanner ? (
-              <img
-                src={dataUrlBanner}
-                alt="Uploaded"
-                className="max-w-full max-h-full object-contain"
-              />
-            ) : organization?.banner?.url ? (
-              <img
-                src={organization.banner.url}
-                className="max-w-full max-h-full object-contain"
-              />
-            ) : (
-              <div className="h-full bg-transparent flex justify-center items-center">
-                Organization Banner
-              </div>
-            )}
-          </div> */}
 
           <FormField
             control={form.control}
@@ -491,14 +323,18 @@ const OrgPage: PageComponent = () => {
                     <div
                       style={{ backgroundColor: field.value || undefined }}
                       className="w-9 h-5 border border-black rounded cursor-pointer"
-                      onClick={handlePrimaryColorClick}
+                      onClick={() =>
+                        setDisplayPrimaryColorPicker(!displayPrimaryColorPicker)
+                      }
                     />
 
                     {displayPrimaryColorPicker ? (
                       <div className="absolute z-10">
                         <div
                           className="fixed inset-0"
-                          onClick={handlePrimaryClose}
+                          onClick={() => {
+                            setDisplayPrimaryColorPicker(false);
+                          }}
                         />
 
                         <ChromePicker
@@ -536,14 +372,18 @@ const OrgPage: PageComponent = () => {
                     <div
                       style={{ backgroundColor: field.value || undefined }}
                       className="w-9 h-5 border border-black rounded cursor-pointer"
-                      onClick={handleSecondaryColorClick}
+                      onClick={() =>
+                        setDisplaySecondaryColorPicker(
+                          !displaySecondaryColorPicker
+                        )
+                      }
                     />
 
                     {displaySecondaryColorPicker ? (
                       <div className="absolute z-10">
                         <div
                           className="fixed inset-0"
-                          onClick={handleSecondaryClose}
+                          onClick={() => setDisplaySecondaryColorPicker(false)}
                         />
 
                         <ChromePicker
@@ -570,52 +410,6 @@ const OrgPage: PageComponent = () => {
             )}
           />
 
-          {/* Comment out accent color for now */}
-          {/* <FormField
-            control={form.control}
-            name="accentColor"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Accent Color</FormLabel>
-                <FormControl>
-                  <div className="h-6 flex items-center gap-2">
-                    <div
-                      style={{ backgroundColor: field.value || undefined }}
-                      className="w-9 h-5 border border-black rounded cursor-pointer"
-                      onClick={handleAccentColorClick}
-                    />
-
-                    {displayAccentColorPicker ? (
-                      <div className="absolute z-10">
-                        <div
-                          className="fixed inset-0"
-                          onClick={handleAccentClose}
-                        />
-
-                        <ChromePicker
-                          color={field.value || "#ffffff"}
-                          onChange={(updatedColor) => {
-                            if (updatedColor && updatedColor.hex) {
-                              form.setValue("accentColor", updatedColor.hex);
-                            }
-                          }}
-                        />
-                      </div>
-                    ) : null}
-
-                    <input
-                      className="text-[14px]"
-                      type="text"
-                      value={field.value || undefined}
-                      readOnly
-                    />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
-
           <FormField
             control={form.control}
             name="description"
@@ -634,7 +428,7 @@ const OrgPage: PageComponent = () => {
             )}
           />
 
-          <FormField
+          {/* <FormField
             control={form.control}
             name="longDescription"
             render={({ field }) => (
@@ -653,10 +447,177 @@ const OrgPage: PageComponent = () => {
                 <FormMessage />
               </FormItem>
             )}
+          /> */}
+          <div>
+            <Label>Long Description</Label>
+            <Editor value={longDescription} setValue={setLongDescription} />
+          </div>
+
+          <Button className="!mt-3" disabled={isPending} type="submit">
+            Update
+          </Button>
+        </form>
+      </Form>
+    </OrganizationWrapper>
+  );
+};
+
+export default OrgPage;
+
+// const handleBannerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//   const bannerFile = e.target.files?.[0];
+
+//   if (bannerFile) {
+//     const allowedBannerFileTypes = ["image/jpeg", "image/png", "image/gif"];
+//     if (allowedBannerFileTypes.includes(bannerFile.type)) {
+//       const bannerReader = new FileReader();
+
+//       bannerReader.onload = (bannerReaderEvent) => {
+//         if (bannerReaderEvent.target) {
+//           const dataUrlBannerData = bannerReaderEvent.target.result as string;
+//           setDataUrlBanner(dataUrlBannerData);
+//           setBanner(dataUrlBannerData);
+//         }
+//       };
+
+//       bannerReader.readAsDataURL(bannerFile);
+//     } else {
+//       alert("Invalid file type. Please upload a valid image file.");
+//     }
+//   }
+// };
+
+// const [dataUrlBanner, setDataUrlBanner] = useState<string | undefined>(
+//   undefined
+// );
+
+// const layoutToNumber = {
+//   one: 1,
+//   two: 2,
+//   three: 3,
+//   four: 4,
+//   five: 5,
+//   "Layout 1": 1,
+//   "Layout 2": 2,
+//   "Layout 3": 3,
+//   "Layout 4": 4,
+//   "Layout 5": 5,
+// };
+
+// const [layout, setLayout] = useState<Layout | null>(null);
+// const [selectedLayout, setSelectedLayout] = useState(organization?.layout);
+// const [open, setOpen] = useState(false);
+// const layoutValue = selectedLayout || organization?.layout || "one";
+// const [page, setPage] = useState(layoutToNumber[layoutValue]);
+
+// useEffect(() => {
+//   setPage(layoutToNumber[layoutValue]);
+// }, [layoutValue]);
+
+// const handleClickOpen = () => {
+//   setOpen(true);
+// };
+
+// const handleClose = () => {
+//   setOpen(false);
+//   const layoutValue = organization?.layout || "one";
+//   setPage(layoutToNumber[layoutValue]);
+//   setSelectedLayout(layoutValue as Layout | undefined);
+// };
+
+// const handlePageChange = (newPage: React.SetStateAction<number>) => {
+//   setPage(newPage);
+//   setSelectedLayout(numberToString(newPage) as Layout);
+// };
+
+// const numberToString = (num: any) => {
+//   switch (num) {
+//     case 1:
+//       return "one";
+//     case 2:
+//       return "two";
+//     case 3:
+//       return "three";
+//     case 4:
+//       return "four";
+//     case 5:
+//       return "five";
+//     default:
+//       return "one";
+//   }
+// };
+
+// const mapLayoutToString = (layout: any) => {
+//   switch (layout) {
+//     case Layout.one:
+//       return "Layout 1";
+//     case Layout.two:
+//       return "Layout 2";
+//     case Layout.three:
+//       return "Layout 3";
+//     case Layout.four:
+//       return "Layout 4";
+//     case Layout.five:
+//       return "Layout 5";
+//     default:
+//       return layout;
+//   }
+// };
+
+// useEffect(() => {
+//   if (layout) {
+//     form.setValue("layout", layout);
+//     setOpen(false);
+//   }
+// }, [layout]);
+
+{
+  /* Comment out banner for now */
+}
+{
+  /* <FormField
+            control={form.control}
+            name="imageURLBanner" // Add this line for the image URL
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Organization Banner</FormLabel>
+                <FormControl>
+                  <Input
+                    id="banner"
+                    type="file"
+                    onChange={handleBannerChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
 
-          {/* Comment out layout for now */}
-          {/* <span className="flex items-center">
+          <div className="w-full h-[200px] border rounded overflow-hidden relative flex justify-center items-center shadow">
+            {dataUrlBanner ? (
+              <img
+                src={dataUrlBanner}
+                alt="Uploaded"
+                className="max-w-full max-h-full object-contain"
+              />
+            ) : organization?.banner?.url ? (
+              <img
+                src={organization.banner.url}
+                className="max-w-full max-h-full object-contain"
+              />
+            ) : (
+              <div className="h-full bg-transparent flex justify-center items-center">
+                Organization Banner
+              </div>
+            )}
+          </div> */
+}
+
+{
+  /* Comment out layout for now */
+}
+{
+  /* <span className="flex items-center">
             <Button variant="secondary" onClick={handleClickOpen} type="button">
               Select Layout
               <MousePointerSquare className="h-4 w-4 ml-1" />
@@ -1256,15 +1217,55 @@ const OrgPage: PageComponent = () => {
                 </div>
               </div>
             </>
-          )} */}
+          )} */
+}
 
-          <Button className="!mt-3" disabled={isPending} type="submit">
-            Update
-          </Button>
-        </form>
-      </Form>
-    </OrganizationWrapper>
-  );
-};
+{
+  /* Comment out accent color for now */
+}
+{
+  /* <FormField
+            control={form.control}
+            name="accentColor"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Accent Color</FormLabel>
+                <FormControl>
+                  <div className="h-6 flex items-center gap-2">
+                    <div
+                      style={{ backgroundColor: field.value || undefined }}
+                      className="w-9 h-5 border border-black rounded cursor-pointer"
+                      onClick={handleAccentColorClick}
+                    />
 
-export default OrgPage;
+                    {displayAccentColorPicker ? (
+                      <div className="absolute z-10">
+                        <div
+                          className="fixed inset-0"
+                          onClick={handleAccentClose}
+                        />
+
+                        <ChromePicker
+                          color={field.value || "#ffffff"}
+                          onChange={(updatedColor) => {
+                            if (updatedColor && updatedColor.hex) {
+                              form.setValue("accentColor", updatedColor.hex);
+                            }
+                          }}
+                        />
+                      </div>
+                    ) : null}
+
+                    <input
+                      className="text-[14px]"
+                      type="text"
+                      value={field.value || undefined}
+                      readOnly
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          /> */
+}

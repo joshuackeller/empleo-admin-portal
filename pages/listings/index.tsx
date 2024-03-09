@@ -22,31 +22,40 @@ import {
   FormMessage,
 } from "@/src/components/shadcn/Form";
 import { useState } from "react";
-import useAddListing from "@/src/requests/listings/useAddListing";
 import ListingsTable from "@/src/components/tables/ListingsTable";
 import { PlusIcon } from "lucide-react";
+import useCreateListing from "@/src/requests/listings/useCreateListing";
+import { useRouter } from "next/router";
+import { EmploymentType, Listing } from "@/src/utilities/interfaces";
 
 const formSchema = z.object({
   jobTitle: z.string(),
   jobDescription: z.string().optional(),
   jobRequirements: z.string().optional(),
-  employmentType: z.string().optional(),
+  employmentType: z
+    .enum([
+      Object.values(EmploymentType)[0],
+      ...Object.values(EmploymentType).slice(1),
+    ])
+    .optional(),
   location: z.string().optional(),
   salaryRange: z.string().optional(),
   published: z.boolean(),
 });
 
 const ListingsPage: PageComponent = () => {
-  const { mutate: addListing, isPending } = useAddListing();
+  const router = useRouter();
+
+  const { mutate: createListing, isPending } = useCreateListing();
   const [open, setOpen] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       jobTitle: "",
-      jobDescription: "",
+      jobDescription: undefined,
       jobRequirements: "",
-      employmentType: "",
+      employmentType: undefined,
       location: "",
       salaryRange: "",
       published: false,
@@ -54,11 +63,11 @@ const ListingsPage: PageComponent = () => {
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    addListing(
+    createListing(
       { body: values },
       {
-        onSuccess: () => {
-          setOpen(false);
+        onSuccess: (response: Listing) => {
+          router.push(`/listings/${response.id}`);
         },
       }
     );
@@ -68,7 +77,7 @@ const ListingsPage: PageComponent = () => {
     <div>
       <div>
         <div className="flex justify-between items-start">
-          <h4>Listing</h4>
+          <h4>Listings</h4>
           <div>
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
@@ -76,9 +85,9 @@ const ListingsPage: PageComponent = () => {
                   <PlusIcon className="h-4 w-4 text-white" />
                 </button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
+              <DialogContent className="max-w-md">
                 <DialogHeader>
-                  <DialogTitle>Add Listing</DialogTitle>
+                  <DialogTitle>Create Listing</DialogTitle>
                   <DialogDescription
                     className="!font-sans"
                     style={{ fontFamily: "sans-serif" }}
@@ -93,13 +102,13 @@ const ListingsPage: PageComponent = () => {
                         <FormItem>
                           <FormLabel>Job Title</FormLabel>
                           <FormControl>
-                            <Input placeholder="Software Engineer" {...field} />
+                            <Input placeholder="Manager" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                    <FormField
+                    {/* <FormField
                       control={form.control}
                       name="jobDescription"
                       render={({ field }) => (
@@ -179,10 +188,10 @@ const ListingsPage: PageComponent = () => {
                           <FormMessage />
                         </FormItem>
                       )}
-                    />
+                    /> */}
                     <div className="flex justify-end mt-3">
                       <Button disabled={isPending} type="submit">
-                        Add
+                        Create Listing
                       </Button>
                     </div>
                   </form>

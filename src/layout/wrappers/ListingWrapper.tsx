@@ -1,4 +1,5 @@
 import { Separator } from "@/src/components/shadcn/Separator";
+import useGetListing from "@/src/requests/listings/useGetListing";
 import { cn } from "@/src/utilities/cn";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -41,7 +42,7 @@ const ListingWrapper = ({ children }: ListingWrapperProps) => {
             pathname === `/listings/[listingId]/applications` && "text-primary"
           )}
         >
-          Applicants
+          Applications
         </Link>
       </div>
       <Separator className="mb-2 mt-1" />
