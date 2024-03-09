@@ -25,6 +25,14 @@ import Link from "next/link";
 import useGetCurrentOrganization from "@/src/requests/organizations/useGetCurrentOrganization";
 import { cn } from "@/src/utilities/cn";
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
+import { DropdownMenu } from "@/src/components/shadcn/DropdownMenu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/src/components/shadcn/Select";
 
 const formSchema = z.object({
   jobTitle: z.string(),
@@ -181,7 +189,24 @@ const ListingPage: PageComponent = () => {
                   <FormItem>
                     <FormLabel>Employment Type</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Select
+                        onValueChange={(val) =>
+                          form.setValue("employmentType", val)
+                        }
+                        defaultValue={field.employmentType}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="full_time">Full Time</SelectItem>
+                          <SelectItem value="part_time">Part Time</SelectItem>
+                          <SelectItem value="seasonal">Seasonal</SelectItem>
+                          <SelectItem value="internship">Internship</SelectItem>
+                          <SelectItem value="contract">Contract</SelectItem>
+                          <SelectItem value="temporary">Temporary</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
