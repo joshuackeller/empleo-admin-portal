@@ -30,36 +30,30 @@ import {
 } from "@/src/components/shadcn/Select";
 import { Font } from "@/src/utilities/interfaces";
 import { ChromePicker } from "react-color";
-import { Textarea } from "@/src/components/shadcn/Textarea";
 import Editor from "@/src/components/textEditor/Editor";
 import { Label } from "@/src/components/shadcn/Label";
+import { Skeleton } from "@/src/components/shadcn/Skeleton";
 
 const formSchema = z.object({
   title: z.string().min(1),
   imageURL: z.string().url().optional(),
-  // imageURLBanner: z.string().url().optional(),
   headerFont: z.nativeEnum(Font).optional(),
   bodyFont: z.nativeEnum(Font).optional(),
   primaryColor: z.string().nullable().optional(),
   secondaryColor: z.string().nullable().optional(),
-  // accentColor: z.string().nullable().optional(),
-  // layout: z.nativeEnum(Layout).optional(),
   description: z.string().nullable().optional(),
   longDescription: z.string().nullable().optional(),
-  // eeocEnabled: z.boolean(),
-  // veteranEnabled: z.boolean(),
-  // disabilityEnabled: z.boolean(),
-  // raceEnabled: z.boolean(),
-  // genderEnabled: z.boolean(),
 });
 
 const OrgPage: PageComponent = () => {
   const { data: organization } = useGetCurrentOrganization();
 
-  const [image, setImage] = useState<string | null>(null);
-  const [longDescription, setLongDescription] = useState<string>("");
+  const { mutate: updateOrganization, isPending } = useUpdateOrganization();
 
-  // const [banner, setBanner] = useState<string | null>(null);
+  const [image, setImage] = useState<string | null>(null);
+  const [longDescription, setLongDescription] = useState<string | undefined>(
+    undefined
+  );
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -91,40 +85,24 @@ const OrgPage: PageComponent = () => {
     },
   });
 
-  const { mutate: updateOrganization, isPending } = useUpdateOrganization();
-
   const [dataUrl, setDataUrl] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     if (!!organization) {
+      setLongDescription(organization?.longDescription || "");
       form.reset(organization);
     }
   }, [organization]);
 
-  // Handle the form submission -- this will be called when the form is submitted
-  const handleUpdate = (values: z.infer<typeof formSchema>) => {
+  const handleUpdate = () => {
     updateOrganization({
       body: {
-        dataUrl, // Add this line for uploading image (Ex: data:image/png;base64,....)
-        imageURL: image, // Pass the base64 image directly to the request
-        // dataUrlBanner,
-        // imageURLBanner: banner,
-        headerFont: form.getValues("headerFont") as Font,
-        bodyFont: form.getValues("headerFont") as Font,
-        ...values,
-        primaryColor: values.primaryColor || null || undefined,
-        secondaryColor: values.secondaryColor || null || undefined,
-        // accentColor: values.accentColor || null || undefined,
-        // layout: form.getValues("layout") as Layout,
-        description: values.description || undefined,
+        imageURL: image,
+        ...form.getValues(),
+        dataUrl,
         longDescription: longDescription || undefined,
-        eeocEnabled: organization?.eeocEnabled || false,
-        veteranEnabled: organization?.veteranEnabled || false,
-        disabilityEnabled: organization?.disabilityEnabled || false,
-        raceEnabled: organization?.raceEnabled || false,
-        genderEnabled: organization?.genderEnabled || false,
-      }, // Pass the form values to the request
-      organizationId: organization?.id || "", // Pass the organization ID to the request
+      },
+      organizationId: organization?.id || "",
     });
   };
 
@@ -133,7 +111,6 @@ const OrgPage: PageComponent = () => {
   const [displaySecondaryColorPicker, setDisplaySecondaryColorPicker] =
     useState(false);
 
-  // Render the page
   return (
     <OrganizationWrapper>
       <div className="max-w-2xl ">
@@ -427,37 +404,22 @@ const OrgPage: PageComponent = () => {
               </FormItem>
             )}
           />
-
-          {/* <FormField
-            control={form.control}
-            name="longDescription"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Long Organization Description</FormLabel>
-                <FormControl>
-                  <div>
-                    <Textarea
-                      placeholder="Our company values are..."
-                      rows={5} // Set the number of rows
-                      {...field}
-                      value={field.value || ""}
-                    />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
-          <div>
-            <Label>Long Description</Label>
-            <Editor value={longDescription} setValue={setLongDescription} />
-          </div>
-
-          <Button className="!mt-3" disabled={isPending} type="submit">
-            Update
-          </Button>
         </form>
       </Form>
+      <div className="mt-2.5">
+        {typeof longDescription === "undefined" ? (
+          <Skeleton className="h-36 w-full" />
+        ) : (
+          <>
+            <Label>Long Description</Label>
+            <Editor value={longDescription} setValue={setLongDescription} />
+          </>
+        )}
+      </div>
+
+      <Button className="!mt-3" disabled={isPending} onClick={handleUpdate}>
+        Update
+      </Button>
     </OrganizationWrapper>
   );
 };
