@@ -1,16 +1,5 @@
-import { Lock, LockOpen, TextFields } from "@mui/icons-material";
-import { Box, Button, Stack, Typography } from "@mui/material";
-import type { EditorOptions } from "@tiptap/core";
-import { Dispatch, SetStateAction, useCallback, useRef, useState } from "react";
-import {
-  LinkBubbleMenu,
-  MenuButton,
-  RichTextEditor,
-  RichTextReadOnly,
-  TableBubbleMenu,
-  insertImages,
-  type RichTextEditorRef,
-} from "mui-tiptap";
+import { Dispatch, SetStateAction, useState } from "react";
+import { LinkBubbleMenu, TableBubbleMenu } from "mui-tiptap";
 import EditorMenuControls from "./EditorMenuControls";
 import useExtensions from "./useExtensions";
 import dynamic from "next/dynamic";
@@ -21,8 +10,10 @@ const DynamicRichTextEditor = dynamic(
 );
 
 interface EditorProps {
-  value: string;
-  setValue: Dispatch<SetStateAction<string>>;
+  value?: string;
+  setValue:
+    | Dispatch<SetStateAction<string | undefined>>
+    | Dispatch<SetStateAction<string>>;
 }
 
 export default function Editor({ value, setValue }: EditorProps) {
@@ -31,8 +22,6 @@ export default function Editor({ value, setValue }: EditorProps) {
   });
   const [isEditable, setIsEditable] = useState(true);
   const [showMenuBar, setShowMenuBar] = useState(true);
-
-  const [submittedContent, setSubmittedContent] = useState("");
 
   return (
     <>
