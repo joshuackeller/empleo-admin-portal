@@ -68,6 +68,7 @@ const TeamPage: PageComponent = () => {
       {
         onSuccess: () => {
           setOpen(false);
+          form.setValue("email", "");
         },
       }
     );

@@ -14,12 +14,12 @@ interface UpdateOrganizationProps {
     dataUrlBanner?: string;
     headerFont?: Font;
     bodyFont?: Font;
-    primaryColor?: string;
-    secondaryColor?: string;
+    primaryColor?: string | null;
+    secondaryColor?: string | null;
     accentColor?: string;
     layout?: Layout;
-    description?: string;
-    longDescription?: string;
+    description?: string | null;
+    longDescription?: string | null;
     eeocEnabled?: boolean;
     veteranEnabled?: boolean;
     disabilityEnabled?: boolean;
