@@ -65,27 +65,14 @@ const ApplicationsPage: PageComponent = () => {
 
   return (
     <ListingWrapper>
-      <div
-        className="mt-3"
-        style={{
-          minHeight: "300px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-        }}
-      >
-        {/* <ApplicationsTable
-          listingId={listingId as string}
-          applications={applications}
-          isFetching={isFetching}
-        /> */}
+      <div className="min-h-[300px]">
         <ApplicationsTable
           listingId={listingId as string}
           applications={applications?.slice(startIndex, endIndex)}
           isFetching={isFetching}
         />
       </div>
-      <div style={{ height: "50px", position: "relative" }}>
+      <div className="h-12 relative">
         <Pagination>
           <PaginationContent>
             <PaginationItem>
@@ -96,19 +83,23 @@ const ApplicationsPage: PageComponent = () => {
                 onClick={() => handlePageChange("prev")}
               />
             </PaginationItem>
-            {Number(page) > 1 && (
-              <PaginationItem>
+            <PaginationItem>
+              {Number(page) > 1 ? (
                 <PaginationEllipsis />
-              </PaginationItem>
-            )}
+              ) : (
+                <PaginationEllipsis style={{ color: "white" }} />
+              )}
+            </PaginationItem>
             <PaginationItem>
               <PaginationLink>{page}</PaginationLink>
             </PaginationItem>
-            {Number(page) < totalPages && (
-              <PaginationItem>
+            <PaginationItem>
+              {Number(page) < totalPages ? (
                 <PaginationEllipsis />
-              </PaginationItem>
-            )}
+              ) : (
+                <PaginationEllipsis style={{ color: "white" }} />
+              )}
+            </PaginationItem>
             <PaginationItem>
               <PaginationNext
                 className={`cursor-pointer ${

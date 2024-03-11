@@ -147,17 +147,10 @@ const TeamPage: PageComponent = () => {
         </div>
         <Separator className="mb-3 mt-1" />
       </div>
-      <div
-        style={{
-          minHeight: "300px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-        }}
-      >
+      <div className="min-h-[300px]">
         <AdminTable data={data?.slice(startIndex, endIndex)} />
       </div>
-      <div style={{ height: "50px", position: "relative" }}>
+      <div className="h-12 relative">
         <Pagination>
           <PaginationContent>
             <PaginationItem>
@@ -168,19 +161,23 @@ const TeamPage: PageComponent = () => {
                 onClick={() => handlePageChange("prev")}
               />
             </PaginationItem>
-            {Number(page) > 1 && (
-              <PaginationItem>
+            <PaginationItem>
+              {Number(page) > 1 ? (
                 <PaginationEllipsis />
-              </PaginationItem>
-            )}
+              ) : (
+                <PaginationEllipsis style={{ color: "white" }} />
+              )}
+            </PaginationItem>
             <PaginationItem>
               <PaginationLink>{page}</PaginationLink>
             </PaginationItem>
-            {Number(page) < totalPages && (
-              <PaginationItem>
+            <PaginationItem>
+              {Number(page) < totalPages ? (
                 <PaginationEllipsis />
-              </PaginationItem>
-            )}
+              ) : (
+                <PaginationEllipsis style={{ color: "white" }} />
+              )}
+            </PaginationItem>
             <PaginationItem>
               <PaginationNext
                 className={`cursor-pointer ${
