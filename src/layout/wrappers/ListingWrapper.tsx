@@ -20,7 +20,7 @@ const ListingWrapper = ({ children }: ListingWrapperProps) => {
         <Link
           href={`/listings/${listingId}`}
           className={cn(
-            `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
+            `text-sm font-medium transition-colors text-gray-400 hover:text-primary`,
             pathname === `/listings/[listingId]` && "text-primary"
           )}
         >
@@ -29,7 +29,7 @@ const ListingWrapper = ({ children }: ListingWrapperProps) => {
         <Link
           href={`/listings/${listingId}/fields`}
           className={cn(
-            `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
+            `text-sm font-medium transition-colors text-gray-400 hover:text-primary`,
             pathname === `/listings/[listingId]/fields` && "text-primary"
           )}
         >
@@ -38,7 +38,7 @@ const ListingWrapper = ({ children }: ListingWrapperProps) => {
         <Link
           href={`/listings/${listingId}/applications`}
           className={cn(
-            `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
+            `text-sm font-medium transition-colors text-gray-400 hover:text-primary`,
             pathname === `/listings/[listingId]/applications` && "text-primary"
           )}
         >

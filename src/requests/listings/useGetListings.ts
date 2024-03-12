@@ -3,18 +3,33 @@ import useEmpleoApi from "../useEmpleoApi";
 import { useQuery } from "@tanstack/react-query";
 import ListingQueryKeys from ".";
 
-const GetListings = async (): Promise<Listing[]> => {
+interface GetListingsProps {
+  page?: string;
+  pageSize?: string;
+}
+
+const GetListings = async ({ page, pageSize }: GetListingsProps = {}): Promise<Listing[]> => {
   const api = useEmpleoApi();
 
-  const { data } = await api.get("/listings");
+  const { data } = await api.get("/listings", {
+    params: {
+      page,
+      pageSize,
+    },
+  });
 
   return data;
 };
 
-const useGetListings = () => {
+interface useGetListingsProps {
+  page?: string;
+  pageSize?: string;
+}
+
+const useGetListings = ({ page, pageSize }: useGetListingsProps = {}) => {
   return useQuery({
-    queryKey: ListingQueryKeys.all,
-    queryFn: GetListings,
+    queryKey: ListingQueryKeys.all(page, pageSize),
+    queryFn: () => GetListings({ page, pageSize }),
   });
 };
 

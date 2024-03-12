@@ -15,9 +15,15 @@ import useRemoveAdmin from "@/src/requests/admins/useRemoveAdmin";
 import useAuthContext from "@/src/utilities/useAuthContext";
 import ReadJWTData from "@/src/utilities/ReadJWTData";
 import { boolean } from "zod";
+import { Admin } from "@/src/utilities/interfaces";
 
-const AdminTable = () => {
-  const { data, isFetching } = useGetAdmins();
+type AdminTableProps = {
+  data?: Admin[];
+};
+
+const AdminTable: React.FC<AdminTableProps> = ({ data }) => {
+  // const { data, isFetching } = useGetAdmins();
+  const { isFetching } = useGetAdmins();
 
   const { token } = useAuthContext();
   const tokenData = ReadJWTData(token || "");
