@@ -42,7 +42,7 @@ const ListingWrapper = ({ children }: ListingWrapperProps) => {
             pathname === `/listings/[listingId]/applications` && "text-primary"
           )}
         >
-          Applications
+          Applicants
         </Link>
       </div>
       <Separator className="mb-2 mt-1" />
