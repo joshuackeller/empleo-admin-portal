@@ -19,10 +19,19 @@ const columns: ColumnDef<Listing>[] = [
   {
     accessorKey: "jobTitle",
     header: "Job Title",
+    // WIP - Not working
+    enableResizing: false,
+    minSize: 500,
+    size: 500,
+    maxSize: 500,
   },
   {
     accessorKey: "shortDescription",
     header: "Short Description",
+    enableResizing: false,
+    minSize: 500,
+    size: 500,
+    maxSize: 500,
   },
   // {
   //   accessorKey: "jobRequirements",

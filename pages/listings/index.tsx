@@ -37,6 +37,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/src/components/shadcn/Pagination";
+import { Skeleton } from "@/src/components/shadcn/Skeleton";
 
 const formSchema = z.object({
   jobTitle: z.string(),
@@ -111,7 +112,6 @@ const ListingsPage: PageComponent = () => {
     }
   };
 
-  if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error</div>;
 
   return (
@@ -164,10 +164,14 @@ const ListingsPage: PageComponent = () => {
         <Separator className="mb-3 mt-1" />
       </div>
       <div className="min-h-[300px]">
-        <ListingsTable data={data?.slice(startIndex, endIndex) ?? []} />
+        {isLoading ? (
+          <Skeleton className="h-[275px]" />
+        ) : (
+          <ListingsTable data={data?.slice(startIndex, endIndex) ?? []} />
+        )}
       </div>
-      <div className="h-12 relative">
-        <Pagination>
+      <div className="h-12 mt-5">
+        <Pagination className="flex justify-start">
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious
@@ -177,7 +181,7 @@ const ListingsPage: PageComponent = () => {
                 onClick={() => handlePageChange("prev")}
               />
             </PaginationItem>
-            <PaginationItem>
+            {/* <PaginationItem>
               {Number(page) > 1 ? (
                 <PaginationEllipsis />
               ) : (
@@ -193,7 +197,7 @@ const ListingsPage: PageComponent = () => {
               ) : (
                 <PaginationEllipsis style={{ color: "white" }} />
               )}
-            </PaginationItem>
+            </PaginationItem> */}
             <PaginationItem>
               <PaginationNext
                 className={`cursor-pointer ${
