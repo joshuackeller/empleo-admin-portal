@@ -40,9 +40,7 @@ export function DataTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
     defaultColumn: {
-      size: 200,
-      minSize: 50,
-      maxSize: 500,
+      size: 100,
     },
   });
 
@@ -71,7 +69,12 @@ export function DataTable<TData, TValue>({
             <TableRow key={headerGroup.id} className="hover:bg-inherit">
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    style={{
+                      minWidth: header.getSize(),
+                    }}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(

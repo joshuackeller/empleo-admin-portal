@@ -4,8 +4,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/src/components/shadcn/DropdownMenu";
 import { Button } from "../shadcn/Button";
@@ -19,39 +17,37 @@ const columns: ColumnDef<Listing>[] = [
   {
     accessorKey: "jobTitle",
     header: "Job Title",
-    // WIP - Not working
-    enableResizing: false,
-    minSize: 500,
-    size: 500,
-    maxSize: 500,
+    size: 200,
   },
   {
     accessorKey: "shortDescription",
     header: "Short Description",
-    enableResizing: false,
-    minSize: 500,
-    size: 500,
-    maxSize: 500,
+    size: 300,
   },
-  // {
-  //   accessorKey: "jobRequirements",
-  //   header: "Job Requirements",
-  // },
+  {
+    accessorKey: "_count.applications",
+    header: "Applicants",
+    size: 100,
+  },
   {
     accessorKey: "employmentType",
     header: "Employment Type",
+    size: 150,
   },
   {
     accessorKey: "location",
     header: "Location",
+    size: 150,
   },
   {
     accessorKey: "salaryRange",
     header: "Salary Range",
+    size: 200,
   },
   {
     accessorKey: "published",
     header: "Published?",
+    size: 150,
   },
   {
     id: "actions",
@@ -78,9 +74,6 @@ const columns: ColumnDef<Listing>[] = [
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-              <DropdownMenuSeparator />
               <DropdownMenuItem
                 disabled={isRemoving}
                 onClick={handleRemoveListing}
