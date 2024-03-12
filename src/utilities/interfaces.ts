@@ -105,6 +105,9 @@ export interface BaseListing {
   usAuthorizedEnabled: boolean;
   createdAt: string;
   updatedAt: string;
+  _count: {
+    applications: number;
+  };
 }
 
 export interface Listing extends BaseListing {}
