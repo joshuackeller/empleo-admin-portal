@@ -24,7 +24,7 @@ import {
   FormMessage,
 } from "@/src/components/shadcn/Form";
 import { useState, useEffect, use } from "react";
-import { Plus } from "lucide-react";
+import { Plus, ArrowUpDown, MoreHorizontal } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
@@ -45,7 +45,35 @@ const TeamPage: PageComponent = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [page, setPage] = useState("1");
   const [pageSize, setPageSize] = useState("5"); // This is the number of rows to show per page
-  const { data, isLoading, isError } = useGetAdmins({ page, pageSize });
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const {
+    data: unsortedData,
+    isLoading,
+    isError,
+  } = useGetAdmins({ page, pageSize });
+
+  const [sortKey, setSortKey] = useState<string | null>(null);
+
+  const handleSort = (columnName: string) => {
+    setSortDirection((prevDirection) =>
+      columnName === sortKey && prevDirection === "asc" ? "desc" : "asc"
+    );
+    setSortKey(columnName);
+    setStartIndex(0); // Reset startIndex when sorting
+  };
+
+  const data = unsortedData?.sort((a, b) => {
+    if (sortKey) {
+      const valueA = a[sortKey as keyof typeof a];
+      const valueB = b[sortKey as keyof typeof b];
+      return sortDirection === "asc"
+        ? valueA.localeCompare(valueB)
+        : valueB.localeCompare(valueA);
+    } else {
+      return 0;
+    }
+  });
+
   const [startIndex, setStartIndex] = useState(0);
   const [endIndex, setEndIndex] = useState(parseInt(pageSize));
   const rowsPerPage = parseInt(pageSize);
@@ -147,7 +175,10 @@ const TeamPage: PageComponent = () => {
         <Separator className="mb-3 mt-1" />
       </div>
       <div className="min-h-[300px]">
-        <AdminTable data={data?.slice(startIndex, endIndex)} />
+        <AdminTable
+          data={data?.slice(startIndex, endIndex)}
+          onSort={(columnName) => handleSort(columnName)}
+        />
       </div>
       <div className="h-12 mt-5">
         <Pagination className="flex justify-start">
