@@ -51,7 +51,7 @@ const columns: ColumnDef<Listing>[] = [
   },
   {
     id: "actions",
-    enableHiding: false,
+    enablePinning: true,
     cell: ({ row }) => {
       const listingId = row.original.id;
 
