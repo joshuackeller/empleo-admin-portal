@@ -33,6 +33,24 @@ const columns: ColumnDef<Listing>[] = [
     accessorKey: "employmentType",
     header: "Employment Type",
     size: 150,
+    cell: ({ row }) => {
+      switch (row.original.employmentType) {
+        case "full_time":
+          return "Full Time";
+        case "part_time":
+          return "Part Time";
+        case "contract":
+          return "Contract";
+        case "temporary":
+          return "Temporary";
+        case "internship":
+          return "Internship";
+        case "seasonal":
+          return "Seasonal";
+        default:
+          return row.original.employmentType;
+      }
+    },
   },
   {
     accessorKey: "location",
