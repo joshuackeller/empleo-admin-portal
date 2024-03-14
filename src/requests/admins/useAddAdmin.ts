@@ -23,7 +23,7 @@ const useAddAdmin = () => {
     mutationFn: AddAdmin,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: AdminQueryKeys.all,
+        queryKey: AdminQueryKeys.all(),
       });
     },
   });

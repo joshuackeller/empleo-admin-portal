@@ -33,7 +33,7 @@ const useCreateListing = () => {
     mutationFn: CreateListing,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ListingQueryKeys.all,
+        queryKey: ListingQueryKeys.all(""),
       });
     },
   });
