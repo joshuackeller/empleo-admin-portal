@@ -13,7 +13,6 @@ const Page = () => {
     },
   ];
 
-  //   return <DocViewer documents={docs} />;
   return (
     <div>
       <div>hello there</div>
