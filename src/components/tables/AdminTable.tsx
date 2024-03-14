@@ -38,14 +38,17 @@ const AdminTable: React.FC<AdminTableProps> = ({ data }) => {
         {
           accessorKey: "firstName",
           header: "First Name",
+          size: 200,
         },
         {
           accessorKey: "lastName",
           header: "Last Name",
+          size: 200,
         },
         {
           accessorKey: "email",
           header: "Email",
+          size: 300,
         },
         {
           id: "actions",

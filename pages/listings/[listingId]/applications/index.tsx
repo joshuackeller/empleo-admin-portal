@@ -60,7 +60,6 @@ const ApplicationsPage: PageComponent = () => {
     }
   };
 
-  if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error</div>;
 
   return (
@@ -72,8 +71,8 @@ const ApplicationsPage: PageComponent = () => {
           isFetching={isFetching}
         />
       </div>
-      <div className="h-12 relative">
-        <Pagination>
+      <div className="h-12 mt-5">
+        <Pagination className="flex justify-start">
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious
@@ -82,23 +81,6 @@ const ApplicationsPage: PageComponent = () => {
                 }`}
                 onClick={() => handlePageChange("prev")}
               />
-            </PaginationItem>
-            <PaginationItem>
-              {Number(page) > 1 ? (
-                <PaginationEllipsis />
-              ) : (
-                <PaginationEllipsis style={{ color: "white" }} />
-              )}
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink>{page}</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              {Number(page) < totalPages ? (
-                <PaginationEllipsis />
-              ) : (
-                <PaginationEllipsis style={{ color: "white" }} />
-              )}
             </PaginationItem>
             <PaginationItem>
               <PaginationNext

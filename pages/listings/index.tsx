@@ -181,23 +181,6 @@ const ListingsPage: PageComponent = () => {
                 onClick={() => handlePageChange("prev")}
               />
             </PaginationItem>
-            {/* <PaginationItem>
-              {Number(page) > 1 ? (
-                <PaginationEllipsis />
-              ) : (
-                <PaginationEllipsis style={{ color: "white" }} />
-              )}
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink>{page}</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              {Number(page) < totalPages ? (
-                <PaginationEllipsis />
-              ) : (
-                <PaginationEllipsis style={{ color: "white" }} />
-              )}
-            </PaginationItem> */}
             <PaginationItem>
               <PaginationNext
                 className={`cursor-pointer ${
