@@ -50,7 +50,7 @@ const TablePagination = ({ query }: TablePaginationProps) => {
           <Link
             href={{
               pathname: router.pathname,
-              query: { ...router.query, page: page + 1 },
+              query: { ...router.query, page: nextPage ? page + 1 : page },
             }}
             className={cn(
               "px-2 py-1 hover:bg-gray-100 rounded flex gap-x-1 items-center text-sm font-medium ",
