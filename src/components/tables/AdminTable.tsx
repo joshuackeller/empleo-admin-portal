@@ -14,26 +14,19 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import useRemoveAdmin from "@/src/requests/admins/useRemoveAdmin";
 import useAuthContext from "@/src/utilities/useAuthContext";
 import ReadJWTData from "@/src/utilities/ReadJWTData";
-import { boolean } from "zod";
-import { Admin } from "@/src/utilities/interfaces";
+import { UsePaginatedQueryResult } from "@/src/requests/usePaginatedQuery";
 
 type AdminTableProps = {
-  data?: Admin[];
+  query: UsePaginatedQueryResult;
 };
 
-const AdminTable: React.FC<AdminTableProps> = ({ data }) => {
-  // const { data, isFetching } = useGetAdmins();
-  const { isFetching } = useGetAdmins();
-
+const AdminTable = ({ query }: AdminTableProps) => {
   const { token } = useAuthContext();
   const tokenData = ReadJWTData(token || "");
 
-  if (!data) return <Skeleton className="h-24 w-full" />;
-
   return (
     <DataTable
-      isFetching={isFetching}
-      data={data}
+      query={query}
       columns={[
         {
           accessorKey: "firstName",
@@ -54,7 +47,7 @@ const AdminTable: React.FC<AdminTableProps> = ({ data }) => {
           id: "actions",
           enableHiding: false,
           cell: ({ row }) => {
-            const adminId = row.original.id;
+            const adminId = (row.original as any).id; // Maybe fix???
 
             const { mutate: removeAdmin, isPending } = useRemoveAdmin();
 

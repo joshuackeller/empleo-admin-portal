@@ -23,7 +23,7 @@ const useRemoveApplication = () => {
     mutationFn: RemoveApplication,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ApplicationQueryKeys.all(""),
+        queryKey: ApplicationQueryKeys.all,
       });
     },
   });

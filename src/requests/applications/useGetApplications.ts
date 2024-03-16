@@ -1,15 +1,18 @@
-import { Application, Listing } from "@/src/utilities/interfaces";
+import { Application } from "@/src/utilities/interfaces";
 import useEmpleoApi from "../useEmpleoApi";
 import { useQuery } from "@tanstack/react-query";
 import ApplicationQueryKeys from ".";
+import { PaginatedQueryParams } from "../usePaginatedQuery";
 
-interface GetApplicationsProps {
+interface GetApplicationsProps extends PaginatedQueryParams {
   listingId: string;
-  page?: string;
-  pageSize?: string;
 }
 
-const GetApplications = async ({ listingId, page, pageSize }: GetApplicationsProps): Promise<Application[]> => {
+const GetApplications = async ({
+  listingId,
+  page,
+  pageSize,
+}: GetApplicationsProps): Promise<{ data: Application[]; count: number }> => {
   const api = useEmpleoApi();
 
   const { data } = await api.get("/applications", {
@@ -25,14 +28,12 @@ const GetApplications = async ({ listingId, page, pageSize }: GetApplicationsPro
 
 interface useGetApplicationsProps {
   listingId: string;
-  page?: string;
-  pageSize?: string;
 }
 
-const useGetApplications = ({ listingId, page, pageSize }: useGetApplicationsProps) => {
+const useGetApplications = ({ listingId }: useGetApplicationsProps) => {
   return useQuery({
-    queryKey: ApplicationQueryKeys.all(listingId, page, pageSize),
-    queryFn: () => GetApplications({ listingId, page, pageSize }),
+    queryKey: ApplicationQueryKeys.all,
+    queryFn: (params) => GetApplications({ listingId, ...params }),
   });
 };
 
