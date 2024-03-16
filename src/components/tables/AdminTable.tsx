@@ -15,9 +15,15 @@ import useRemoveAdmin from "@/src/requests/admins/useRemoveAdmin";
 import useAuthContext from "@/src/utilities/useAuthContext";
 import ReadJWTData from "@/src/utilities/ReadJWTData";
 import { boolean } from "zod";
+import { Admin } from "@/src/utilities/interfaces";
 
-const AdminTable = () => {
-  const { data, isFetching } = useGetAdmins();
+type AdminTableProps = {
+  data?: Admin[];
+};
+
+const AdminTable: React.FC<AdminTableProps> = ({ data }) => {
+  // const { data, isFetching } = useGetAdmins();
+  const { isFetching } = useGetAdmins();
 
   const { token } = useAuthContext();
   const tokenData = ReadJWTData(token || "");
@@ -32,14 +38,17 @@ const AdminTable = () => {
         {
           accessorKey: "firstName",
           header: "First Name",
+          size: 200,
         },
         {
           accessorKey: "lastName",
           header: "Last Name",
+          size: 200,
         },
         {
           accessorKey: "email",
           header: "Email",
+          size: 300,
         },
         {
           id: "actions",

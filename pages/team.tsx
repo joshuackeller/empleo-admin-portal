@@ -23,8 +23,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/src/components/shadcn/Form";
-import { useState } from "react";
+import { useState, useEffect, use } from "react";
 import { Plus } from "lucide-react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/src/components/shadcn/Pagination";
+import useGetAdmins from "@/src/requests/admins/useGetAdmins";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -33,6 +43,17 @@ const formSchema = z.object({
 const TeamPage: PageComponent = () => {
   const { mutate: addAdmin, isPending } = useAddAdmin();
   const [open, setOpen] = useState<boolean>(false);
+  const [page, setPage] = useState("1");
+  const [pageSize, setPageSize] = useState("5"); // This is the number of rows to show per page
+  const { data, isLoading, isError } = useGetAdmins({ page, pageSize });
+  const [startIndex, setStartIndex] = useState(0);
+  const [endIndex, setEndIndex] = useState(parseInt(pageSize));
+  const rowsPerPage = parseInt(pageSize);
+  const totalPages = Math.ceil((data?.length ?? 0) / rowsPerPage);
+
+  useEffect(() => {
+    setEndIndex(startIndex + rowsPerPage);
+  }, [startIndex, rowsPerPage]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,10 +68,29 @@ const TeamPage: PageComponent = () => {
       {
         onSuccess: () => {
           setOpen(false);
+          form.setValue("email", "");
         },
       }
     );
   };
+
+  const handlePageChange = (direction: "next" | "prev") => {
+    if (direction === "next" && endIndex < (data?.length ?? 0)) {
+      const newEndIndex = Math.min(endIndex + rowsPerPage, data?.length ?? 0);
+      setPage(Math.ceil(newEndIndex / rowsPerPage).toString());
+      setStartIndex(endIndex);
+      setEndIndex(newEndIndex);
+    } else if (direction === "prev" && startIndex > 0) {
+      const newStartIndex = Math.max(startIndex - rowsPerPage, 0);
+      setPage(
+        Math.ceil((newStartIndex + rowsPerPage) / rowsPerPage).toString()
+      );
+      setEndIndex(startIndex);
+      setStartIndex(newStartIndex);
+    }
+  };
+
+  if (isError) return <div>Error</div>;
 
   return (
     <div>
@@ -106,8 +146,32 @@ const TeamPage: PageComponent = () => {
         </div>
         <Separator className="mb-3 mt-1" />
       </div>
-      <div>
-        <AdminTable />
+      <div className="min-h-[300px]">
+        <AdminTable data={data?.slice(startIndex, endIndex)} />
+      </div>
+      <div className="h-12 mt-5">
+        <Pagination className="flex justify-start">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                className={`cursor-pointer ${
+                  startIndex === 0 ? "pointer-events-none opacity-50" : ""
+                }`}
+                onClick={() => handlePageChange("prev")}
+              />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext
+                className={`cursor-pointer ${
+                  endIndex >= (data?.length ?? 0)
+                    ? "pointer-events-none opacity-50"
+                    : ""
+                }`}
+                onClick={() => handlePageChange("next")}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </div>
     </div>
   );

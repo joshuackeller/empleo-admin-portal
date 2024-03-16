@@ -76,8 +76,6 @@
     "@tiptap/starter-kit": "^2.2.4",
     "@tiptap/suggestion": "2.0.4",
     "@types/node": "20.10.0",
-    "@types/react": "18.2.39",
-    "@types/react-dom": "18.2.17",
     "antd": "^5.14.1",
     "autoprefixer": "10.4.16",
     "axios": "^1.6.2",
@@ -110,9 +108,9 @@
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.5",
     "@types/luxon": "^3.4.2",
-    "@types/react": "^18.0.15",
+    "@types/react": "^18.2.39",
     "@types/react-color": "^3.0.11",
-    "@types/react-dom": "^18.0.6",
+    "@types/react-dom": "^18.2.17",
     "@types/react-resizable": "^3.0.7"
   }
 }

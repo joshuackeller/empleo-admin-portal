@@ -34,7 +34,7 @@ const useUpdateApplication = () => {
         description: "nice work",
       });
       queryClient.invalidateQueries({
-        queryKey: ApplicationQueryKeys.all,
+        queryKey: ApplicationQueryKeys.all(""),
       });
       queryClient.setQueryData(
         ApplicationQueryKeys.single(response.id),

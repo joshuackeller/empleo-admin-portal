@@ -1,5 +1,5 @@
 const ApplicationQueryKeys = {
-  all: ["applications"],
+  all: (listingId: string, page?: string, pageSize?: string) => ["applications", listingId, page, pageSize],
   single: (applicationId: string) => ["applications", applicationId],
   notes: (applicationId: string) => ["applications", applicationId, "notes"],
 };

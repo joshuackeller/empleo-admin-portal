@@ -23,14 +23,18 @@ const columns: ColumnDef<Application>[] = [
   {
     accessorKey: "firstName",
     header: "First Name",
+    size: 200,
   },
   {
     accessorKey: "lastName",
     header: "Last Name",
+    size: 200,
   },
   {
+
     accessorKey: "phone",
     header: "phone",
+    size: 200,
   },
   {
     accessorKey: "status",
