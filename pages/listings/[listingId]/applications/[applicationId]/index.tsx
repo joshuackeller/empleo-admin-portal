@@ -30,6 +30,7 @@ import { DateTime } from "luxon";
 import { Skeleton } from "@/src/components/shadcn/Skeleton";
 import useGetListing from "@/src/requests/listings/useGetListing";
 import { Separator } from "@/src/components/shadcn/Separator";
+import FileViewer from "@/src/components/other/FileViewer";
 
 const formSchema = z.object({
   // applicationId: z.string(),
@@ -190,6 +191,14 @@ const SingleApplicationDetails = () => {
                   </div>
                 </div>
               )}
+              <div>
+                {application.resume && (
+                  <FileViewer
+                    uri={application.resume?.url}
+                    fileType={application.resume?.fileType}
+                  />
+                )}
+              </div>
               {listing?.coverLetterEnabled && (
                 <div>
                   <Label>Cover Letter</Label>

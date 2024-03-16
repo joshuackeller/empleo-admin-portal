@@ -29,12 +29,12 @@ const columns: ColumnDef<Application>[] = [
     header: "Last Name",
   },
   {
-    accessorKey: "address",
-    header: "Street Address",
-  },
-  {
     accessorKey: "phone",
     header: "phone",
+  },
+  {
+    accessorKey: "status",
+    header: "Application Status",
   },
   {
     id: "actions",

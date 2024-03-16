@@ -156,7 +156,7 @@ export interface Application extends BaseApplication {
   coverLetter: BaseFile | null;
 }
 
-enum FileType {
+export enum FileType {
   doc = "doc",
   docx = "docx",
   pdf = "pdf",
