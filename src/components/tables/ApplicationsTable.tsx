@@ -31,14 +31,14 @@ const columns: ColumnDef<Application>[] = [
     size: 200,
   },
   {
-    accessorKey: "address",
-    header: "Street Address",
-    size: 300,
-  },
-  {
+
     accessorKey: "phone",
     header: "phone",
     size: 200,
+  },
+  {
+    accessorKey: "status",
+    header: "Application Status",
   },
   {
     id: "actions",
