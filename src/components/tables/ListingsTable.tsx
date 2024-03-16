@@ -1,5 +1,4 @@
 import { DataTable } from "@/src/components/shadcn/DataTable";
-import { Skeleton } from "@/src/components/shadcn/Skeleton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,9 +8,9 @@ import {
 import { Button } from "../shadcn/Button";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import useRemoveListing from "@/src/requests/listings/useRemoveListing";
-import useGetListings from "@/src/requests/listings/useGetListings";
 import { ColumnDef } from "@tanstack/react-table";
 import { Listing } from "@/src/utilities/interfaces";
+import { UsePaginatedQueryResult } from "@/src/requests/usePaginatedQuery";
 
 const columns: ColumnDef<Listing>[] = [
   {
@@ -108,22 +107,14 @@ const columns: ColumnDef<Listing>[] = [
 ];
 
 type ListingsTableProps = {
-  data: Listing[];
+  query: UsePaginatedQueryResult;
 };
 
-const ListingsTable: React.FC<ListingsTableProps> = ({ data }) => {
-  const { isFetching } = useGetListings();
+const ListingsTable = ({ query }: ListingsTableProps) => {
   const isClickable = true;
 
-  if (!data) return <Skeleton className="h-24 w-full" />;
-
   return (
-    <DataTable
-      isFetching={isFetching}
-      data={data}
-      columns={columns}
-      isClickable={isClickable}
-    />
+    <DataTable query={query} columns={columns} isClickable={isClickable} />
   );
 };
 

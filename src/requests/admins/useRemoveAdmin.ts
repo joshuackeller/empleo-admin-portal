@@ -21,7 +21,7 @@ const useRemoveAdmin = () => {
     mutationFn: RemoveAdmin,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: AdminQueryKeys.all(),
+        queryKey: AdminQueryKeys.all,
       });
     },
   });

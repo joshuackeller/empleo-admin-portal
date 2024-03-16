@@ -44,7 +44,7 @@ const useAddApplication = () => {
     mutationFn: AddApplication,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ApplicationQueryKeys.all(""),
+        queryKey: ApplicationQueryKeys.all,
       });
     },
   });

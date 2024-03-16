@@ -74,7 +74,7 @@ const useUpdateListing = ({
       }
       if (!optimistic || !listingId) {
         queryClient.invalidateQueries({
-          queryKey: ListingQueryKeys.all(""),
+          queryKey: ListingQueryKeys.all,
         });
         queryClient.setQueryData(
           ListingQueryKeys.single(response.id),
