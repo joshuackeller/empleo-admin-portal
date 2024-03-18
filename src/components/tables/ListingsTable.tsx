@@ -83,23 +83,16 @@ const columns: ColumnDef<Listing>[] = [
 
       return (
         <div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <DotsHorizontalIcon className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                disabled={isRemoving}
-                onClick={handleRemoveListing}
-                className="!text-red-500 cursor-pointer"
-              >
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Button
+            variant="ghost"
+            className="h-8 w-8 p-0 text-indigo-500"
+            disabled={isRemoving}
+            onClick={() =>
+              (window.location.href = `/listings/${listingId}/applications/`)
+            }
+          >
+            View Applicants
+          </Button>
         </div>
       );
     },
