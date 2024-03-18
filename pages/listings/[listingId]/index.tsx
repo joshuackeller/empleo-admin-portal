@@ -262,6 +262,7 @@ const ListingPage: PageComponent = () => {
                 <Editor
                   value={jobDescription || listing?.jobDescription || ""}
                   setValue={setJobDescription}
+                  placeholder="Enter your job description here..."
                 />
               </div>
 

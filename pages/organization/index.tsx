@@ -412,7 +412,11 @@ const OrgPage: PageComponent = () => {
         ) : (
           <>
             <Label>Long Description</Label>
-            <Editor value={longDescription} setValue={setLongDescription} />
+            <Editor
+              value={longDescription}
+              setValue={setLongDescription}
+              placeholder="Write something cool about your company here and it will be displayed on your custom job board!"
+            />
           </>
         )}
       </div>
