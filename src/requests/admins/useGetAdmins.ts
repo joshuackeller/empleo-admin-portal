@@ -1,18 +1,28 @@
 import { Admin } from "@/src/utilities/interfaces";
 import useEmpleoApi from "../useEmpleoApi";
-import { useQuery } from "@tanstack/react-query";
 import AdminQueryKeys from ".";
+import usePaginatedQuery, { PaginatedQueryParams } from "../usePaginatedQuery";
 
-const GetAdmins = async (): Promise<Admin[]> => {
+interface GetAdminsProps extends PaginatedQueryParams {}
+
+const GetAdmins = async ({
+  page,
+  pageSize,
+}: GetAdminsProps): Promise<{ data: Admin[]; count: number }> => {
   const api = useEmpleoApi();
 
-  const { data } = await api.get("/admins");
+  const { data } = await api.get("/admins", {
+    params: {
+      page,
+      pageSize,
+    },
+  });
 
   return data;
 };
 
 const useGetAdmins = () => {
-  return useQuery({
+  return usePaginatedQuery({
     queryKey: AdminQueryKeys.all,
     queryFn: GetAdmins,
   });

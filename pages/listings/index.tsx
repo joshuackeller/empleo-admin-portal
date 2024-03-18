@@ -22,31 +22,44 @@ import {
   FormMessage,
 } from "@/src/components/shadcn/Form";
 import { useState } from "react";
-import useAddListing from "@/src/requests/listings/useAddListing";
 import ListingsTable from "@/src/components/tables/ListingsTable";
 import { PlusIcon } from "lucide-react";
+import useCreateListing from "@/src/requests/listings/useCreateListing";
+import { useRouter } from "next/router";
+import { EmploymentType, Listing } from "@/src/utilities/interfaces";
+import useGetListings from "@/src/requests/listings/useGetListings";
+import { Skeleton } from "@/src/components/shadcn/Skeleton";
 
 const formSchema = z.object({
   jobTitle: z.string(),
   jobDescription: z.string().optional(),
   jobRequirements: z.string().optional(),
-  employmentType: z.string().optional(),
+  employmentType: z
+    .enum([
+      Object.values(EmploymentType)[0],
+      ...Object.values(EmploymentType).slice(1),
+    ])
+    .optional(),
   location: z.string().optional(),
   salaryRange: z.string().optional(),
   published: z.boolean(),
 });
 
 const ListingsPage: PageComponent = () => {
-  const { mutate: addListing, isPending } = useAddListing();
+  const router = useRouter();
+
+  const { mutate: createListing, isPending } = useCreateListing();
   const [open, setOpen] = useState<boolean>(false);
+
+  const query = useGetListings();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       jobTitle: "",
-      jobDescription: "",
+      jobDescription: undefined,
       jobRequirements: "",
-      employmentType: "",
+      employmentType: undefined,
       location: "",
       salaryRange: "",
       published: false,
@@ -54,21 +67,23 @@ const ListingsPage: PageComponent = () => {
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    addListing(
+    createListing(
       { body: values },
       {
-        onSuccess: () => {
-          setOpen(false);
+        onSuccess: (response: Listing) => {
+          router.push(`/listings/${response.id}`);
         },
       }
     );
   };
 
+  if (query.isError) return <div>Error</div>;
+
   return (
     <div>
       <div>
         <div className="flex justify-between items-start">
-          <h4>Listing</h4>
+          <h4>Listings</h4>
           <div>
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
@@ -76,9 +91,9 @@ const ListingsPage: PageComponent = () => {
                   <PlusIcon className="h-4 w-4 text-white" />
                 </button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
+              <DialogContent className="max-w-md">
                 <DialogHeader>
-                  <DialogTitle>Add Listing</DialogTitle>
+                  <DialogTitle>Create Listing</DialogTitle>
                   <DialogDescription
                     className="!font-sans"
                     style={{ fontFamily: "sans-serif" }}
@@ -93,96 +108,16 @@ const ListingsPage: PageComponent = () => {
                         <FormItem>
                           <FormLabel>Job Title</FormLabel>
                           <FormControl>
-                            <Input placeholder="Software Engineer" {...field} />
+                            <Input placeholder="Manager" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                    <FormField
-                      control={form.control}
-                      name="jobDescription"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Job Description</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Write Code" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="jobRequirements"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Job Requirements</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="1-2 years of experience"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="employmentType"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Employment Type</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Full Time" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="location"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Location</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Provo, Utah" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="salaryRange"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Salary Range</FormLabel>
-                          <FormControl>
-                            <Input placeholder="$85,000 - $95,000" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="published"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Published?</FormLabel>
-                          <FormControl>
-                            <input type="checkbox" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+
                     <div className="flex justify-end mt-3">
                       <Button disabled={isPending} type="submit">
-                        Add
+                        Create Listing
                       </Button>
                     </div>
                   </form>
@@ -194,7 +129,7 @@ const ListingsPage: PageComponent = () => {
         <Separator className="mb-3 mt-1" />
       </div>
       <div>
-        <ListingsTable />
+        <ListingsTable query={query} />
       </div>
     </div>
   );

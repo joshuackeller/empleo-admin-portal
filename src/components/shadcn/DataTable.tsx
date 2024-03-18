@@ -4,7 +4,6 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -16,11 +15,14 @@ import {
 import { cn } from "@/src/utilities/cn";
 import { useRouter } from "next/router";
 import { Application } from "@/src/utilities/interfaces";
+import TablePagination from "../tables/TablePagination";
+import { Skeleton } from "./Skeleton";
+import { UsePaginatedQueryResult } from "@/src/requests/usePaginatedQuery";
 
 interface DataTableProps<TData, TValue> {
   applications?: Application[];
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  query: UsePaginatedQueryResult;
   isFetching?: boolean;
   isClickable?: boolean;
   linkBaseRoute?: string;
@@ -28,7 +30,7 @@ interface DataTableProps<TData, TValue> {
 
 export function DataTable<TData, TValue>({
   columns,
-  data,
+  query,
   isFetching = false,
   isClickable = false,
   linkBaseRoute,
@@ -36,12 +38,13 @@ export function DataTable<TData, TValue>({
   const router = useRouter();
   const baseRoute = linkBaseRoute || router.pathname;
   const table = useReactTable({
-    data,
+    data: query?.data?.data || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
+    defaultColumn: {
+      size: 100,
+    },
   });
-
-  //emily's attempt at routing function for all tables.
 
   const handleRowClick = (
     baseRoute: string,
@@ -53,6 +56,7 @@ export function DataTable<TData, TValue>({
     }
   };
 
+  if (query.isLoading) return <Skeleton className="h-96 w-full" />;
   return (
     <div
       className={cn(
@@ -66,7 +70,12 @@ export function DataTable<TData, TValue>({
             <TableRow key={headerGroup.id} className="hover:bg-inherit">
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    style={{
+                      minWidth: header.getSize(),
+                    }}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -79,6 +88,7 @@ export function DataTable<TData, TValue>({
             </TableRow>
           ))}
         </TableHeader>
+
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
@@ -112,6 +122,9 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
+      <div className="p-1 border-t">
+        <TablePagination query={query} />
+      </div>
     </div>
   );
 }

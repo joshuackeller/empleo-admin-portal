@@ -18,23 +18,28 @@ import Link from "next/link";
 import useGetApplications from "@/src/requests/applications/useGetApplications";
 import useRemoveApplication from "@/src/requests/applications/useRemoveApplication";
 import { useRouter } from "next/router";
+import { UsePaginatedQueryResult } from "@/src/requests/usePaginatedQuery";
 
 const columns: ColumnDef<Application>[] = [
   {
     accessorKey: "firstName",
     header: "First Name",
+    size: 200,
   },
   {
     accessorKey: "lastName",
     header: "Last Name",
+    size: 200,
   },
   {
-    accessorKey: "address",
-    header: "Street Address",
-  },
-  {
+
     accessorKey: "phone",
     header: "phone",
+    size: 200,
+  },
+  {
+    accessorKey: "status",
+    header: "Application Status",
   },
   {
     id: "actions",
@@ -85,23 +90,16 @@ const columns: ColumnDef<Application>[] = [
 ];
 
 interface ApplicationsTableProps {
-  applications: Application[] | undefined;
-  isFetching: boolean;
+  query: UsePaginatedQueryResult;
   listingId: string;
 }
 
-const ApplicationsTable = ({
-  applications,
-  isFetching,
-  listingId,
-}: ApplicationsTableProps) => {
+const ApplicationsTable = ({ query, listingId }: ApplicationsTableProps) => {
   const isClickable = true;
 
-  if (!applications) return <Skeleton className="h-24 w-full" />;
   return (
     <DataTable
-      isFetching={isFetching}
-      data={applications}
+      query={query}
       columns={columns}
       isClickable={isClickable}
       linkBaseRoute={`/listings/${listingId}/applications`}

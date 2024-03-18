@@ -7,19 +7,14 @@ import ListingWrapper from "@/src/layout/wrappers/ListingWrapper";
 const ApplicationsPage: PageComponent = () => {
   const router = useRouter();
   const listingId = router.query.listingId;
-  const { data: applications, isFetching } = useGetListingApplications(
-    listingId as string
-  );
+
+  const query = useGetListingApplications({
+    listingId: listingId as string,
+  });
 
   return (
     <ListingWrapper>
-      <div className="mt-3">
-        <ApplicationsTable
-          listingId={listingId as string}
-          applications={applications}
-          isFetching={isFetching}
-        />
-      </div>
+      <ApplicationsTable query={query} listingId={listingId as string} />
     </ListingWrapper>
   );
 };

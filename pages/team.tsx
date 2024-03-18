@@ -25,6 +25,7 @@ import {
 } from "@/src/components/shadcn/Form";
 import { useState } from "react";
 import { Plus } from "lucide-react";
+import useGetAdmins from "@/src/requests/admins/useGetAdmins";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -33,6 +34,7 @@ const formSchema = z.object({
 const TeamPage: PageComponent = () => {
   const { mutate: addAdmin, isPending } = useAddAdmin();
   const [open, setOpen] = useState<boolean>(false);
+  const query = useGetAdmins();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,6 +49,7 @@ const TeamPage: PageComponent = () => {
       {
         onSuccess: () => {
           setOpen(false);
+          form.setValue("email", "");
         },
       }
     );
@@ -106,9 +109,7 @@ const TeamPage: PageComponent = () => {
         </div>
         <Separator className="mb-3 mt-1" />
       </div>
-      <div>
-        <AdminTable />
-      </div>
+      <AdminTable query={query} />
     </div>
   );
 };
