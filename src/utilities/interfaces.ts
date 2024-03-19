@@ -155,14 +155,26 @@ export interface BaseApplication {
 }
 
 export interface Application extends BaseApplication {
+  user: BaseUser;
   resume: BaseFile | null;
   coverLetter: BaseFile | null;
+}
+
+export enum FileType {
+  doc = "doc",
+  docx = "docx",
+  pdf = "pdf",
+  png = "png",
+  jpeg = "jpeg",
+  pages = "pages",
+  unknown = "unknown",
 }
 
 export interface BaseFile {
   id: string;
   name: string;
   url: string;
+  fileType: FileType;
   createdAt: string;
   updatedAt: string;
 }

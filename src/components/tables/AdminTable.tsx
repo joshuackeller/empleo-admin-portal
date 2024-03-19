@@ -14,108 +14,40 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import useRemoveAdmin from "@/src/requests/admins/useRemoveAdmin";
 import useAuthContext from "@/src/utilities/useAuthContext";
 import ReadJWTData from "@/src/utilities/ReadJWTData";
-import { boolean } from "zod";
-import { Admin } from "@/src/utilities/interfaces";
-import { useState } from "react";
-import { ArrowUpDown, MoreHorizontal, ArrowUp, ArrowDown } from "lucide-react";
+import { UsePaginatedQueryResult } from "@/src/requests/usePaginatedQuery";
 
 type AdminTableProps = {
-  data?: Admin[];
-  // onSort?: (columnName: string) => void;
-  onSort?: (columnName: string, direction: "asc" | "desc") => void;
+  query: UsePaginatedQueryResult;
 };
 
-const AdminTable: React.FC<AdminTableProps> = ({ data, onSort }) => {
-  const { isFetching } = useGetAdmins();
+const AdminTable = ({ query }: AdminTableProps) => {
   const { token } = useAuthContext();
   const tokenData = ReadJWTData(token || "");
 
-  const [selectedColumn, setSelectedColumn] = useState<string | null>(null);
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
-
-  const handleSort = (columnName: string) => {
-    let direction: "asc" | "desc" = "asc";
-    if (selectedColumn === columnName) {
-      direction = sortDirection === "asc" ? "desc" : "asc";
-    }
-    setSelectedColumn(columnName);
-    setSortDirection(direction);
-    onSort && onSort(columnName, direction);
-  };
-
-  if (!data) return <Skeleton className="h-24 w-full" />;
-
   return (
     <DataTable
-      isFetching={isFetching}
-      data={data}
-      // columnNames={["firstName", "lastName", "email"]}
+      query={query}
       columns={[
         {
           accessorKey: "firstName",
-          header: ({ column }) => {
-            return (
-              <Button variant="ghost" onClick={() => handleSort("firstName")}>
-                First Name
-                {selectedColumn === "firstName" ? (
-                  sortDirection === "asc" ? (
-                    <ArrowUp className="ml-2 h-4 w-4" />
-                  ) : (
-                    <ArrowDown className="ml-2 h-4 w-4" />
-                  )
-                ) : (
-                  <ArrowUpDown className="ml-2 h-4 w-4" />
-                )}
-              </Button>
-            );
-          },
+          header: "First Name",
           size: 200,
         },
         {
           accessorKey: "lastName",
-          header: ({ column }) => {
-            return (
-              <Button variant="ghost" onClick={() => handleSort("lastName")}>
-                Last Name
-                {selectedColumn === "lastName" ? (
-                  sortDirection === "asc" ? (
-                    <ArrowUp className="ml-2 h-4 w-4" />
-                  ) : (
-                    <ArrowDown className="ml-2 h-4 w-4" />
-                  )
-                ) : (
-                  <ArrowUpDown className="ml-2 h-4 w-4" />
-                )}
-              </Button>
-            );
-          },
+          header: "Last Name",
           size: 200,
         },
         {
           accessorKey: "email",
-          header: ({ column }) => {
-            return (
-              <Button variant="ghost" onClick={() => handleSort("email")}>
-                Email
-                {selectedColumn === "email" ? (
-                  sortDirection === "asc" ? (
-                    <ArrowUp className="ml-2 h-4 w-4" />
-                  ) : (
-                    <ArrowDown className="ml-2 h-4 w-4" />
-                  )
-                ) : (
-                  <ArrowUpDown className="ml-2 h-4 w-4" />
-                )}
-              </Button>
-            );
-          },
+          header: "Email",
           size: 300,
         },
         {
           id: "actions",
           enableHiding: false,
           cell: ({ row }) => {
-            const adminId = row.original.id;
+            const adminId = (row.original as any).id; // Maybe fix???
 
             const { mutate: removeAdmin, isPending } = useRemoveAdmin();
 
