@@ -9,6 +9,8 @@ interface GetListingsProps extends PaginatedQueryParams {}
 const GetListings = async ({
   page,
   pageSize,
+  sort,
+  direction,
 }: GetListingsProps): Promise<{
   data: Listing[];
   count: number;
@@ -19,6 +21,8 @@ const GetListings = async ({
     params: {
       page,
       pageSize,
+      sort,
+      direction,
     },
   });
 

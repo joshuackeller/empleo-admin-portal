@@ -12,6 +12,8 @@ const GetApplications = async ({
   listingId,
   page,
   pageSize,
+  sort,
+  direction,
 }: GetApplicationsProps): Promise<{ data: Application[]; count: number }> => {
   const api = useEmpleoApi();
 
@@ -20,6 +22,8 @@ const GetApplications = async ({
       listingId,
       page,
       pageSize,
+      sort,
+      direction,
     },
   });
 

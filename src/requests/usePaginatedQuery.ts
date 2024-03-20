@@ -13,6 +13,8 @@ import { useEffect, useState } from "react";
 export interface PaginatedQueryParams extends QueryFunctionContext {
   page?: string;
   pageSize?: string;
+  sort?: string;
+  direction?: string;
 }
 
 export type UsePaginatedQueryResult<
@@ -21,6 +23,8 @@ export type UsePaginatedQueryResult<
 > = UseQueryResult<TData, TError> & {
   page: string;
   pageSize: string;
+  sort: string;
+  direction: string;
 };
 
 const usePaginatedQuery = <
@@ -42,6 +46,8 @@ const usePaginatedQuery = <
   const router = useRouter();
   const [page, setPage] = useState<string>("1");
   const [pageSize, setPageSize] = useState<string>("10");
+  const [sort, setSort] = useState<string>("");
+  const [direction, setDirection] = useState<'asc' | 'desc'>('asc');
 
   useEffect(() => {
     if (router.query.page) {
@@ -50,20 +56,30 @@ const usePaginatedQuery = <
     if (router.query.pageSize) {
       setPageSize(router.query.pageSize as string);
     }
-  }, [router.query.page]);
+    if (router.query.sort) {
+      setSort(router.query.sort as string);
+    }
+    if (router.query.direction) {
+      setDirection(router.query.direction as 'asc' | 'desc');
+    }
+  } , [router.query.page, router.query.pageSize, router.query.sort, router.query.direction]);
 
   return {
     page,
     pageSize,
+    sort,
+    direction,
     ...useQuery<TQueryFnData, TError, TData, TQueryKey>({
       queryFn: queryFn
         ? () =>
             queryFn({
               page,
               pageSize,
+              sort,
+              direction,
             } as any)
         : undefined,
-      queryKey: [...queryKey, page, pageSize] as any,
+        queryKey: [...queryKey, page, pageSize, sort, direction] as any,
       placeholderData: keepPreviousData,
       ...props,
     }),
