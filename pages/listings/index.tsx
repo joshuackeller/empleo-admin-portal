@@ -53,6 +53,13 @@ const ListingsPage: PageComponent = () => {
 
   const query = useGetListings();
 
+  const handleSort = (columnName: string, direction: 'asc' | 'desc') => {
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, sort: columnName, direction },
+    });
+  };
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -129,7 +136,8 @@ const ListingsPage: PageComponent = () => {
         <Separator className="mb-3 mt-1" />
       </div>
       <div>
-        <ListingsTable query={query} />
+        {/* <ListingsTable query={query} /> */}
+        <ListingsTable query={query} onSort={handleSort} />
       </div>
     </div>
   );

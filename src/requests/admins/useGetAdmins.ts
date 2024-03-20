@@ -8,6 +8,8 @@ interface GetAdminsProps extends PaginatedQueryParams {}
 const GetAdmins = async ({
   page,
   pageSize,
+  sort,
+  direction,
 }: GetAdminsProps): Promise<{ data: Admin[]; count: number }> => {
   const api = useEmpleoApi();
 
@@ -15,6 +17,8 @@ const GetAdmins = async ({
     params: {
       page,
       pageSize,
+      sort,
+      direction,
     },
   });
 
