@@ -12,9 +12,17 @@ const ApplicationsPage: PageComponent = () => {
     listingId: listingId as string,
   });
 
+  const handleSort = (columnName: string, direction: 'asc' | 'desc') => {
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, sort: columnName, direction },
+    });
+  };
+
   return (
     <ListingWrapper>
-      <ApplicationsTable query={query} listingId={listingId as string} />
+      {/* <ApplicationsTable query={query} listingId={listingId as string} /> */}
+      <ApplicationsTable query={query} listingId={listingId as string} onSort={handleSort} />
     </ListingWrapper>
   );
 };

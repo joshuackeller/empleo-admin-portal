@@ -11,6 +11,8 @@ const GetListingApplications = async ({
   listingId,
   page,
   pageSize,
+  sort,
+  direction,
 }: GetListingApplicationsProps): Promise<{
   data: Application[];
   count: number;
@@ -21,6 +23,8 @@ const GetListingApplications = async ({
     params: {
       page,
       pageSize,
+      sort,
+      direction,
     },
   });
 

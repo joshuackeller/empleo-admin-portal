@@ -15,14 +15,30 @@ import useRemoveAdmin from "@/src/requests/admins/useRemoveAdmin";
 import useAuthContext from "@/src/utilities/useAuthContext";
 import ReadJWTData from "@/src/utilities/ReadJWTData";
 import { UsePaginatedQueryResult } from "@/src/requests/usePaginatedQuery";
+import { useState } from "react";
+import { ArrowUpDown, MoreHorizontal, ArrowUp, ArrowDown } from "lucide-react";
 
 type AdminTableProps = {
   query: UsePaginatedQueryResult;
+  onSort?: (columnName: string, direction: "asc" | "desc") => void;
 };
 
-const AdminTable = ({ query }: AdminTableProps) => {
+const AdminTable = ({ query, onSort }: AdminTableProps) => {
   const { token } = useAuthContext();
   const tokenData = ReadJWTData(token || "");
+
+  const [selectedColumn, setSelectedColumn] = useState<string | null>(null);
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+
+  const handleSort = (columnName: string) => {
+    let direction: "asc" | "desc" = "asc";
+    if (selectedColumn === columnName) {
+      direction = sortDirection === "asc" ? "desc" : "asc";
+    }
+    setSelectedColumn(columnName);
+    setSortDirection(direction);
+    onSort && onSort(columnName, direction);
+  };
 
   return (
     <DataTable
@@ -30,17 +46,62 @@ const AdminTable = ({ query }: AdminTableProps) => {
       columns={[
         {
           accessorKey: "firstName",
-          header: "First Name",
+          header: ({ column }) => {
+            return (
+              <Button variant="ghost" onClick={() => handleSort("firstName")}>
+                First Name
+                {selectedColumn === "firstName" ? (
+                  sortDirection === "asc" ? (
+                    <ArrowUp className="ml-2 h-4 w-4" />
+                  ) : (
+                    <ArrowDown className="ml-2 h-4 w-4" />
+                  )
+                ) : (
+                  <ArrowUpDown className="ml-2 h-4 w-4" />
+                )}
+              </Button>
+            );
+          },
           size: 200,
         },
         {
           accessorKey: "lastName",
-          header: "Last Name",
+          header: ({ column }) => {
+            return (
+              <Button variant="ghost" onClick={() => handleSort("lastName")}>
+                Last Name
+                {selectedColumn === "lastName" ? (
+                  sortDirection === "asc" ? (
+                    <ArrowUp className="ml-2 h-4 w-4" />
+                  ) : (
+                    <ArrowDown className="ml-2 h-4 w-4" />
+                  )
+                ) : (
+                  <ArrowUpDown className="ml-2 h-4 w-4" />
+                )}
+              </Button>
+            );
+          },
           size: 200,
         },
         {
           accessorKey: "email",
-          header: "Email",
+          header: ({ column }) => {
+            return (
+              <Button variant="ghost" onClick={() => handleSort("email")}>
+                Email
+                {selectedColumn === "email" ? (
+                  sortDirection === "asc" ? (
+                    <ArrowUp className="ml-2 h-4 w-4" />
+                  ) : (
+                    <ArrowDown className="ml-2 h-4 w-4" />
+                  )
+                ) : (
+                  <ArrowUpDown className="ml-2 h-4 w-4" />
+                )}
+              </Button>
+            );
+          },
           size: 300,
         },
         {
