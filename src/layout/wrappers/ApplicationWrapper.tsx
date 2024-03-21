@@ -22,9 +22,9 @@ const ApplicationWrapper = ({ children }: ApplicationWrapperProps) => {
         className="flex items-center gap-x-2 text-xs mb-2"
       >
         <ArrowLeftIcon className="h-3 w-3" />
-        <div>Back to Applications</div>
+        <div>Back to Applicants</div>
       </Link>
-      <h4>Application</h4>
+      <h4>Applicants</h4>
       <div className="flex items-center gap-x-5 my-2">
         <Link
           href={`/listings/${listingId}/applications/${applicationId}`}

@@ -1,6 +1,7 @@
 import { Self } from "@/src/utilities/interfaces";
 import useEmpleoApi from "../useEmpleoApi";
 import useCustomMutation from "../useCustomMutation";
+import { useToast } from "@/src/components/shadcn/use-toast";
 
 interface UpdateSelfProps {
   body: {
@@ -17,8 +18,15 @@ const UpdateSelf = async ({ body }: UpdateSelfProps): Promise<Self> => {
 };
 
 const useUpdateSelf = () => {
+  const { toast } = useToast();
   return useCustomMutation({
     mutationFn: UpdateSelf,
+    onSuccess: () => {
+      toast({
+        title: "Updated Account",
+        description: "nice work",
+      });
+    },
   });
 };
 

@@ -21,14 +21,21 @@ import {
   FormLabel,
   FormMessage,
 } from "@/src/components/shadcn/Form";
-import { useState } from "react";
+import {
+  LegacyRef,
+  MouseEvent,
+  RefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import ListingsTable from "@/src/components/tables/ListingsTable";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, SearchIcon } from "lucide-react";
 import useCreateListing from "@/src/requests/listings/useCreateListing";
 import { useRouter } from "next/router";
 import { EmploymentType, Listing } from "@/src/utilities/interfaces";
 import useGetListings from "@/src/requests/listings/useGetListings";
-import { Skeleton } from "@/src/components/shadcn/Skeleton";
+import SlideSearch from "@/src/components/other/SlideSearch";
 
 const formSchema = z.object({
   jobTitle: z.string(),
@@ -84,7 +91,8 @@ const ListingsPage: PageComponent = () => {
       <div>
         <div className="flex justify-between items-start">
           <h4>Listings</h4>
-          <div>
+          <div className="flex gap-x-2">
+            <SlideSearch />
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
                 <button className="p-1 rounded-full bg-indigo-500">
