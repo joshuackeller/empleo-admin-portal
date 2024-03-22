@@ -17,11 +17,13 @@ import {
   DownloadIcon,
   Download,
   ViewIcon,
+  Copy,
+  CopyIcon,
 } from "lucide-react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { FormEvent, useState } from "react";
+import { FormEvent, useCallback, useRef, useState } from "react";
 import useCreateApplicationNote from "@/src/requests/applications/useCreateApplicationNote";
 import {
   Alert,
@@ -45,6 +47,7 @@ import {
   DialogTrigger,
 } from "@/src/components/shadcn/Dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import { useToast } from "@/src/components/shadcn/use-toast";
 
 const formSchema = z.object({
   // applicationId: z.string(),
@@ -84,6 +87,18 @@ const SingleApplicationDetails = () => {
   );
   const { data: listing } = useGetListing(listingId as string);
   const { data: notes } = useGetApplicationNotes(applicationId as string);
+  const { toast } = useToast();
+
+  //copy on click
+  const handleIconClick = useCallback(async () => {
+    if (application?.user.email) {
+      await navigator.clipboard.writeText(application.user.email);
+      toast({
+        title: "Copied",
+        duration: 2000,
+      });
+    }
+  }, [application?.user.email]);
 
   const { mutate: updateApplication } = useUpdateApplication();
   const onSubmit = (e: FormEvent) => {
@@ -165,7 +180,17 @@ const SingleApplicationDetails = () => {
               )}
               <div>
                 <Label>Email</Label>
-                <Input disabled value={application?.user.email || ""} />
+                <div style={{ position: "relative" }}>
+                  <Input disabled value={application?.user.email || ""} />
+                  {application?.user.email && (
+                    <>
+                      <CopyIcon
+                        className="h-4 w-4 top-2 right-2 absolute cursor-pointer"
+                        onClick={handleIconClick}
+                      />
+                    </>
+                  )}
+                </div>
               </div>
               {listing?.linkedInUrlEnabled && (
                 <div>
@@ -180,7 +205,7 @@ const SingleApplicationDetails = () => {
                           rel="noreferrer"
                           className={cn(
                             "absolute inset-0 z-10",
-                            application?.coverLetter?.url
+                            application?.linkedInUrl
                               ? "cursor-pointer"
                               : "cursor-default"
                           )}
@@ -214,19 +239,21 @@ const SingleApplicationDetails = () => {
                         <div>
                           <Dialog>
                             <DialogTrigger>
-                              <button
+                              <div
                                 onClick={() => setShowFileViewer(true)}
-                                className="h-4 w-4 top-2 right-4  absolute"
+                                className="h-4 w-4 top-2 right-4  absolute cursor-pointer"
                               >
                                 <ViewIcon className="h-4 w-4 top-2 right-8 absolute" />
-                              </button>
+                              </div>
                             </DialogTrigger>
                             <DialogContent className="h-full max-w-4xl">
                               {application.resume && (
-                                <FileViewer
-                                  uri={application.resume?.url}
-                                  fileType={application.resume?.fileType}
-                                />
+                                <div className="h-full overflow-auto">
+                                  <FileViewer
+                                    uri={application.resume?.url}
+                                    fileType={application.resume?.fileType}
+                                  />
+                                </div>
                               )}
                             </DialogContent>
                           </Dialog>
@@ -274,15 +301,15 @@ const SingleApplicationDetails = () => {
                         </a>
                         <div>
                           <Dialog>
-                            <DialogTrigger>
-                              <button
+                            <DialogTrigger asChild>
+                              <div
                                 onClick={() => setShowFileViewer(true)}
                                 className="h-4 w-4 top-2 right-4  absolute"
                               >
-                                <ViewIcon className="h-4 w-4 top-2 right-8 absolute" />
-                              </button>
+                                <ViewIcon className="h-4 w-4 top-2 right-8 absolute cursor-pointer" />
+                              </div>
                             </DialogTrigger>
-                            <DialogContent className="h-full max-w-4xl">
+                            <DialogContent className="h-full overflow-y-scroll max-h-screen max-w-4xl">
                               {application.coverLetter && (
                                 <FileViewer
                                   uri={application.coverLetter?.url}
@@ -294,6 +321,7 @@ const SingleApplicationDetails = () => {
                         </div>
                       </>
                     )}
+
                     {/* <Input
                       disabled
                       value={application?.coverLetter?.name || ""}
