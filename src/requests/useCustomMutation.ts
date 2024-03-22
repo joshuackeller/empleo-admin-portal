@@ -10,10 +10,10 @@ const useCustomMutation = <
   TData = unknown,
   TError = Error,
   TVariables = void,
-  TContext = unknown,
+  TContext = unknown
 >(
   options: UseMutationOptions<TData, TError, TVariables, TContext>,
-  queryClient?: QueryClient,
+  queryClient?: QueryClient
 ) => {
   const { toast } = useToast();
   return useMutation<TData, TError, TVariables, TContext>(
@@ -28,7 +28,7 @@ const useCustomMutation = <
         });
       },
     },
-    queryClient,
+    queryClient
   );
 };
 

@@ -21,22 +21,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/src/components/shadcn/Form";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import ListingsTable from "@/src/components/tables/ListingsTable";
 import { PlusIcon } from "lucide-react";
 import useCreateListing from "@/src/requests/listings/useCreateListing";
 import { useRouter } from "next/router";
 import { EmploymentType, Listing } from "@/src/utilities/interfaces";
 import useGetListings from "@/src/requests/listings/useGetListings";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/src/components/shadcn/Pagination";
 import { Skeleton } from "@/src/components/shadcn/Skeleton";
 
 const formSchema = z.object({
@@ -60,17 +51,14 @@ const ListingsPage: PageComponent = () => {
   const { mutate: createListing, isPending } = useCreateListing();
   const [open, setOpen] = useState<boolean>(false);
 
-  const [page, setPage] = useState("1");
-  const [pageSize, setPageSize] = useState("4"); // This is the number of rows to show per page
-  const { data, isLoading, isError } = useGetListings({ page, pageSize });
-  const [startIndex, setStartIndex] = useState(0);
-  const [endIndex, setEndIndex] = useState(parseInt(pageSize));
-  const rowsPerPage = parseInt(pageSize);
-  const totalPages = Math.ceil((data?.length ?? 0) / rowsPerPage);
+  const query = useGetListings();
 
-  useEffect(() => {
-    setEndIndex(startIndex + rowsPerPage);
-  }, [startIndex, rowsPerPage]);
+  const handleSort = (columnName: string, direction: 'asc' | 'desc') => {
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, sort: columnName, direction },
+    });
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -96,23 +84,7 @@ const ListingsPage: PageComponent = () => {
     );
   };
 
-  const handlePageChange = (direction: "next" | "prev") => {
-    if (direction === "next" && endIndex < (data?.length ?? 0)) {
-      const newEndIndex = Math.min(endIndex + rowsPerPage, data?.length ?? 0);
-      setPage(Math.ceil(newEndIndex / rowsPerPage).toString());
-      setStartIndex(endIndex);
-      setEndIndex(newEndIndex);
-    } else if (direction === "prev" && startIndex > 0) {
-      const newStartIndex = Math.max(startIndex - rowsPerPage, 0);
-      setPage(
-        Math.ceil((newStartIndex + rowsPerPage) / rowsPerPage).toString()
-      );
-      setEndIndex(startIndex);
-      setStartIndex(newStartIndex);
-    }
-  };
-
-  if (isError) return <div>Error</div>;
+  if (query.isError) return <div>Error</div>;
 
   return (
     <div>
@@ -163,123 +135,12 @@ const ListingsPage: PageComponent = () => {
         </div>
         <Separator className="mb-3 mt-1" />
       </div>
-      <div className="min-h-[300px]">
-        {isLoading ? (
-          <Skeleton className="h-[275px]" />
-        ) : (
-          <ListingsTable data={data?.slice(startIndex, endIndex) ?? []} />
-        )}
-      </div>
-      <div className="h-12 mt-5">
-        <Pagination className="flex justify-start">
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
-                className={`cursor-pointer ${
-                  startIndex === 0 ? "pointer-events-none opacity-50" : ""
-                }`}
-                onClick={() => handlePageChange("prev")}
-              />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext
-                className={`cursor-pointer ${
-                  endIndex >= (data?.length ?? 0)
-                    ? "pointer-events-none opacity-50"
-                    : ""
-                }`}
-                onClick={() => handlePageChange("next")}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+      <div>
+        {/* <ListingsTable query={query} /> */}
+        <ListingsTable query={query} onSort={handleSort} />
       </div>
     </div>
   );
 };
 
 export default ListingsPage;
-
-{
-  /* <FormField
-                      control={form.control}
-                      name="jobDescription"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Job Description</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Write Code" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="jobRequirements"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Job Requirements</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="1-2 years of experience"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="employmentType"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Employment Type</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Full Time" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="location"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Location</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Provo, Utah" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="salaryRange"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Salary Range</FormLabel>
-                          <FormControl>
-                            <Input placeholder="$85,000 - $95,000" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="published"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Published?</FormLabel>
-                          <FormControl>
-                            <input type="checkbox" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    /> */
-}

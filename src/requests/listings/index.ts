@@ -1,6 +1,11 @@
 const ListingQueryKeys = {
-  all: (page?: string, pageSize?: string) => [ "listings", page || "", pageSize || "" ],
-  single: (listingId: string) => [ "listings", listingId ],
+  all: ["listings"],
+  allPaginated: (page?: string, pageSize?: string) => [
+    "listings",
+    page || "",
+    pageSize || "",
+  ],
+  single: (listingId: string) => ["listings", listingId],
   applications: (listingId: string) => [
     ...ListingQueryKeys.single(listingId),
     "applications",
