@@ -57,11 +57,11 @@ const columns: ColumnDef<Listing>[] = [
     header: "Location",
     size: 150,
   },
-  {
-    accessorKey: "salaryRange",
-    header: "Salary Range",
-    size: 200,
-  },
+  // {
+  //   accessorKey: "salaryRange",
+  //   header: "Salary Range",
+  //   size: 200,
+  // },
   {
     accessorKey: "published",
     header: "Published?",
