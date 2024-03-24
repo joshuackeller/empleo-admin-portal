@@ -15,6 +15,7 @@ export interface PaginatedQueryParams extends QueryFunctionContext {
   pageSize?: string;
   sort?: string;
   direction?: string;
+  search?: string;
 }
 
 export type UsePaginatedQueryResult<
@@ -25,6 +26,7 @@ export type UsePaginatedQueryResult<
   pageSize: string;
   sort: string;
   direction: string;
+  search?: string;
 };
 
 const usePaginatedQuery = <
@@ -47,7 +49,8 @@ const usePaginatedQuery = <
   const [page, setPage] = useState<string>("1");
   const [pageSize, setPageSize] = useState<string>("10");
   const [sort, setSort] = useState<string>("");
-  const [direction, setDirection] = useState<'asc' | 'desc'>('asc');
+  const [direction, setDirection] = useState<"asc" | "desc">("asc");
+  const [search, setSearch] = useState<string | undefined>();
 
   useEffect(() => {
     if (router.query.page) {
@@ -60,15 +63,31 @@ const usePaginatedQuery = <
       setSort(router.query.sort as string);
     }
     if (router.query.direction) {
-      setDirection(router.query.direction as 'asc' | 'desc');
+      setDirection(router.query.direction as "asc" | "desc");
     }
-  } , [router.query.page, router.query.pageSize, router.query.sort, router.query.direction]);
+    if (router.query.search) {
+      setSearch(router.query.search as string);
+    } else {
+      setSearch(undefined);
+    }
+  }, [
+    router.query.page,
+    router.query.pageSize,
+    router.query.sort,
+    router.query.direction,
+    router.query.search,
+  ]);
+
+  useEffect(() => {
+    setPage("1");
+  }, [search]);
 
   return {
     page,
     pageSize,
     sort,
     direction,
+    search,
     ...useQuery<TQueryFnData, TError, TData, TQueryKey>({
       queryFn: queryFn
         ? () =>
@@ -77,9 +96,10 @@ const usePaginatedQuery = <
               pageSize,
               sort,
               direction,
+              search,
             } as any)
         : undefined,
-        queryKey: [...queryKey, page, pageSize, sort, direction] as any,
+      queryKey: [...queryKey, page, pageSize, sort, direction, search] as any,
       placeholderData: keepPreviousData,
       ...props,
     }),
