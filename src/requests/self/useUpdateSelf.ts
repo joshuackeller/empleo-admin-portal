@@ -7,6 +7,7 @@ interface UpdateSelfProps {
   body: {
     firstName: string;
     lastName?: string;
+    showToast?: boolean;
   };
 }
 
@@ -23,8 +24,8 @@ const useUpdateSelf = () => {
     mutationFn: UpdateSelf,
     onSuccess: () => {
       toast({
-        title: "Updated Account",
-        description: "nice work",
+        title: "Success",
+        description: "User information updated successfully",
       });
     },
   });
