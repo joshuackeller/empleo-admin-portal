@@ -23,7 +23,7 @@ const TablePagination = ({ query }: TablePaginationProps) => {
   const page = queryPage ? parseInt(queryPage) : 1;
   const pageSize = queryPageSize ? parseInt(queryPageSize) : 10;
 
-  const nextPage = page * pageSize <= count ?? false;
+  const nextPage = page * pageSize < count ?? false;
 
   return (
     <Pagination className="flex justify-start">

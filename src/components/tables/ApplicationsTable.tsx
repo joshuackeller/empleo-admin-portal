@@ -22,7 +22,6 @@ import { UsePaginatedQueryResult } from "@/src/requests/usePaginatedQuery";
 import { useState } from "react";
 import { ArrowUpDown, MoreHorizontal, ArrowUp, ArrowDown } from "lucide-react";
 
-
 // const columns: ColumnDef<Application>[] = [
 //   {
 //     accessorKey: "firstName",
@@ -94,7 +93,11 @@ interface ApplicationsTableProps {
   listingId: string;
 }
 
-const ApplicationsTable = ({ query, onSort, listingId }: ApplicationsTableProps) => {
+const ApplicationsTable = ({
+  query,
+  onSort,
+  listingId,
+}: ApplicationsTableProps) => {
   const isClickable = true;
 
   const [selectedColumn, setSelectedColumn] = useState<string | null>(null);
@@ -115,16 +118,16 @@ const ApplicationsTable = ({ query, onSort, listingId }: ApplicationsTableProps)
       accessorKey: "firstName",
       header: ({ column }) => {
         return (
-          <Button variant="ghost" onClick={() => handleSort("firstName")}>
+          <Button variant="sort" onClick={() => handleSort("firstName")}>
             First Name
             {selectedColumn === "firstName" ? (
               sortDirection === "asc" ? (
-                <ArrowUp className="ml-2 h-4 w-4" />
+                <ArrowUp className="ml-2 h-3 w-3" />
               ) : (
-                <ArrowDown className="ml-2 h-4 w-4" />
+                <ArrowDown className="ml-2 h-3 w-3" />
               )
             ) : (
-              <ArrowUpDown className="ml-2 h-4 w-4" />
+              <ArrowUpDown className="ml-2 h-3 w-3" />
             )}
           </Button>
         );
@@ -135,16 +138,16 @@ const ApplicationsTable = ({ query, onSort, listingId }: ApplicationsTableProps)
       accessorKey: "lastName",
       header: ({ column }) => {
         return (
-          <Button variant="ghost" onClick={() => handleSort("lastName")}>
+          <Button variant="sort" onClick={() => handleSort("lastName")}>
             Last Name
             {selectedColumn === "lastName" ? (
               sortDirection === "asc" ? (
-                <ArrowUp className="ml-2 h-4 w-4" />
+                <ArrowUp className="ml-2 h-3 w-3" />
               ) : (
-                <ArrowDown className="ml-2 h-4 w-4" />
+                <ArrowDown className="ml-2 h-3 w-3" />
               )
             ) : (
-              <ArrowUpDown className="ml-2 h-4 w-4" />
+              <ArrowUpDown className="ml-2 h-3 w-3" />
             )}
           </Button>
         );
@@ -155,16 +158,16 @@ const ApplicationsTable = ({ query, onSort, listingId }: ApplicationsTableProps)
       accessorKey: "phone",
       header: ({ column }) => {
         return (
-          <Button variant="ghost" onClick={() => handleSort("phone")}>
+          <Button variant="sort" onClick={() => handleSort("phone")}>
             Phone
             {selectedColumn === "phone" ? (
               sortDirection === "asc" ? (
-                <ArrowUp className="ml-2 h-4 w-4" />
+                <ArrowUp className="ml-2 h-3 w-3" />
               ) : (
-                <ArrowDown className="ml-2 h-4 w-4" />
+                <ArrowDown className="ml-2 h-3 w-3" />
               )
             ) : (
-              <ArrowUpDown className="ml-2 h-4 w-4" />
+              <ArrowUpDown className="ml-2 h-3 w-3" />
             )}
           </Button>
         );
@@ -175,16 +178,16 @@ const ApplicationsTable = ({ query, onSort, listingId }: ApplicationsTableProps)
       accessorKey: "user.email",
       header: ({ column }) => {
         return (
-          <Button variant="ghost" onClick={() => handleSort("user.email")}>
+          <Button variant="sort" onClick={() => handleSort("user.email")}>
             Email
             {selectedColumn === "user.email" ? (
               sortDirection === "asc" ? (
-                <ArrowUp className="ml-2 h-4 w-4" />
+                <ArrowUp className="ml-2 h-3 w-3" />
               ) : (
-                <ArrowDown className="ml-2 h-4 w-4" />
+                <ArrowDown className="ml-2 h-3 w-3" />
               )
             ) : (
-              <ArrowUpDown className="ml-2 h-4 w-4" />
+              <ArrowUpDown className="ml-2 h-3 w-3" />
             )}
           </Button>
         );
@@ -195,16 +198,16 @@ const ApplicationsTable = ({ query, onSort, listingId }: ApplicationsTableProps)
       accessorKey: "status",
       header: ({ column }) => {
         return (
-          <Button variant="ghost" onClick={() => handleSort("status")}>
+          <Button variant="sort" onClick={() => handleSort("status")}>
             Application Status
             {selectedColumn === "status" ? (
               sortDirection === "asc" ? (
-                <ArrowUp className="ml-2 h-4 w-4" />
+                <ArrowUp className="ml-2 h-3 w-3" />
               ) : (
-                <ArrowDown className="ml-2 h-4 w-4" />
+                <ArrowDown className="ml-2 h-3 w-3" />
               )
             ) : (
-              <ArrowUpDown className="ml-2 h-4 w-4" />
+              <ArrowUpDown className="ml-2 h-3 w-3" />
             )}
           </Button>
         );
@@ -236,16 +239,15 @@ const ApplicationsTable = ({ query, onSort, listingId }: ApplicationsTableProps)
       enableHiding: false,
       cell: ({ row }) => {
         const applicationId = row.original.id;
-  
+
         const { mutate: removeApplication, isPending: isRemoving } =
           useRemoveApplication();
         const { mutate: updateApplication, isPending: isUpdating } =
           useUpdateApplication();
-  
+
         const handleRemoveApplication = () => {
           removeApplication({ applicationId });
         };
-  
       },
     },
   ];
