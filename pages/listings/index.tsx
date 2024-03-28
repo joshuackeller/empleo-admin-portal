@@ -23,12 +23,18 @@ import {
 } from "@/src/components/shadcn/Form";
 import { useState } from "react";
 import ListingsTable from "@/src/components/tables/ListingsTable";
-import { PlusIcon } from "lucide-react";
+import { HelpCircleIcon, PlusIcon } from "lucide-react";
 import useCreateListing from "@/src/requests/listings/useCreateListing";
 import { useRouter } from "next/router";
 import { EmploymentType, Listing } from "@/src/utilities/interfaces";
 import useGetListings from "@/src/requests/listings/useGetListings";
 import { Skeleton } from "@/src/components/shadcn/Skeleton";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/src/components/shadcn/Tooltip";
 
 const formSchema = z.object({
   jobTitle: z.string(),
@@ -83,7 +89,34 @@ const ListingsPage: PageComponent = () => {
     <div>
       <div>
         <div className="flex justify-between items-start">
-          <h4>Listings</h4>
+          <h4 className="flex items-center pb-0.5">
+            Listings
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger disabled className="cursor-default">
+                  <HelpCircleIcon size="16" className="ml-1" />
+                </TooltipTrigger>
+                <TooltipContent
+                  style={{
+                    padding: "1em",
+                    maxWidth: "500px",
+                    wordWrap: "break-word",
+                    zIndex: 1000,
+                  }}
+                >
+                  <h4 className="text-center">Job Listings</h4>
+                  <br />
+                  View and manage the job listings for your organization.
+                  <br />
+                  <br />
+                  Click on a listing row to edit the listing and view
+                  applicants.
+                  <br />
+                  <br />
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </h4>
           <div>
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>

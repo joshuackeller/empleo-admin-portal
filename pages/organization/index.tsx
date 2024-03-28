@@ -15,7 +15,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/src/components/shadcn/Form";
-import { ExternalLinkIcon, MonitorIcon } from "lucide-react";
+import {
+  ExternalLinkIcon,
+  Heading5,
+  Info,
+  MonitorIcon,
+  AlertTriangleIcon,
+  CircleDashedIcon,
+  HelpCircleIcon,
+} from "lucide-react";
 import OrganizationWrapper from "@/src/layout/wrappers/OrganizationWrapper";
 import { cn } from "@/src/utilities/cn";
 import Link from "next/link";
@@ -33,6 +41,19 @@ import { ChromePicker } from "react-color";
 import Editor from "@/src/components/textEditor/Editor";
 import { Label } from "@/src/components/shadcn/Label";
 import { Skeleton } from "@/src/components/shadcn/Skeleton";
+
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@radix-ui/react-popover";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/src/components/shadcn/Tooltip";
 
 const formSchema = z.object({
   title: z.string().min(1),
@@ -170,7 +191,38 @@ const OrgPage: PageComponent = () => {
             name="imageURL" // Add this line for the image URL
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Organization Logo</FormLabel>
+                <FormLabel className="flex items-center">
+                  Organization Logo
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger disabled className="cursor-default">
+                        <HelpCircleIcon size="16" className="ml-1" />
+                      </TooltipTrigger>
+                      <TooltipContent
+                        style={{
+                          padding: "1em",
+                          maxWidth: "500px",
+                          wordWrap: "break-word",
+                          zIndex: 1000,
+                        }}
+                      >
+                        <h4 className="text-center">Organization Logo</h4>
+                        <br />
+                        Add a logo or picture that will be displayed on the
+                        front page of your white-label site.
+                        <br />
+                        <br />
+                        Here is an example white-label page for a fictional
+                        company, Dunder Mifflin
+                        <img
+                          className="w-auto h-auto mt-2 border border-black"
+                          src="/popupPictures/organizationLogoPopup.jpg"
+                          alt="Organization Logo"
+                        />
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </FormLabel>
                 <FormControl>
                   <Input
                     id="picture"
@@ -208,7 +260,38 @@ const OrgPage: PageComponent = () => {
             name="headerFont"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Primary/Header Font</FormLabel>
+                <FormLabel className="flex items-center">
+                  Primary/Header Font
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger disabled className="cursor-default">
+                        <HelpCircleIcon size="16" className="ml-1" />
+                      </TooltipTrigger>
+                      <TooltipContent
+                        style={{
+                          padding: "1em",
+                          maxWidth: "500px",
+                          wordWrap: "break-word",
+                          zIndex: 1000,
+                        }}
+                      >
+                        <h4 className="text-center">Primary/Header Font</h4>
+                        <br />
+                        Change the font of the Header that will be displayed on
+                        the front page of your white-label site.
+                        <br />
+                        <br />
+                        Here is an example white-label page for a fictional
+                        company, Dunder Mifflin
+                        <img
+                          className="w-auto h-auto mt-2 border border-black"
+                          src="/popupPictures/primaryHeaderFontPopup.jpg"
+                          alt="Organization Logo"
+                        />
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </FormLabel>
                 <FormControl>
                   <div className="flex items-center gap-2">
                     <Select
@@ -251,7 +334,31 @@ const OrgPage: PageComponent = () => {
             name="bodyFont"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Secondary/Body Font</FormLabel>
+                <FormLabel className="flex items-center">
+                  Secondary/Body Font
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger disabled className="cursor-default">
+                        <HelpCircleIcon size="16" className="ml-1" />
+                      </TooltipTrigger>
+                      <TooltipContent
+                        style={{
+                          padding: "1em",
+                          maxWidth: "500px",
+                          wordWrap: "break-word",
+                          zIndex: 1000,
+                        }}
+                      >
+                        <h4 className="text-center">Secondary/Body Font</h4>
+                        <br />
+                        Change the font of any Body text that will be shown on
+                        your white-label site.
+                        <br />
+                        <br />
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </FormLabel>
                 <FormControl>
                   <div className="flex items-center gap-2">
                     <Select
@@ -294,7 +401,38 @@ const OrgPage: PageComponent = () => {
             name="primaryColor"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Primary Color</FormLabel>
+                <FormLabel className="flex items-center">
+                  Primary Color
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger disabled className="cursor-default">
+                        <HelpCircleIcon size="16" className="ml-1" />
+                      </TooltipTrigger>
+                      <TooltipContent
+                        style={{
+                          padding: "1em",
+                          maxWidth: "500px",
+                          wordWrap: "break-word",
+                          zIndex: 1000,
+                        }}
+                      >
+                        <h4 className="text-center">Primary Color</h4>
+                        <br />
+                        Change the color of the various buttons found throughout
+                        your white-label site.
+                        <br />
+                        <br />
+                        Here is an example white-label page for a fictional
+                        company, Dunder Mifflin
+                        <img
+                          className="w-auto h-auto mt-2 border border-black"
+                          src="/popupPictures/primaryColorPopup.jpg"
+                          alt="Organization Logo"
+                        />
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </FormLabel>
                 <FormControl>
                   <div className="h-6 flex items-center gap-2">
                     <div
@@ -343,7 +481,31 @@ const OrgPage: PageComponent = () => {
             name="secondaryColor"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Secondary Color</FormLabel>
+                <FormLabel className="flex items-center">
+                  Secondary Color
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger disabled className="cursor-default">
+                        <HelpCircleIcon size="16" className="ml-1" />
+                      </TooltipTrigger>
+                      <TooltipContent
+                        style={{
+                          padding: "1em",
+                          maxWidth: "500px",
+                          wordWrap: "break-word",
+                          zIndex: 1000,
+                        }}
+                      >
+                        <h4 className="text-center">Secondary Color</h4>
+                        <br />
+                        Change the slight accent color that is shown in the
+                        background of your white-label site.
+                        <br />
+                        <br />
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </FormLabel>
                 <FormControl>
                   <div className="h-6 flex items-center gap-2">
                     <div
@@ -392,7 +554,41 @@ const OrgPage: PageComponent = () => {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Organization Description</FormLabel>
+                <FormLabel className="flex items-center">
+                  Organization Description
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger disabled className="cursor-default">
+                        <HelpCircleIcon size="16" className="ml-1" />
+                      </TooltipTrigger>
+                      <TooltipContent
+                        style={{
+                          padding: "1em",
+                          maxWidth: "500px",
+                          wordWrap: "break-word",
+                          zIndex: 1000,
+                        }}
+                      >
+                        <h4 className="text-center">
+                          Organization Description
+                        </h4>
+                        <br />
+                        Enter a description, motto, or slogan that will be
+                        displayed under your company name on the front page of
+                        your white-label site.
+                        <br />
+                        <br />
+                        Here is an example white-label page for a fictional
+                        company, Dunder Mifflin
+                        <img
+                          className="w-auto h-auto mt-2 border border-black"
+                          src="/popupPictures/organizationDescriptionPopup.jpg"
+                          alt="Organization Logo"
+                        />
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="We make the best widgets in the world"
@@ -411,7 +607,42 @@ const OrgPage: PageComponent = () => {
           <Skeleton className="h-36 w-full" />
         ) : (
           <>
-            <Label>Long Description</Label>
+            <Label className="flex items-center pb-0.5">
+              Long Organization Description
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger disabled className="cursor-default">
+                    <HelpCircleIcon size="16" className="ml-1" />
+                  </TooltipTrigger>
+                  <TooltipContent
+                    style={{
+                      padding: "1em",
+                      maxWidth: "500px",
+                      wordWrap: "break-word",
+                      zIndex: 1000,
+                    }}
+                  >
+                    <h4 className="text-center">
+                      Long Organization Description
+                    </h4>
+                    <br />
+                    Write a longer description that will be displayed as the
+                    body of your white-label site. Add images, embed videos, and
+                    utilize the text editor to make your site stand out and
+                    showcase your company.
+                    <br />
+                    <br />
+                    Here is an example white-label page for a fictional company,
+                    Dunder Mifflin.
+                    <img
+                      className="w-auto h-auto mt-2 border border-black"
+                      src="/popupPictures/longDescriptionPopup.jpg"
+                      alt="Organization Logo"
+                    />
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </Label>
             <Editor
               value={longDescription}
               setValue={setLongDescription}
