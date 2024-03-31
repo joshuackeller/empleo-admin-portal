@@ -241,19 +241,17 @@ const SingleApplicationDetails = () => {
                             <DialogTrigger>
                               <div
                                 onClick={() => setShowFileViewer(true)}
-                                className="h-4 w-4 top-2 right-4  absolute cursor-pointer"
+                                className="h-4 w-4 top-2 right-4 absolute z-10"
                               >
-                                <ViewIcon className="h-4 w-4 top-2 right-8 absolute" />
+                                <ViewIcon className="h-4 w-4 top-2 right-8 absolute cursor-pointer" />
                               </div>
                             </DialogTrigger>
-                            <DialogContent className="h-full max-w-4xl">
+                            <DialogContent className="h-full overflow-y-scroll max-h-screen max-w-4xl">
                               {application.resume && (
-                                <div className="h-full overflow-auto">
-                                  <FileViewer
-                                    uri={application.resume?.url}
-                                    fileType={application.resume?.fileType}
-                                  />
-                                </div>
+                                <FileViewer
+                                  uri={application.resume?.url}
+                                  fileType={application.resume?.fileType}
+                                />
                               )}
                             </DialogContent>
                           </Dialog>
@@ -463,7 +461,9 @@ const SingleApplicationDetails = () => {
                         </p>
                       </div>
                     </div>
-                    <div className="text-sm">{note.text}</div>
+                    <div className="text-sm overflow-auto break-words">
+                      {note.text}
+                    </div>
                   </div>
                 ))}
               </div>

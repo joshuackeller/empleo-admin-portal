@@ -5,3 +5,4 @@ const ApplicationQueryKeys = {
 };
 
 export default ApplicationQueryKeys;
+//test
