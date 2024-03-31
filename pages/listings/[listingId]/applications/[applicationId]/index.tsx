@@ -11,11 +11,19 @@ import useGetApplication from "@/src/requests/applications/useGetApplication";
 import useUpdateApplication from "@/src/requests/applications/useUpdateApplication";
 import useGetApplicationNotes from "@/src/requests/applications/useGetApplicationNotes";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeftIcon, ExternalLinkIcon } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  ExternalLinkIcon,
+  DownloadIcon,
+  Download,
+  ViewIcon,
+  Copy,
+  CopyIcon,
+} from "lucide-react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { FormEvent, useState } from "react";
+import { FormEvent, useCallback, useRef, useState } from "react";
 import useCreateApplicationNote from "@/src/requests/applications/useCreateApplicationNote";
 import {
   Alert,
@@ -31,6 +39,15 @@ import { Skeleton } from "@/src/components/shadcn/Skeleton";
 import useGetListing from "@/src/requests/listings/useGetListing";
 import { Separator } from "@/src/components/shadcn/Separator";
 import FileViewer from "@/src/components/other/FileViewer";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTrigger,
+} from "@/src/components/shadcn/Dialog";
+import { DialogTitle } from "@radix-ui/react-dialog";
+import { useToast } from "@/src/components/shadcn/use-toast";
 
 const formSchema = z.object({
   // applicationId: z.string(),
@@ -70,6 +87,18 @@ const SingleApplicationDetails = () => {
   );
   const { data: listing } = useGetListing(listingId as string);
   const { data: notes } = useGetApplicationNotes(applicationId as string);
+  const { toast } = useToast();
+
+  //copy on click
+  const handleIconClick = useCallback(async () => {
+    if (application?.user.email) {
+      await navigator.clipboard.writeText(application.user.email);
+      toast({
+        title: "Copied",
+        duration: 2000,
+      });
+    }
+  }, [application?.user.email]);
 
   const { mutate: updateApplication } = useUpdateApplication();
   const onSubmit = (e: FormEvent) => {
@@ -83,6 +112,7 @@ const SingleApplicationDetails = () => {
   };
 
   const [text, setText] = useState<string>("");
+  const [showFileViewer, setShowFileViewer] = useState<boolean>(false);
   const { mutate: createNote, isPending: isCreatingNote } =
     useCreateApplicationNote(applicationId as string);
 
@@ -142,7 +172,26 @@ const SingleApplicationDetails = () => {
                   </Button>
                 </div>
               </div>
-
+              {listing?.phoneEnabled && (
+                <div>
+                  <Label>Phone</Label>
+                  <Input disabled value={application?.phone || ""} />
+                </div>
+              )}
+              <div>
+                <Label>Email</Label>
+                <div style={{ position: "relative" }}>
+                  <Input disabled value={application?.user.email || ""} />
+                  {application?.user.email && (
+                    <>
+                      <CopyIcon
+                        className="h-4 w-4 top-2 right-2 absolute cursor-pointer"
+                        onClick={handleIconClick}
+                      />
+                    </>
+                  )}
+                </div>
+              </div>
               {listing?.linkedInUrlEnabled && (
                 <div>
                   <Label>LinkedIn Url</Label>
@@ -156,7 +205,7 @@ const SingleApplicationDetails = () => {
                           rel="noreferrer"
                           className={cn(
                             "absolute inset-0 z-10",
-                            application?.coverLetter?.url
+                            application?.linkedInUrl
                               ? "cursor-pointer"
                               : "cursor-default"
                           )}
@@ -179,25 +228,53 @@ const SingleApplicationDetails = () => {
                           target="_blank"
                           rel="noreferrer"
                           className={cn(
-                            "absolute inset-0 z-10",
+                            "absolute top-2 right-2 z-10",
                             application?.resume?.url
                               ? "cursor-pointer"
                               : "cursor-default"
                           )}
-                        ></a>
-                        <ExternalLinkIcon className="h-4 w-4 top-2 right-2 absolute" />
+                        >
+                          <DownloadIcon className="h-4 w-4 top-2 right-2 absolute" />
+                        </a>
+                        <div>
+                          <Dialog>
+                            <DialogTrigger>
+                              <div
+                                onClick={() => setShowFileViewer(true)}
+                                className="h-4 w-4 top-2 right-4  absolute cursor-pointer"
+                              >
+                                <ViewIcon className="h-4 w-4 top-2 right-8 absolute" />
+                              </div>
+                            </DialogTrigger>
+                            <DialogContent className="h-full max-w-4xl">
+                              {application.resume && (
+                                <div className="h-full overflow-auto">
+                                  <FileViewer
+                                    uri={application.resume?.url}
+                                    fileType={application.resume?.fileType}
+                                  />
+                                </div>
+                              )}
+                            </DialogContent>
+                          </Dialog>
+                        </div>
                       </>
                     )}
                   </div>
                 </div>
               )}
               <div>
-                {application.resume && (
-                  <FileViewer
-                    uri={application.resume?.url}
-                    fileType={application.resume?.fileType}
-                  />
-                )}
+                <Dialog>
+                  <DialogTrigger></DialogTrigger>
+                  <DialogContent>
+                    {application.resume && (
+                      <FileViewer
+                        uri={application.resume?.url}
+                        fileType={application.resume?.fileType}
+                      />
+                    )}
+                  </DialogContent>
+                </Dialog>
               </div>
               {listing?.coverLetterEnabled && (
                 <div>
@@ -207,8 +284,50 @@ const SingleApplicationDetails = () => {
                       disabled
                       value={application?.coverLetter?.name || ""}
                     />
-
                     {application?.coverLetter?.url && (
+                      <>
+                        <a
+                          href={application?.coverLetter?.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className={cn(
+                            "absolute top-2 right-2 z-10",
+                            application?.coverLetter?.url
+                              ? "cursor-pointer"
+                              : "cursor-default"
+                          )}
+                        >
+                          <DownloadIcon className="h-4 w-4 top-2 right-2 absolute" />
+                        </a>
+                        <div>
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <div
+                                onClick={() => setShowFileViewer(true)}
+                                className="h-4 w-4 top-2 right-4  absolute"
+                              >
+                                <ViewIcon className="h-4 w-4 top-2 right-8 absolute cursor-pointer" />
+                              </div>
+                            </DialogTrigger>
+                            <DialogContent className="h-full overflow-y-scroll max-h-screen max-w-4xl">
+                              {application.coverLetter && (
+                                <FileViewer
+                                  uri={application.coverLetter?.url}
+                                  fileType={application.coverLetter?.fileType}
+                                />
+                              )}
+                            </DialogContent>
+                          </Dialog>
+                        </div>
+                      </>
+                    )}
+
+                    {/* <Input
+                      disabled
+                      value={application?.coverLetter?.name || ""}
+                    /> */}
+
+                    {/* {application?.coverLetter?.url && (
                       <>
                         <a
                           href={application?.coverLetter?.url}
@@ -221,9 +340,9 @@ const SingleApplicationDetails = () => {
                               : "cursor-default"
                           )}
                         ></a>
-                        <ExternalLinkIcon className="h-4 w-4 top-2 right-2 absolute" />
+                        <DownloadIcon className="h-4 w-4 top-2 right-2 absolute" />
                       </>
-                    )}
+                    )} */}
                   </div>
                 </div>
               )}
@@ -255,12 +374,6 @@ const SingleApplicationDetails = () => {
                   </div>
                 )}
               </div>
-              {listing?.phoneEnabled && (
-                <div>
-                  <Label>Phone</Label>
-                  <Input disabled value={application?.phone || ""} />
-                </div>
-              )}
               {listing?.noteEnabled && (
                 <div>
                   <Label>Feel free to add anything else we should know!</Label>

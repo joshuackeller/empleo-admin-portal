@@ -155,6 +155,7 @@ export interface BaseApplication {
 }
 
 export interface Application extends BaseApplication {
+  user: BaseUser;
   resume: BaseFile | null;
   coverLetter: BaseFile | null;
 }

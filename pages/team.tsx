@@ -32,6 +32,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/src/components/shadcn/Tooltip";
+import { useRouter } from "next/router";
+
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -41,6 +43,14 @@ const TeamPage: PageComponent = () => {
   const { mutate: addAdmin, isPending } = useAddAdmin();
   const [open, setOpen] = useState<boolean>(false);
   const query = useGetAdmins();
+  const router = useRouter();
+
+  const handleSort = (columnName: string, direction: 'asc' | 'desc') => {
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, sort: columnName, direction },
+    });
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -144,7 +154,9 @@ const TeamPage: PageComponent = () => {
         </div>
         <Separator className="mb-3 mt-1" />
       </div>
-      <AdminTable query={query} />
+      {/* <AdminTable query={query} /> */}
+      {/* <AdminTable query={query} onSort={(columnName) => handleSort(columnName)}/> */}
+      <AdminTable query={query} onSort={handleSort} />
     </div>
   );
 };
