@@ -14,7 +14,6 @@ import { UsePaginatedQueryResult } from "@/src/requests/usePaginatedQuery";
 import { useState } from "react";
 import { ArrowUpDown, MoreHorizontal, ArrowUp, ArrowDown } from "lucide-react";
 
-
 const columns: ColumnDef<Listing>[] = [
   {
     accessorKey: "jobTitle",
@@ -59,11 +58,11 @@ const columns: ColumnDef<Listing>[] = [
     header: "Location",
     size: 150,
   },
-//   {
-//     accessorKey: "salaryRange",
-//     header: "Salary Range",
-//     size: 200,
-//   },
+  //   {
+  //     accessorKey: "salaryRange",
+  //     header: "Salary Range",
+  //     size: 200,
+  //   },
   {
     accessorKey: "published",
     header: "Published?",
@@ -194,10 +193,7 @@ const ListingsTable = ({ query, onSort }: ListingsTableProps) => {
       accessorKey: "employmentType",
       header: ({ column }) => {
         return (
-          <Button
-            variant="ghost"
-            onClick={() => handleSort("employmentType")}
-          >
+          <Button variant="ghost" onClick={() => handleSort("employmentType")}>
             Employment Type
             {selectedColumn === "employmentType" ? (
               sortDirection === "asc" ? (
@@ -251,26 +247,26 @@ const ListingsTable = ({ query, onSort }: ListingsTableProps) => {
       },
       size: 150,
     },
-    {
-      accessorKey: "salaryRange",
-      header: ({ column }) => {
-        return (
-          <Button variant="ghost" onClick={() => handleSort("salaryRange")}>
-            Salary Range
-            {selectedColumn === "salaryRange" ? (
-              sortDirection === "asc" ? (
-                <ArrowUp className="ml-2 h-4 w-4" />
-              ) : (
-                <ArrowDown className="ml-2 h-4 w-4" />
-              )
-            ) : (
-              <ArrowUpDown className="ml-2 h-4 w-4" />
-            )}
-          </Button>
-        );
-      },
-      size: 200,
-    },
+    // {
+    //   accessorKey: "salaryRange",
+    //   header: ({ column }) => {
+    //     return (
+    //       <Button variant="ghost" onClick={() => handleSort("salaryRange")}>
+    //         Salary Range
+    //         {selectedColumn === "salaryRange" ? (
+    //           sortDirection === "asc" ? (
+    //             <ArrowUp className="ml-2 h-4 w-4" />
+    //           ) : (
+    //             <ArrowDown className="ml-2 h-4 w-4" />
+    //           )
+    //         ) : (
+    //           <ArrowUpDown className="ml-2 h-4 w-4" />
+    //         )}
+    //       </Button>
+    //     );
+    //   },
+    //   size: 200,
+    // },
     {
       accessorKey: "published",
       header: ({ column }) => {
@@ -325,10 +321,7 @@ const ListingsTable = ({ query, onSort }: ListingsTableProps) => {
   ];
 
   return (
-    <DataTable 
-      query={query} 
-      columns={columns} 
-      isClickable={isClickable} />
+    <DataTable query={query} columns={columns} isClickable={isClickable} />
   );
 };
 

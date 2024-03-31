@@ -19,7 +19,7 @@ import { Switch } from "@/src/components/shadcn/Switch";
 import useGetListing from "@/src/requests/listings/useGetListing";
 import { Skeleton } from "@/src/components/shadcn/Skeleton";
 import ListingWrapper from "@/src/layout/wrappers/ListingWrapper";
-import { MonitorIcon } from "lucide-react";
+import { MonitorIcon, Sparkles, SparklesIcon } from "lucide-react";
 import Link from "next/link";
 import useGetCurrentOrganization from "@/src/requests/organizations/useGetCurrentOrganization";
 import { cn } from "@/src/utilities/cn";
@@ -36,6 +36,12 @@ import {
   SelectItem,
   SelectGroup,
 } from "@/src/components/shadcn/Select";
+import ChatGPT from "@/src/components/other/chatgpt";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/src/components/shadcn/Dialog";
 
 const formSchema = z.object({
   jobTitle: z.string(),
@@ -51,6 +57,7 @@ const formSchema = z.object({
 const ListingPage: PageComponent = () => {
   const router = useRouter();
   const listingId = router.query.listingId;
+  const [showchatgptViewer, setShowChatGPT] = useState<boolean>(false);
 
   const { data: organization } = useGetCurrentOrganization();
 
@@ -263,6 +270,20 @@ const ListingPage: PageComponent = () => {
                   value={jobDescription || listing?.jobDescription || ""}
                   setValue={setJobDescription}
                 />
+              </div>
+              <div>
+                <Dialog>
+                  <DialogTrigger>
+                    <div onClick={() => setShowChatGPT(true)}>
+                      <SparklesIcon />
+                    </div>
+                  </DialogTrigger>
+                  <DialogContent
+                    style={{ maxHeight: "400px", overflowY: "auto" }}
+                  >
+                    <ChatGPT listingId={listingId as string} />
+                  </DialogContent>
+                </Dialog>
               </div>
 
               <div className="flex justify-end mt-3">
