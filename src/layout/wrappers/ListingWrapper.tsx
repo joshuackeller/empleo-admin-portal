@@ -13,6 +13,13 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/src/components/shadcn/Tooltip";
+import { HelpCircleIcon } from "lucide-react";
 
 interface ListingWrapperProps {
   children: ReactNode;
@@ -36,7 +43,31 @@ const ListingWrapper = ({ children }: ListingWrapperProps) => {
   };
   return (
     <div>
-      <h4>Listing</h4>
+      <h4 className="flex items-center pb-0.5">
+        Listing
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger disabled className="cursor-default">
+              <HelpCircleIcon size="16" className="ml-1" />
+            </TooltipTrigger>
+            <TooltipContent
+              style={{
+                padding: "1em",
+                maxWidth: "500px",
+                wordWrap: "break-word",
+                zIndex: 1000,
+              }}
+            >
+              <h4 className="text-center">Job Listing</h4>
+              <br />
+              Configure the details and fields of this job listing and view its
+              current applicants.
+              <br />
+              <br />
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </h4>
       <div className="flex justify-between">
         <div className="flex items-center gap-x-5 my-2">
           <Link
