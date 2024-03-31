@@ -36,14 +36,14 @@ export default function Editor({
         content={value}
         onUpdate={(content) => setValue(content.editor.getHTML())}
         editable={isEditable}
-        renderControls={() => <EditorMenuControls />}
+        renderControls={(editor) => <EditorMenuControls editor={editor} />}
         RichTextFieldProps={{
           MenuBarProps: {
             hide: !showMenuBar,
           },
         }}
       >
-        {() => (
+        {(editor) => (
           <>
             <LinkBubbleMenu />
             <TableBubbleMenu />
