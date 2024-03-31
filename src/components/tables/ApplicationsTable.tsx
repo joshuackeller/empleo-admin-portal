@@ -1,27 +1,12 @@
 import { DataTable } from "@/src/components/shadcn/DataTable";
-import { Skeleton } from "@/src/components/shadcn/Skeleton";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/src/components/shadcn/DropdownMenu";
 import { Button } from "../shadcn/Button";
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
-import useGetApplication from "@/src/requests/applications/useGetApplication";
 import { ColumnDef } from "@tanstack/react-table";
 import { Application } from "@/src/utilities/interfaces";
 import useUpdateApplication from "@/src/requests/applications/useUpdateApplication";
-import Link from "next/link";
-import useGetApplications from "@/src/requests/applications/useGetApplications";
 import useRemoveApplication from "@/src/requests/applications/useRemoveApplication";
-import { useRouter } from "next/router";
 import { UsePaginatedQueryResult } from "@/src/requests/usePaginatedQuery";
 import { useState } from "react";
-import { ArrowUpDown, MoreHorizontal, ArrowUp, ArrowDown } from "lucide-react";
-
+import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 
 // const columns: ColumnDef<Application>[] = [
 //   {
@@ -94,7 +79,11 @@ interface ApplicationsTableProps {
   listingId: string;
 }
 
-const ApplicationsTable = ({ query, onSort, listingId }: ApplicationsTableProps) => {
+const ApplicationsTable = ({
+  query,
+  onSort,
+  listingId,
+}: ApplicationsTableProps) => {
   const isClickable = true;
 
   const [selectedColumn, setSelectedColumn] = useState<string | null>(null);
@@ -236,16 +225,15 @@ const ApplicationsTable = ({ query, onSort, listingId }: ApplicationsTableProps)
       enableHiding: false,
       cell: ({ row }) => {
         const applicationId = row.original.id;
-  
+
         const { mutate: removeApplication, isPending: isRemoving } =
-          useRemoveApplication();
+          useRemoveApplication(listingId);
         const { mutate: updateApplication, isPending: isUpdating } =
           useUpdateApplication();
-  
+
         const handleRemoveApplication = () => {
           removeApplication({ applicationId });
         };
-  
       },
     },
   ];
