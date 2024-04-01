@@ -1,5 +1,16 @@
+import { Button } from "@/src/components/shadcn/Button";
+import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/src/components/shadcn/DropdownMenu";
 import { Separator } from "@/src/components/shadcn/Separator";
+import ApplicationQueryKeys from "@/src/requests/applications";
+import useRemoveApplication from "@/src/requests/applications/useRemoveApplication";
 import { cn } from "@/src/utilities/cn";
+import { DropdownMenuContent } from "@radix-ui/react-dropdown-menu";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { QueryClient } from "@tanstack/react-query";
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -18,9 +29,24 @@ interface ApplicationWrapperProps {
 
 const ApplicationWrapper = ({ children }: ApplicationWrapperProps) => {
   const { pathname } = useRouter();
+  const router = useRouter();
   const {
     query: { listingId, applicationId },
   } = useRouter();
+
+  const { mutate: deleteApplication, isPending } = useRemoveApplication(
+    listingId as string
+  );
+  const handleDeleteApplication = () => {
+    deleteApplication(
+      { applicationId: applicationId as string },
+      {
+        onSuccess: () => {
+          router.push(`/listings/${listingId}/applications`);
+        },
+      }
+    );
+  };
 
   return (
     <div>

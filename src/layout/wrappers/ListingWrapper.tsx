@@ -29,6 +29,7 @@ const ListingWrapper = ({ children }: ListingWrapperProps) => {
   const { pathname } = useRouter();
   const router = useRouter();
   const listingId = router.query.listingId;
+  const isDetailsPage = pathname === `/listings/[listingId]`;
 
   const { mutate: deleteListing, isPending } = useRemoveListing();
   const handleDeleteListing = () => {
@@ -99,23 +100,25 @@ const ListingWrapper = ({ children }: ListingWrapperProps) => {
             Applicants
           </Link>
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              disabled={isPending}
-              onClick={handleDeleteListing}
-              className="!text-red-500 cursor-pointer"
-            >
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {isDetailsPage && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <DotsHorizontalIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                disabled={isPending}
+                onClick={handleDeleteListing}
+                className="!text-red-500 cursor-pointer"
+              >
+                Delete Listing
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
       <Separator className="mb-2 mt-1" />
       {children}

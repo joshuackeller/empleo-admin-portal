@@ -16,7 +16,16 @@ const FileViewer = ({ uri, fileType }: FileViewProps) => {
 
   return (
     <div>
-      <DocViewer documents={docs} pluginRenderers={DocViewerRenderers} />
+      <DocViewer
+        documents={docs}
+        pluginRenderers={DocViewerRenderers}
+        config={{
+          pdfVerticalScrollByDefault: true,
+          header: {
+            disableHeader: true,
+          },
+        }}
+      />
     </div>
   );
 };
