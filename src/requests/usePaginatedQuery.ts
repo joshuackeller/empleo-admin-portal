@@ -10,6 +10,7 @@ import {
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
+// @ts-ignore
 export interface PaginatedQueryParams extends QueryFunctionContext {
   page?: string;
   pageSize?: string;
@@ -91,13 +92,14 @@ const usePaginatedQuery = <
     ...useQuery<TQueryFnData, TError, TData, TQueryKey>({
       queryFn: queryFn
         ? () =>
+            // @ts-ignore
             queryFn({
               page,
               pageSize,
               sort,
               direction,
               search,
-            } as any)
+            })
         : undefined,
       queryKey: [...queryKey, page, pageSize, sort, direction, search] as any,
       placeholderData: keepPreviousData,
