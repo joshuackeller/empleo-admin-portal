@@ -12,12 +12,9 @@ import useUpdateApplication from "@/src/requests/applications/useUpdateApplicati
 import useGetApplicationNotes from "@/src/requests/applications/useGetApplicationNotes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  ArrowLeftIcon,
   ExternalLinkIcon,
   DownloadIcon,
-  Download,
   ViewIcon,
-  Copy,
   CopyIcon,
 } from "lucide-react";
 import { useRouter } from "next/router";
@@ -25,11 +22,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { FormEvent, useCallback, useRef, useState } from "react";
 import useCreateApplicationNote from "@/src/requests/applications/useCreateApplicationNote";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/src/components/shadcn/Alert";
 import { Label } from "@/src/components/shadcn/Label";
 import { Input } from "@/src/components/shadcn/Input";
 import { cn } from "@/src/utilities/cn";
@@ -41,12 +33,9 @@ import { Separator } from "@/src/components/shadcn/Separator";
 import FileViewer from "@/src/components/other/FileViewer";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogHeader,
   DialogTrigger,
 } from "@/src/components/shadcn/Dialog";
-import { DialogTitle } from "@radix-ui/react-dialog";
 import { useToast } from "@/src/components/shadcn/use-toast";
 
 const formSchema = z.object({
@@ -228,23 +217,21 @@ const SingleApplicationDetails = () => {
                           target="_blank"
                           rel="noreferrer"
                           className={cn(
-                            "absolute top-2 right-2 z-10",
+                            "absolute top-2.5 right-3 z-10",
                             application?.resume?.url
                               ? "cursor-pointer"
                               : "cursor-default"
                           )}
                         >
-                          <DownloadIcon className="h-4 w-4 top-2 right-2 absolute" />
+                          <DownloadIcon className="h-4 w-4" />
                         </a>
                         <div>
                           <Dialog>
-                            <DialogTrigger>
-                              <div
+                            <DialogTrigger asChild>
+                              <ViewIcon
+                                className="h-4 w-4 top-2.5 right-10 absolute cursor-pointer"
                                 onClick={() => setShowFileViewer(true)}
-                                className="h-4 w-4 top-2 right-4 absolute z-10"
-                              >
-                                <ViewIcon className="h-4 w-4 top-2 right-8 absolute cursor-pointer" />
-                              </div>
+                              />
                             </DialogTrigger>
                             <DialogContent className="h-full overflow-y-scroll max-h-screen max-w-4xl">
                               {application.resume && (
@@ -289,23 +276,21 @@ const SingleApplicationDetails = () => {
                           target="_blank"
                           rel="noreferrer"
                           className={cn(
-                            "absolute top-2 right-2 z-10",
+                            "absolute top-2.5 right-3 z-10",
                             application?.coverLetter?.url
                               ? "cursor-pointer"
                               : "cursor-default"
                           )}
                         >
-                          <DownloadIcon className="h-4 w-4 top-2 right-2 absolute" />
+                          <DownloadIcon className="h-4 w-4" />
                         </a>
                         <div>
                           <Dialog>
                             <DialogTrigger asChild>
-                              <div
+                              <ViewIcon
+                                className="h-4 w-4 top-2.5 right-10 absolute cursor-pointer"
                                 onClick={() => setShowFileViewer(true)}
-                                className="h-4 w-4 top-2 right-4  absolute"
-                              >
-                                <ViewIcon className="h-4 w-4 top-2 right-8 absolute cursor-pointer" />
-                              </div>
+                              />
                             </DialogTrigger>
                             <DialogContent className="h-full overflow-y-scroll max-h-screen max-w-4xl">
                               {application.coverLetter && (
@@ -410,7 +395,7 @@ const SingleApplicationDetails = () => {
               )}
             </form>
             <div className="max-w-2xl mb-12">
-              <Separator className="my-5" />
+              <Separator className="mt-5 mb-10" />
               <h4>Internal Notes</h4>
               <form>
                 <div>

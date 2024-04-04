@@ -19,13 +19,12 @@ import { Switch } from "@/src/components/shadcn/Switch";
 import useGetListing from "@/src/requests/listings/useGetListing";
 import { Skeleton } from "@/src/components/shadcn/Skeleton";
 import ListingWrapper from "@/src/layout/wrappers/ListingWrapper";
-import { MonitorIcon, Sparkles, SparklesIcon } from "lucide-react";
+import { MonitorIcon, SparklesIcon } from "lucide-react";
 import Link from "next/link";
 import useGetCurrentOrganization from "@/src/requests/organizations/useGetCurrentOrganization";
 import { cn } from "@/src/utilities/cn";
-import { ClipboardIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
+import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import { Label } from "@/src/components/shadcn/Label";
-import { useToast } from "@/src/components/shadcn/use-toast";
 import Editor from "@/src/components/textEditor/Editor";
 import { EmploymentType } from "@/src/utilities/interfaces";
 import {
@@ -36,7 +35,7 @@ import {
   SelectItem,
   SelectGroup,
 } from "@/src/components/shadcn/Select";
-import ChatGPT from "@/src/components/other/chatgpt";
+import ChatGPT from "@/src/components/other/ChatGPT";
 import {
   Dialog,
   DialogContent,
@@ -57,7 +56,7 @@ const formSchema = z.object({
 const ListingPage: PageComponent = () => {
   const router = useRouter();
   const listingId = router.query.listingId;
-  const [showchatgptViewer, setShowChatGPT] = useState<boolean>(false);
+  const [showChatGPT, setShowChatGPT] = useState<boolean>(false);
 
   const { data: organization } = useGetCurrentOrganization();
 
@@ -264,24 +263,17 @@ const ListingPage: PageComponent = () => {
                   </FormItem>
                 )}
               />
-              <div>
-                <Label>Job Description</Label>
-                <div>
-                  <Dialog>
-                    <DialogTrigger>
-                      <div onClick={() => setShowChatGPT(true)}>
-                        <SparklesIcon />
-                      </div>
-                    </DialogTrigger>
-                    <DialogContent
-                      style={{
-                        maxHeight: "400px",
-                        overflowY: "auto",
-                      }}
-                    >
-                      <ChatGPT listingId={listingId as string} />
-                    </DialogContent>
-                  </Dialog>
+              <div className="pt-2">
+                <div className="flex items-center justify-between gap-x-1 mb-1">
+                  <Label>Job Description</Label>
+                  <Button
+                    variant="outline"
+                    type="button"
+                    onClick={() => setShowChatGPT(true)}
+                    className="gap-x-1"
+                  >
+                    Generate Using AI <SparklesIcon className="h-4 w-4" />
+                  </Button>
                 </div>
                 <Editor
                   value={jobDescription || listing?.jobDescription || ""}
@@ -296,6 +288,12 @@ const ListingPage: PageComponent = () => {
                 </Button>
               </div>
             </form>
+
+            <Dialog open={showChatGPT} onOpenChange={setShowChatGPT}>
+              <DialogContent className="max-w-2xl">
+                <ChatGPT listingId={listingId as string} />
+              </DialogContent>
+            </Dialog>
           </Form>
         </div>
       )}

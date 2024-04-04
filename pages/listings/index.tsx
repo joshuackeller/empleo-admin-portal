@@ -21,22 +21,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/src/components/shadcn/Form";
-import {
-  LegacyRef,
-  MouseEvent,
-  RefObject,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useState } from "react";
 import ListingsTable from "@/src/components/tables/ListingsTable";
-import { PlusIcon, SearchIcon, HelpCircleIcon, PlusIcon } from "lucide-react";
+import { HelpCircleIcon, PlusIcon } from "lucide-react";
 import useCreateListing from "@/src/requests/listings/useCreateListing";
 import { useRouter } from "next/router";
 import { EmploymentType, Listing } from "@/src/utilities/interfaces";
 import useGetListings from "@/src/requests/listings/useGetListings";
 import SlideSearch from "@/src/components/other/SlideSearch";
-import { Skeleton } from "@/src/components/shadcn/Skeleton";
 import {
   Tooltip,
   TooltipContent,
@@ -67,7 +59,7 @@ const ListingsPage: PageComponent = () => {
 
   const query = useGetListings();
 
-  const handleSort = (columnName: string, direction: 'asc' | 'desc') => {
+  const handleSort = (columnName: string, direction: "asc" | "desc") => {
     router.push({
       pathname: router.pathname,
       query: { ...router.query, sort: columnName, direction },
@@ -104,78 +96,81 @@ const ListingsPage: PageComponent = () => {
     <div>
       <div>
         <div className="flex justify-between items-start">
-
-          <div className="flex gap-x-2">
-            <SlideSearch />
+          <div className="flex items-center gap-x-1">
+            <h4 className="flex items-center pb-0.5">Listings</h4>
+            <div>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger disabled className="cursor-default">
+                    <HelpCircleIcon size="16" className="ml-1" />
+                  </TooltipTrigger>
+                  <TooltipContent
+                    style={{
+                      padding: "1em",
+                      maxWidth: "500px",
+                      wordWrap: "break-word",
+                      zIndex: 1000,
+                    }}
+                  >
+                    <h4 className="text-center">Job Listings</h4>
+                    <br />
+                    View and manage the job listings for your organization.
+                    <br />
+                    <br />
+                    Click on a listing row to edit the listing and view
+                    applicants.
+                    <br />
+                    <br />
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
           </div>
-          <h4 className="flex items-center pb-0.5">
-            Listings
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger disabled className="cursor-default">
-                  <HelpCircleIcon size="16" className="ml-1" />
-                </TooltipTrigger>
-                <TooltipContent
-                  style={{
-                    padding: "1em",
-                    maxWidth: "500px",
-                    wordWrap: "break-word",
-                    zIndex: 1000,
-                  }}
-                >
-                  <h4 className="text-center">Job Listings</h4>
-                  <br />
-                  View and manage the job listings for your organization.
-                  <br />
-                  <br />
-                  Click on a listing row to edit the listing and view
-                  applicants.
-                  <br />
-                  <br />
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </h4>
-          <div>
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger asChild>
-                <button className="p-1 rounded-full bg-indigo-500">
-                  <PlusIcon className="h-4 w-4 text-white" />
-                </button>
-              </DialogTrigger>
-              <DialogContent className="max-w-md">
-                <DialogHeader>
-                  <DialogTitle>Create Listing</DialogTitle>
-                  <DialogDescription
-                    className="!font-sans"
-                    style={{ fontFamily: "sans-serif" }}
-                  ></DialogDescription>
-                </DialogHeader>
-                <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <FormField
-                      control={form.control}
-                      name="jobTitle"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Job Title</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Manager" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+          <div className="flex items-center gap-x-2">
+            <div className="flex gap-x-2">
+              <SlideSearch />
+            </div>
+            <div>
+              <Dialog open={open} onOpenChange={setOpen}>
+                <DialogTrigger asChild>
+                  <button className="p-1 rounded-full bg-indigo-500">
+                    <PlusIcon className="h-4 w-4 text-white" />
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Create Listing</DialogTitle>
+                    <DialogDescription
+                      className="!font-sans"
+                      style={{ fontFamily: "sans-serif" }}
+                    ></DialogDescription>
+                  </DialogHeader>
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                      <FormField
+                        control={form.control}
+                        name="jobTitle"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Job Title</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Manager" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                    <div className="flex justify-end mt-3">
-                      <Button disabled={isPending} type="submit">
-                        Create Listing
-                      </Button>
-                    </div>
-                  </form>
-                </Form>
-              </DialogContent>
-            </Dialog>
+                      <div className="flex justify-end mt-3">
+                        <Button disabled={isPending} type="submit">
+                          Create Listing
+                        </Button>
+                      </div>
+                    </form>
+                  </Form>
+                </DialogContent>
+              </Dialog>
+            </div>
           </div>
         </div>
         <Separator className="mb-3 mt-1" />
