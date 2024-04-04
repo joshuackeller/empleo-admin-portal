@@ -39,20 +39,12 @@ import React from "react";
 export default function EditorMenuControls({ editor }: { editor: any }) {
   const theme = useTheme();
 
-  // const handleAddVideo = () => {
-  //   const url = window.prompt("Enter the video URL");
-  //   if (url) {
-  //     editor
-  //       .chain()
-  //       .focus()
-  //       .insertContent(`<iframe src="${url}"></iframe>`)
-  //       .run();
-  //   }
-  // };
-
   const handleAddVideo = () => {
     const videoSrc = editor.getAttributes("video").src;
-    const url = window.prompt("Enter the video URL", videoSrc);
+    const url = window.prompt(
+      "Enter the video embed URL. This can be found on a YouTube video by clicking 'Share', then 'Embed' and copying the provided link.",
+      videoSrc
+    );
 
     // cancelled
     if (url === null) {
