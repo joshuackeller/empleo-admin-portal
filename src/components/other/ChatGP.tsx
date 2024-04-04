@@ -1,11 +1,7 @@
-import React, { FormEvent, useCallback, useState } from "react";
-import axios from "axios";
-import useEmpleoApi from "@/src/requests/useEmpleoApi";
-import { Input } from "../shadcn/Input";
-import { Button, buttonVariants } from "../shadcn/Button";
-import { Form } from "../shadcn/Form";
+import React, { FormEvent, useState } from "react";
+import { Button } from "../shadcn/Button";
 import { Textarea } from "../shadcn/Textarea";
-import { CopyIcon, RefreshCcw, RefreshCwIcon } from "lucide-react";
+import { CopyIcon } from "lucide-react";
 import { toast } from "../shadcn/use-toast";
 import { Skeleton } from "../shadcn/Skeleton";
 import { cn } from "@/src/utilities/cn";
