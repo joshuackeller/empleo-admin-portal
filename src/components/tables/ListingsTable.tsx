@@ -127,16 +127,16 @@ const ListingsTable = ({ query, onSort }: ListingsTableProps) => {
       accessorKey: "jobTitle",
       header: ({ column }) => {
         return (
-          <Button variant="ghost" onClick={() => handleSort("jobTitle")}>
+          <Button variant="sort" onClick={() => handleSort("jobTitle")}>
             Job Title
             {selectedColumn === "jobTitle" ? (
               sortDirection === "asc" ? (
-                <ArrowUp className="ml-2 h-4 w-4" />
+                <ArrowUp className="ml-2 h-3 w-3" />
               ) : (
-                <ArrowDown className="ml-2 h-4 w-4" />
+                <ArrowDown className="ml-2 h-3 w-3" />
               )
             ) : (
-              <ArrowUpDown className="ml-2 h-4 w-4" />
+              <ArrowUpDown className="ml-2 h-3 w-3" />
             )}
           </Button>
         );
@@ -147,19 +147,16 @@ const ListingsTable = ({ query, onSort }: ListingsTableProps) => {
       accessorKey: "shortDescription",
       header: ({ column }) => {
         return (
-          <Button
-            variant="ghost"
-            onClick={() => handleSort("shortDescription")}
-          >
+          <Button variant="sort" onClick={() => handleSort("shortDescription")}>
             Short Description
             {selectedColumn === "shortDescription" ? (
               sortDirection === "asc" ? (
-                <ArrowUp className="ml-2 h-4 w-4" />
+                <ArrowUp className="ml-2 h-3 w-3" />
               ) : (
-                <ArrowDown className="ml-2 h-4 w-4" />
+                <ArrowDown className="ml-2 h-3 w-3" />
               )
             ) : (
-              <ArrowUpDown className="ml-2 h-4 w-4" />
+              <ArrowUpDown className="ml-2 h-3 w-3" />
             )}
           </Button>
         );
@@ -171,18 +168,18 @@ const ListingsTable = ({ query, onSort }: ListingsTableProps) => {
       header: ({ column }) => {
         return (
           <Button
-            variant="ghost"
+            variant="sort"
             onClick={() => handleSort("_count.applications")}
           >
             Applicants
             {selectedColumn === "_count.applications" ? (
               sortDirection === "asc" ? (
-                <ArrowUp className="ml-2 h-4 w-4" />
+                <ArrowUp className="ml-2 h-3 w-3" />
               ) : (
-                <ArrowDown className="ml-2 h-4 w-4" />
+                <ArrowDown className="ml-2 h-3 w-3" />
               )
             ) : (
-              <ArrowUpDown className="ml-2 h-4 w-4" />
+              <ArrowUpDown className="ml-2 h-3 w-3" />
             )}
           </Button>
         );
@@ -193,16 +190,16 @@ const ListingsTable = ({ query, onSort }: ListingsTableProps) => {
       accessorKey: "employmentType",
       header: ({ column }) => {
         return (
-          <Button variant="ghost" onClick={() => handleSort("employmentType")}>
+          <Button variant="sort" onClick={() => handleSort("employmentType")}>
             Employment Type
             {selectedColumn === "employmentType" ? (
               sortDirection === "asc" ? (
-                <ArrowUp className="ml-2 h-4 w-4" />
+                <ArrowUp className="ml-2 h-3 w-3" />
               ) : (
-                <ArrowDown className="ml-2 h-4 w-4" />
+                <ArrowDown className="ml-2 h-3 w-3" />
               )
             ) : (
-              <ArrowUpDown className="ml-2 h-4 w-4" />
+              <ArrowUpDown className="ml-2 h-3 w-3" />
             )}
           </Button>
         );
@@ -231,56 +228,56 @@ const ListingsTable = ({ query, onSort }: ListingsTableProps) => {
       accessorKey: "location",
       header: ({ column }) => {
         return (
-          <Button variant="ghost" onClick={() => handleSort("location")}>
+          <Button variant="sort" onClick={() => handleSort("location")}>
             Location
             {selectedColumn === "location" ? (
               sortDirection === "asc" ? (
-                <ArrowUp className="ml-2 h-4 w-4" />
+                <ArrowUp className="ml-2 h-3 w-3" />
               ) : (
-                <ArrowDown className="ml-2 h-4 w-4" />
+                <ArrowDown className="ml-2 h-3 w-3" />
               )
             ) : (
-              <ArrowUpDown className="ml-2 h-4 w-4" />
+              <ArrowUpDown className="ml-2 h-3 w-3" />
             )}
           </Button>
         );
       },
       size: 150,
     },
-    // {
-    //   accessorKey: "salaryRange",
-    //   header: ({ column }) => {
-    //     return (
-    //       <Button variant="ghost" onClick={() => handleSort("salaryRange")}>
-    //         Salary Range
-    //         {selectedColumn === "salaryRange" ? (
-    //           sortDirection === "asc" ? (
-    //             <ArrowUp className="ml-2 h-4 w-4" />
-    //           ) : (
-    //             <ArrowDown className="ml-2 h-4 w-4" />
-    //           )
-    //         ) : (
-    //           <ArrowUpDown className="ml-2 h-4 w-4" />
-    //         )}
-    //       </Button>
-    //     );
-    //   },
-    //   size: 200,
-    // },
+    {
+      accessorKey: "salaryRange",
+      header: ({ column }) => {
+        return (
+          <Button variant="sort" onClick={() => handleSort("salaryRange")}>
+            Salary Range
+            {selectedColumn === "salaryRange" ? (
+              sortDirection === "asc" ? (
+                <ArrowUp className="ml-2 h-3 w-3" />
+              ) : (
+                <ArrowDown className="ml-2 h-3 w-3" />
+              )
+            ) : (
+              <ArrowUpDown className="ml-2 h-3 w-3" />
+            )}
+          </Button>
+        );
+      },
+      size: 200,
+    },
     {
       accessorKey: "published",
       header: ({ column }) => {
         return (
-          <Button variant="ghost" onClick={() => handleSort("published")}>
+          <Button variant="sort" onClick={() => handleSort("published")}>
             Published?
             {selectedColumn === "published" ? (
               sortDirection === "asc" ? (
-                <ArrowUp className="ml-2 h-4 w-4" />
+                <ArrowUp className="ml-2 h-3 w-3" />
               ) : (
-                <ArrowDown className="ml-2 h-4 w-4" />
+                <ArrowDown className="ml-2 h-3 w-3" />
               )
             ) : (
-              <ArrowUpDown className="ml-2 h-4 w-4" />
+              <ArrowUpDown className="ml-2 h-3 w-3" />
             )}
           </Button>
         );
@@ -305,7 +302,7 @@ const ListingsTable = ({ query, onSort }: ListingsTableProps) => {
         return (
           <div>
             <Button
-              variant="ghost"
+              variant="sort"
               className="h-8 w-8 p-0 text-indigo-500"
               disabled={isRemoving}
               onClick={() =>

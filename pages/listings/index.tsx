@@ -21,13 +21,21 @@ import {
   FormLabel,
   FormMessage,
 } from "@/src/components/shadcn/Form";
-import { useState } from "react";
+import {
+  LegacyRef,
+  MouseEvent,
+  RefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import ListingsTable from "@/src/components/tables/ListingsTable";
-import { HelpCircleIcon, PlusIcon } from "lucide-react";
+import { PlusIcon, SearchIcon, HelpCircleIcon, PlusIcon } from "lucide-react";
 import useCreateListing from "@/src/requests/listings/useCreateListing";
 import { useRouter } from "next/router";
 import { EmploymentType, Listing } from "@/src/utilities/interfaces";
 import useGetListings from "@/src/requests/listings/useGetListings";
+import SlideSearch from "@/src/components/other/SlideSearch";
 import { Skeleton } from "@/src/components/shadcn/Skeleton";
 import {
   Tooltip,
@@ -96,6 +104,10 @@ const ListingsPage: PageComponent = () => {
     <div>
       <div>
         <div className="flex justify-between items-start">
+
+          <div className="flex gap-x-2">
+            <SlideSearch />
+          </div>
           <h4 className="flex items-center pb-0.5">
             Listings
             <TooltipProvider>

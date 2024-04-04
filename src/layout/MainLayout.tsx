@@ -6,10 +6,7 @@ import { cn } from "../utilities/cn";
 import Link from "next/link";
 import EmpleoLogo from "../components/EmpleoLogo";
 import { useRouter } from "next/router";
-
-import SearchDialog from "../components/other/SearchDialog";
 import SettingsDropdown from "../components/other/SettingsDropdown";
-import useGetCurrentOrganization from "../requests/organizations/useGetCurrentOrganization";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -36,7 +33,6 @@ const SIDE_NAV_ITEMS = [
 
 const MainLayout = ({ children, layout = "normal" }: MainLayoutProps) => {
   const { pathname } = useRouter();
-  const { data: organization } = useGetCurrentOrganization();
 
   if (layout === "auth") return <AuthLayout>{children}</AuthLayout>;
   else {
@@ -53,16 +49,8 @@ const MainLayout = ({ children, layout = "normal" }: MainLayoutProps) => {
               </Link>
             </div>
             <div className="pr-2 py-1 flex justify-end items-center gap-x-1 w-full mr-7">
-              <SearchDialog />
+              {/* <SearchDialog /> */}
               <SettingsDropdown />
-              <Link
-                href="/organization"
-                className={
-                  "text-sm font-medium hover:bg-gray-50 rounded-md border px-2 py-0.5 max-w-[200px] truncate"
-                }
-              >
-                {organization?.title || "Organization"}
-              </Link>
             </div>
           </div>
           <div className="flex">

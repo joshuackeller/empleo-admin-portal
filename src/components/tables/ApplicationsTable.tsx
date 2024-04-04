@@ -6,7 +6,7 @@ import useUpdateApplication from "@/src/requests/applications/useUpdateApplicati
 import useRemoveApplication from "@/src/requests/applications/useRemoveApplication";
 import { UsePaginatedQueryResult } from "@/src/requests/usePaginatedQuery";
 import { useState } from "react";
-import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal, ArrowUp, ArrowDown } from "lucide-react";
 
 // const columns: ColumnDef<Application>[] = [
 //   {
@@ -104,16 +104,16 @@ const ApplicationsTable = ({
       accessorKey: "firstName",
       header: ({ column }) => {
         return (
-          <Button variant="ghost" onClick={() => handleSort("firstName")}>
+          <Button variant="sort" onClick={() => handleSort("firstName")}>
             First Name
             {selectedColumn === "firstName" ? (
               sortDirection === "asc" ? (
-                <ArrowUp className="ml-2 h-4 w-4" />
+                <ArrowUp className="ml-2 h-3 w-3" />
               ) : (
-                <ArrowDown className="ml-2 h-4 w-4" />
+                <ArrowDown className="ml-2 h-3 w-3" />
               )
             ) : (
-              <ArrowUpDown className="ml-2 h-4 w-4" />
+              <ArrowUpDown className="ml-2 h-3 w-3" />
             )}
           </Button>
         );
@@ -124,16 +124,16 @@ const ApplicationsTable = ({
       accessorKey: "lastName",
       header: ({ column }) => {
         return (
-          <Button variant="ghost" onClick={() => handleSort("lastName")}>
+          <Button variant="sort" onClick={() => handleSort("lastName")}>
             Last Name
             {selectedColumn === "lastName" ? (
               sortDirection === "asc" ? (
-                <ArrowUp className="ml-2 h-4 w-4" />
+                <ArrowUp className="ml-2 h-3 w-3" />
               ) : (
-                <ArrowDown className="ml-2 h-4 w-4" />
+                <ArrowDown className="ml-2 h-3 w-3" />
               )
             ) : (
-              <ArrowUpDown className="ml-2 h-4 w-4" />
+              <ArrowUpDown className="ml-2 h-3 w-3" />
             )}
           </Button>
         );
@@ -144,16 +144,16 @@ const ApplicationsTable = ({
       accessorKey: "phone",
       header: ({ column }) => {
         return (
-          <Button variant="ghost" onClick={() => handleSort("phone")}>
+          <Button variant="sort" onClick={() => handleSort("phone")}>
             Phone
             {selectedColumn === "phone" ? (
               sortDirection === "asc" ? (
-                <ArrowUp className="ml-2 h-4 w-4" />
+                <ArrowUp className="ml-2 h-3 w-3" />
               ) : (
-                <ArrowDown className="ml-2 h-4 w-4" />
+                <ArrowDown className="ml-2 h-3 w-3" />
               )
             ) : (
-              <ArrowUpDown className="ml-2 h-4 w-4" />
+              <ArrowUpDown className="ml-2 h-3 w-3" />
             )}
           </Button>
         );
@@ -164,16 +164,16 @@ const ApplicationsTable = ({
       accessorKey: "user.email",
       header: ({ column }) => {
         return (
-          <Button variant="ghost" onClick={() => handleSort("user.email")}>
+          <Button variant="sort" onClick={() => handleSort("user.email")}>
             Email
             {selectedColumn === "user.email" ? (
               sortDirection === "asc" ? (
-                <ArrowUp className="ml-2 h-4 w-4" />
+                <ArrowUp className="ml-2 h-3 w-3" />
               ) : (
-                <ArrowDown className="ml-2 h-4 w-4" />
+                <ArrowDown className="ml-2 h-3 w-3" />
               )
             ) : (
-              <ArrowUpDown className="ml-2 h-4 w-4" />
+              <ArrowUpDown className="ml-2 h-3 w-3" />
             )}
           </Button>
         );
@@ -184,16 +184,16 @@ const ApplicationsTable = ({
       accessorKey: "status",
       header: ({ column }) => {
         return (
-          <Button variant="ghost" onClick={() => handleSort("status")}>
+          <Button variant="sort" onClick={() => handleSort("status")}>
             Application Status
             {selectedColumn === "status" ? (
               sortDirection === "asc" ? (
-                <ArrowUp className="ml-2 h-4 w-4" />
+                <ArrowUp className="ml-2 h-3 w-3" />
               ) : (
-                <ArrowDown className="ml-2 h-4 w-4" />
+                <ArrowDown className="ml-2 h-3 w-3" />
               )
             ) : (
-              <ArrowUpDown className="ml-2 h-4 w-4" />
+              <ArrowUpDown className="ml-2 h-3 w-3" />
             )}
           </Button>
         );

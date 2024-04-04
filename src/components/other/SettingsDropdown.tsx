@@ -13,6 +13,7 @@ import {
 } from "@/src/components/shadcn/DropdownMenu";
 import useExitOrganization from "@/src/requests/auth/useExitOrganization";
 import useSignOut from "@/src/requests/auth/useSignOut";
+import useGetCurrentOrganization from "@/src/requests/organizations/useGetCurrentOrganization";
 import { ArrowLeftRight, LogOutIcon, SettingsIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/router";
@@ -20,6 +21,7 @@ import { useRouter } from "next/router";
 const SettingsDropdown = () => {
   const { mutate: signOut } = useSignOut();
   const { mutate: exitOrganization } = useExitOrganization();
+  const { data: organization } = useGetCurrentOrganization();
 
   const router = useRouter();
 
@@ -27,11 +29,11 @@ const SettingsDropdown = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="p-1">
-        <SettingsIcon className="h-4 w-4" />
+      <DropdownMenuTrigger className="transition text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md border px-2 py-0.5 max-w-[200px] truncate">
+        {organization?.title || "Organization"}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel>Settings</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem
@@ -40,7 +42,7 @@ const SettingsDropdown = () => {
             }}
             className="cursor-pointer"
           >
-            Account Details
+            My Account
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

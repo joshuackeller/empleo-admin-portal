@@ -1,7 +1,7 @@
 import { Self } from "@/src/utilities/interfaces";
 import useEmpleoApi from "../useEmpleoApi";
 import useCustomMutation from "../useCustomMutation";
-import { toast, useToast } from "@/src/components/shadcn/use-toast";
+import { useToast } from "@/src/components/shadcn/use-toast";
 
 interface UpdateSelfProps {
   body: {
