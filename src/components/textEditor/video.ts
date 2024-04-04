@@ -27,7 +27,7 @@ export const Video = Node.create({
     return [
       "div",
       {
-        style: "display: flex; justify-content: center;",
+        style: "display: flex; justify-content: center; padding: 12px;",
       },
       [
         "iframe",
@@ -47,7 +47,7 @@ export const Video = Node.create({
         ? "cursor-pointer mx-auto"
         : "mx-auto resize";
       div.style.width = "560px";
-      div.style.height = "315px";
+      div.style.padding = "12px 0";
 
       const iframe = document.createElement("iframe");
       if (editor.isEditable) {
