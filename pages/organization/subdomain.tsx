@@ -90,9 +90,7 @@ const OrgPage: PageComponent = () => {
                 value={slug}
                 onChange={(e) =>
                   setSlug(
-                    e.target.value
-                      ?.replace(/[^a-zA-Z0-9-]/g, "")
-                      ?.toLowerCase(),
+                    e.target.value?.replace(/[^a-zA-Z0-9-]/g, "")?.toLowerCase()
                   )
                 }
                 placeholder="dunder-mifflin"

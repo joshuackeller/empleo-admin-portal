@@ -41,6 +41,7 @@ import {
   TableImproved,
 } from "mui-tiptap";
 import { mentionSuggestionOptions } from "./mentionSuggestionOptions";
+import { Video } from "./video";
 
 export type UseExtensionsOptions = {
   /** Placeholder hint to show in the text input area before a user types a message. */
@@ -111,7 +112,7 @@ export default function useExtensions({
       TableRow,
       TableHeader,
       TableCell,
-
+      Video,
       BulletList,
       CodeBlock,
       Document,
@@ -153,7 +154,7 @@ export default function useExtensions({
       Gapcursor,
       HeadingWithAnchor,
       TextAlign.configure({
-        types: ["heading", "paragraph", "image"],
+        types: ["heading", "paragraph", "image", "video"],
       }),
       TextStyle,
       Color,

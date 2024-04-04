@@ -24,9 +24,16 @@ import {
   FormMessage,
 } from "@/src/components/shadcn/Form";
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { HelpCircleIcon, Plus } from "lucide-react";
 import useGetAdmins from "@/src/requests/admins/useGetAdmins";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/src/components/shadcn/Tooltip";
 import { useRouter } from "next/router";
+
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -68,7 +75,36 @@ const TeamPage: PageComponent = () => {
     <div>
       <div>
         <div className="flex justify-between items-start">
-          <h4>Team</h4>
+          <h4 className="flex items-center pb-0.5">
+            Team
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger disabled className="cursor-default">
+                  <HelpCircleIcon size="16" className="ml-1" />
+                </TooltipTrigger>
+                <TooltipContent
+                  style={{
+                    padding: "1em",
+                    maxWidth: "500px",
+                    wordWrap: "break-word",
+                    zIndex: 1000,
+                  }}
+                >
+                  <h4 className="text-center">Admin Team</h4>
+                  <br />
+                  View and manage the admins of your organization.
+                  <br />
+                  <br />
+                  Each user on this list has full access to the Empleo admin
+                  portal, including creating, viewing, and updating job
+                  listings, viewing applications, and changing white-label site
+                  settings.
+                  <br />
+                  <br />
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </h4>
           <div className="!font-sans">
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
