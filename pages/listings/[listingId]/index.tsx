@@ -266,25 +266,28 @@ const ListingPage: PageComponent = () => {
               />
               <div>
                 <Label>Job Description</Label>
+                <div>
+                  <Dialog>
+                    <DialogTrigger>
+                      <div onClick={() => setShowChatGPT(true)}>
+                        <SparklesIcon />
+                      </div>
+                    </DialogTrigger>
+                    <DialogContent
+                      style={{
+                        maxHeight: "400px",
+                        overflowY: "auto",
+                      }}
+                    >
+                      <ChatGPT listingId={listingId as string} />
+                    </DialogContent>
+                  </Dialog>
+                </div>
                 <Editor
                   value={jobDescription || listing?.jobDescription || ""}
                   setValue={setJobDescription}
                   placeholder="Enter your job description here..."
                 />
-              </div>
-              <div>
-                <Dialog>
-                  <DialogTrigger>
-                    <div onClick={() => setShowChatGPT(true)}>
-                      <SparklesIcon />
-                    </div>
-                  </DialogTrigger>
-                  <DialogContent
-                    style={{ maxHeight: "400px", overflowY: "auto" }}
-                  >
-                    <ChatGPT listingId={listingId as string} />
-                  </DialogContent>
-                </Dialog>
               </div>
 
               <div className="flex justify-end mt-3">
