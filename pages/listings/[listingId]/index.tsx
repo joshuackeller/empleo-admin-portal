@@ -35,7 +35,7 @@ import {
   SelectItem,
   SelectGroup,
 } from "@/src/components/shadcn/Select";
-import ChatGPT from "@/src/components/other/ChatGP";
+import ChatGPT from "@/src/components/other/ChatGPT";
 import {
   Dialog,
   DialogContent,
