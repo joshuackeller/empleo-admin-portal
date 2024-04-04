@@ -41,8 +41,8 @@ const useEmpleoApi = () => {
         organizationId = localStorage.removeItem(ORGANIZATION_ID_KEY);
         return;
       }
-      throw Error(error);
-    },
+      throw error;
+    }
   );
 
   return api;

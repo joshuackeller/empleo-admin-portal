@@ -1,24 +1,26 @@
-import React, { useCallback, useState } from "react";
+import React, { FormEvent, useCallback, useState } from "react";
 import axios from "axios";
 import useEmpleoApi from "@/src/requests/useEmpleoApi";
 import { Input } from "../shadcn/Input";
-import { Button } from "../shadcn/Button";
+import { Button, buttonVariants } from "../shadcn/Button";
 import { Form } from "../shadcn/Form";
 import { Textarea } from "../shadcn/Textarea";
-import { CopyIcon } from "lucide-react";
+import { CopyIcon, RefreshCcw, RefreshCwIcon } from "lucide-react";
 import { toast } from "../shadcn/use-toast";
 import { Skeleton } from "../shadcn/Skeleton";
+import { cn } from "@/src/utilities/cn";
+import { Label } from "../shadcn/Label";
+import useGenerateListingDescription from "@/src/requests/listings/useGenerateListingDescription";
 
 interface ChatGPTProps {
   listingId: string;
 }
 
-const ChatGPT: React.FC<ChatGPTProps> = ({ listingId }) => {
+const ChatGPT = ({ listingId }: ChatGPTProps) => {
   const [input, setInput] = useState("");
   const [response, setResponse] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  //copy chatgpt response to clipboard
-  const handleIconClick = async () => {
+
+  const copyToClipboard = async () => {
     if (response) {
       await navigator.clipboard.writeText(response);
       toast({
@@ -28,84 +30,88 @@ const ChatGPT: React.FC<ChatGPTProps> = ({ listingId }) => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const {
+    mutate: generateDescription,
+    isPending,
+    isSuccess,
+  } = useGenerateListingDescription();
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const api = useEmpleoApi();
-
-    setIsLoading(true);
-
-    try {
-      const result = await api.post(`/listings/${listingId}/chatgpt`, {
-        prompt: `${input}`,
-      });
-      setResponse(result.data.text);
-    } catch (error) {
-      console.error(error);
-      setResponse("An error occurred while processing your request.");
-    } finally {
-      setIsLoading(false);
-    }
+    generateDescription(
+      {
+        listingId,
+        body: {
+          prompt: input,
+        },
+      },
+      {
+        onSuccess: (data) => {
+          setResponse(data.text);
+        },
+      }
+    );
   };
+
+  const LINES = 6;
 
   return (
     <div>
-      <label>
-        Enter a prompt below to generate a job description. Make sure to read
-        through and modify the job description as needed.
-      </label>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="input">Input:</label>
+      <form>
+        <Label>Enter a prompt below to generate a job description</Label>
         <Textarea
           rows={3}
           id="input"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Write a job description for a job posting that is for a warehouse worker that needs to be forklift certified."
+          placeholder="Prompt..."
         />
-        <Button type="submit">Generate Job Description</Button>
-      </form>
-      <div>
-        <label>Response:</label>
-        <div style={{ position: "relative" }}>
-          {isLoading ? (
-            <div className="space-y-3.5 max-w-2xl">
-              <div>
-                <Skeleton className="h-4 w-20 mb-1" />
-                <Skeleton className="h-10 w-full" />
-              </div>
-              <div>
-                <Skeleton className="h-4 w-20 mb-1" />
-                <Skeleton className="h-10 w-full" />
-              </div>
-              <div>
-                <Skeleton className="h-4 w-20 mb-1" />
-                <Skeleton className="h-10 w-full" />
-              </div>
-              <div>
-                <Skeleton className="h-4 w-20 mb-1" />
-                <Skeleton className="h-10 w-full" />
-              </div>
-              <div>
-                <Skeleton className="h-4 w-20 mb-1" />
-                <Skeleton className="h-20 w-full" />
-              </div>
-              <div className="flex justify-end">
-                <Skeleton className="h-9 w-40" />
-              </div>
-            </div>
-          ) : (
-            <Textarea disabled rows={10} value={response || ""} />
-          )}
-          {response && (
-            <>
-              <CopyIcon
-                className="h-4 w-4 top-2 right-2 absolute cursor-pointer"
-                onClick={handleIconClick}
-              />
-            </>
-          )}
+        <div className="my-2 flex justify-end">
+          <Button
+            type="submit"
+            className="gap-x-1"
+            onClick={handleSubmit}
+            disabled={isPending}
+          >
+            Generate Job Description
+          </Button>
         </div>
+      </form>
+
+      <div className="pt-2">
+        {(isPending || response) && (
+          <>
+            <div className="muted-text">
+              Make sure to read through and modify the job description as
+              needed.
+            </div>
+            {isPending ? (
+              <div className="space-y-1 border rounded-lg p-2 my-2 pb-24">
+                {Array.from({ length: LINES }, (_, i) => i).map((i) => (
+                  <Skeleton
+                    className={cn("h-4 ", i === LINES - 1 ? "w-1/3" : "w-full")}
+                    key={i}
+                  />
+                ))}
+              </div>
+            ) : (
+              response && (
+                <>
+                  <div className="space-y-1 border rounded-lg p-2 my-2 pb-24 relative">
+                    <div dangerouslySetInnerHTML={{ __html: response }} />
+                    <div
+                      className="top-0 right-0 absolute cursor-pointer bg-white z-10 p-1 border rounded-bl border-r-0 border-t-0"
+                      onClick={copyToClipboard}
+                    >
+                      <CopyIcon className="h-4 w-4 " />
+                    </div>
+                  </div>
+                </>
+              )
+            )}
+          </>
+        )}
       </div>
     </div>
   );

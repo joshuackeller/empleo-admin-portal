@@ -5,6 +5,7 @@ import {
 } from "@tanstack/react-query";
 import { useToast } from "../components/shadcn/use-toast";
 import HandleAPIError from "../utilities/HandleAPIError";
+import { AxiosError, isAxiosError } from "axios";
 
 const useCustomMutation = <
   TData = unknown,
@@ -20,7 +21,6 @@ const useCustomMutation = <
     {
       ...options,
       onError: (error) => {
-        console.log("HERE FIRST", error);
         toast({
           variant: "destructive",
           title: HandleAPIError(error),

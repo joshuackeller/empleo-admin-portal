@@ -2,9 +2,12 @@ import { Application } from "@/src/utilities/interfaces";
 import useEmpleoApi from "../useEmpleoApi";
 import ListingQueryKeys from ".";
 import usePaginatedQuery, { PaginatedQueryParams } from "../usePaginatedQuery";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
+import ApplicationQueryKeys from "../applications";
 
 interface GetListingApplicationsProps extends PaginatedQueryParams {
   listingId: string;
+  queryClient?: QueryClient;
 }
 
 const GetListingApplications = async ({
@@ -13,6 +16,7 @@ const GetListingApplications = async ({
   pageSize,
   sort,
   direction,
+  queryClient,
 }: GetListingApplicationsProps): Promise<{
   data: Application[];
   count: number;
@@ -28,6 +32,15 @@ const GetListingApplications = async ({
     },
   });
 
+  if (data.data && queryClient) {
+    for (const application of data.data) {
+      queryClient.setQueryData(
+        ApplicationQueryKeys.single(application.id),
+        application
+      );
+    }
+  }
+
   return data;
 };
 
@@ -38,9 +51,12 @@ interface useGetListingApplicationsProps {
 const useGetListingApplications = ({
   listingId,
 }: useGetListingApplicationsProps) => {
+  const queryClient = useQueryClient();
+
   return usePaginatedQuery({
     queryKey: ListingQueryKeys.applications(listingId),
-    queryFn: (params) => GetListingApplications({ listingId, ...params }),
+    queryFn: (params) =>
+      GetListingApplications({ listingId, queryClient, ...params }),
   });
 };
 

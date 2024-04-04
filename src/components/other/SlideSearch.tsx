@@ -55,7 +55,7 @@ const SlideSearch = () => {
       } transition-width duration-200 ease-in-out mx-2 bg-transparent`}
     >
       <input
-        className="w-full h-4 pl-8 pr-2 py-2 text-sm focus:outline-none "
+        className="w-full h-4 pl-8 pr-2  py-2 text-sm focus:outline-none "
         type="text"
         ref={inputRef}
         placeholder={searchOpen ? "Search..." : ""}
