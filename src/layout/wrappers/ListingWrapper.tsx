@@ -13,6 +13,13 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/src/components/shadcn/Tooltip";
+import { HelpCircleIcon } from "lucide-react";
 
 interface ListingWrapperProps {
   children: ReactNode;
@@ -22,6 +29,7 @@ const ListingWrapper = ({ children }: ListingWrapperProps) => {
   const { pathname } = useRouter();
   const router = useRouter();
   const listingId = router.query.listingId;
+  const isDetailsPage = pathname === `/listings/[listingId]`;
 
   const { mutate: deleteListing, isPending } = useRemoveListing();
   const handleDeleteListing = () => {
@@ -36,7 +44,31 @@ const ListingWrapper = ({ children }: ListingWrapperProps) => {
   };
   return (
     <div>
-      <h4>Listing</h4>
+      <h4 className="flex items-center pb-0.5">
+        Listing
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger disabled className="cursor-default">
+              <HelpCircleIcon size="16" className="ml-1" />
+            </TooltipTrigger>
+            <TooltipContent
+              style={{
+                padding: "1em",
+                maxWidth: "500px",
+                wordWrap: "break-word",
+                zIndex: 1000,
+              }}
+            >
+              <h4 className="text-center">Job Listing</h4>
+              <br />
+              Configure the details and fields of this job listing and view its
+              current applicants.
+              <br />
+              <br />
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </h4>
       <div className="flex justify-between">
         <div className="flex items-center gap-x-5 my-2">
           <Link
@@ -68,23 +100,25 @@ const ListingWrapper = ({ children }: ListingWrapperProps) => {
             Applicants
           </Link>
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              disabled={isPending}
-              onClick={handleDeleteListing}
-              className="!text-red-500 cursor-pointer"
-            >
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {isDetailsPage && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <DotsHorizontalIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                disabled={isPending}
+                onClick={handleDeleteListing}
+                className="!text-red-500 cursor-pointer"
+              >
+                Delete Listing
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
       <Separator className="mb-2 mt-1" />
       {children}
