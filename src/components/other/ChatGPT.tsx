@@ -94,10 +94,10 @@ const ChatGPT = ({ listingId }: ChatGPTProps) => {
             ) : (
               response && (
                 <>
-                  <div className="space-y-1 border rounded-lg p-2 my-2 pb-24 relative">
-                    <div dangerouslySetInnerHTML={{ __html: response }} />
+                  <div className="relative max-h-[500px] ">
+                    <Textarea value={response} rows={20} />
                     <div
-                      className="top-0 right-0 absolute cursor-pointer bg-white z-10 p-1 border rounded-bl border-r-0 border-t-0"
+                      className="top-0 right-0 absolute cursor-pointer bg-white z-10 p-1 border rounded-bl border-r-0 border-t-0 m-0.5"
                       onClick={copyToClipboard}
                     >
                       <CopyIcon className="h-4 w-4 " />
