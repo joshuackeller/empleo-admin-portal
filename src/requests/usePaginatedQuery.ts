@@ -81,6 +81,13 @@ const usePaginatedQuery = <
 
   useEffect(() => {
     setPage("1");
+    router.push({
+      pathname: router.pathname,
+      query: {
+        ...router.query,
+        page: "1",
+      },
+    });
   }, [search]);
 
   return {

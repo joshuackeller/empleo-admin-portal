@@ -127,9 +127,7 @@ const ListingsPage: PageComponent = () => {
             </div>
           </div>
           <div className="flex items-center gap-x-2">
-            <div className="flex gap-x-2">
-              <SlideSearch />
-            </div>
+            <SlideSearch />
             <div>
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>

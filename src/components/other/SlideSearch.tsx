@@ -11,6 +11,13 @@ const SlideSearch = () => {
   const inputRef = useRef(null);
   const containerRef = useRef(null);
 
+  useEffect(() => {
+    if (router.query.search) {
+      setSearch(router.query.search as string);
+      setSearchOpen(true);
+    }
+  }, [router]);
+
   const handleClickOutside = (event: any) => {
     if (
       containerRef.current &&
@@ -23,26 +30,19 @@ const SlideSearch = () => {
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [search]);
 
-  useEffect(() => {
-    const handleRouteChange = (url: string) => {
-      router.push(url, undefined, { shallow: true });
-    };
-
-    if (search !== "") {
-      handleRouteChange(`${router.pathname}?search=${search}`);
-    } else {
-      handleRouteChange(router.pathname);
-    }
-  }, [search]);
-
   const handleInputChange = (e: any) => {
-    setSearch(e.target.value);
+    router.push({
+      pathname: router.pathname,
+      query: {
+        ...router.query,
+        search: e.target.value,
+      },
+    });
   };
 
   const debouncedSearch = debounce(handleInputChange, 300);
@@ -60,7 +60,11 @@ const SlideSearch = () => {
         ref={inputRef}
         placeholder={searchOpen ? "Search..." : ""}
         onMouseDown={() => setSearchOpen(true)}
-        onChange={debouncedSearch}
+        value={search}
+        onChange={(e) => {
+          setSearch(e.target.value);
+          debouncedSearch(e);
+        }}
       />
 
       <div

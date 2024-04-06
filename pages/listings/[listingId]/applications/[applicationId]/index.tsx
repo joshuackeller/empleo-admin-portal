@@ -80,14 +80,14 @@ const SingleApplicationDetails = () => {
 
   //copy on click
   const handleIconClick = useCallback(async () => {
-    if (application?.user.email) {
-      await navigator.clipboard.writeText(application.user.email);
+    if (application?.user?.email) {
+      await navigator.clipboard.writeText(application.user?.email);
       toast({
         title: "Copied",
         duration: 2000,
       });
     }
-  }, [application?.user.email]);
+  }, [application?.user?.email]);
 
   const { mutate: updateApplication } = useUpdateApplication();
   const onSubmit = (e: FormEvent) => {

@@ -10,6 +10,7 @@ const GetAdmins = async ({
   pageSize,
   sort,
   direction,
+  search,
 }: GetAdminsProps): Promise<{ data: Admin[]; count: number }> => {
   const api = useEmpleoApi();
 
@@ -19,6 +20,7 @@ const GetAdmins = async ({
       pageSize,
       sort,
       direction,
+      search,
     },
   });
 
