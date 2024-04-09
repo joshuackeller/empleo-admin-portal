@@ -16,7 +16,7 @@ import useAuthContext from "@/src/utilities/useAuthContext";
 import ReadJWTData from "@/src/utilities/ReadJWTData";
 import { UsePaginatedQueryResult } from "@/src/requests/usePaginatedQuery";
 import { useState } from "react";
-import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { ArrowUpDown, ArrowUp, ArrowDown, ClockIcon } from "lucide-react";
 
 type AdminTableProps = {
   query: UsePaginatedQueryResult;
@@ -46,7 +46,20 @@ const AdminTable = ({ query, onSort }: AdminTableProps) => {
       columns={[
         {
           accessorKey: "firstName",
-          header: ({ column }) => {
+          cell: ({ cell }) => {
+            const firstName = cell.getValue();
+            console.log("first name", firstName);
+            if (firstName === "") {
+              return (
+                <p className="flex items-center gap-x-1">
+                  Invitation Pending <ClockIcon className="h-3 w-3" />
+                </p>
+              );
+            } else {
+              return <p>{firstName as string}</p>;
+            }
+          },
+          header: () => {
             return (
               <Button variant="sort" onClick={() => handleSort("firstName")}>
                 First Name
@@ -66,7 +79,7 @@ const AdminTable = ({ query, onSort }: AdminTableProps) => {
         },
         {
           accessorKey: "lastName",
-          header: ({ column }) => {
+          header: () => {
             return (
               <Button variant="sort" onClick={() => handleSort("lastName")}>
                 Last Name
@@ -86,7 +99,7 @@ const AdminTable = ({ query, onSort }: AdminTableProps) => {
         },
         {
           accessorKey: "email",
-          header: ({ column }) => {
+          header: () => {
             return (
               <Button variant="sort" onClick={() => handleSort("email")}>
                 Email
