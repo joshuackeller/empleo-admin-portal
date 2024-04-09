@@ -69,7 +69,7 @@ const useUpdateListing = ({
       if (showToast) {
         toast({
           title: "Updated Listing Details",
-          description: "nice work",
+          description: "Nice work!",
         });
       }
       if (!optimistic || !listingId) {

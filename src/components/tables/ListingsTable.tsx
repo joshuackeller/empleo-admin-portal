@@ -1,105 +1,11 @@
 import { DataTable } from "@/src/components/shadcn/DataTable";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/src/components/shadcn/DropdownMenu";
 import { Button } from "../shadcn/Button";
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import useRemoveListing from "@/src/requests/listings/useRemoveListing";
 import { ColumnDef } from "@tanstack/react-table";
 import { Listing } from "@/src/utilities/interfaces";
 import { UsePaginatedQueryResult } from "@/src/requests/usePaginatedQuery";
 import { useState } from "react";
-import { ArrowUpDown, MoreHorizontal, ArrowUp, ArrowDown } from "lucide-react";
-
-const columns: ColumnDef<Listing>[] = [
-  {
-    accessorKey: "jobTitle",
-    header: "Job Title",
-    size: 200,
-  },
-  {
-    accessorKey: "shortDescription",
-    header: "Short Description",
-    size: 300,
-  },
-  {
-    accessorKey: "_count.applications",
-    header: "Applicants",
-    size: 100,
-  },
-  {
-    accessorKey: "employmentType",
-    header: "Employment Type",
-    size: 150,
-    cell: ({ row }) => {
-      switch (row.original.employmentType) {
-        case "full_time":
-          return "Full Time";
-        case "part_time":
-          return "Part Time";
-        case "contract":
-          return "Contract";
-        case "temporary":
-          return "Temporary";
-        case "internship":
-          return "Internship";
-        case "seasonal":
-          return "Seasonal";
-        default:
-          return row.original.employmentType;
-      }
-    },
-  },
-  {
-    accessorKey: "location",
-    header: "Location",
-    size: 150,
-  },
-  //   {
-  //     accessorKey: "salaryRange",
-  //     header: "Salary Range",
-  //     size: 200,
-  //   },
-  {
-    accessorKey: "published",
-    header: "Published?",
-    size: 150,
-  },
-  {
-    id: "actions",
-    enablePinning: true,
-    cell: ({ row }) => {
-      const listingId = row.original.id;
-
-      const { mutate: deleteListing, isPending: isRemoving } =
-        useRemoveListing();
-
-      const handleRemoveListing = (e: any) => {
-        e.preventDefault();
-        e.stopPropagation();
-        deleteListing({ listingId });
-      };
-
-      return (
-        <div>
-          <Button
-            variant="ghost"
-            className="h-8 w-8 p-0 text-indigo-500"
-            disabled={isRemoving}
-            onClick={() =>
-              (window.location.href = `/listings/${listingId}/applications/`)
-            }
-          >
-            View Applicants
-          </Button>
-        </div>
-      );
-    },
-  },
-];
+import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 
 type ListingsTableProps = {
   query: UsePaginatedQueryResult;
@@ -125,7 +31,7 @@ const ListingsTable = ({ query, onSort }: ListingsTableProps) => {
   const columns: ColumnDef<Listing>[] = [
     {
       accessorKey: "jobTitle",
-      header: ({ column }) => {
+      header: () => {
         return (
           <Button variant="sort" onClick={() => handleSort("jobTitle")}>
             Job Title
@@ -143,29 +49,29 @@ const ListingsTable = ({ query, onSort }: ListingsTableProps) => {
       },
       size: 200,
     },
-    {
-      accessorKey: "shortDescription",
-      header: ({ column }) => {
-        return (
-          <Button variant="sort" onClick={() => handleSort("shortDescription")}>
-            Short Description
-            {selectedColumn === "shortDescription" ? (
-              sortDirection === "asc" ? (
-                <ArrowUp className="ml-2 h-3 w-3" />
-              ) : (
-                <ArrowDown className="ml-2 h-3 w-3" />
-              )
-            ) : (
-              <ArrowUpDown className="ml-2 h-3 w-3" />
-            )}
-          </Button>
-        );
-      },
-      size: 300,
-    },
+    // {
+    //   accessorKey: "shortDescription",
+    //   header: () => {
+    //     return (
+    //       <Button variant="sort" onClick={() => handleSort("shortDescription")}>
+    //         Short Description
+    //         {selectedColumn === "shortDescription" ? (
+    //           sortDirection === "asc" ? (
+    //             <ArrowUp className="ml-2 h-3 w-3" />
+    //           ) : (
+    //             <ArrowDown className="ml-2 h-3 w-3" />
+    //           )
+    //         ) : (
+    //           <ArrowUpDown className="ml-2 h-3 w-3" />
+    //         )}
+    //       </Button>
+    //     );
+    //   },
+    //   size: 300,
+    // },
     {
       accessorKey: "_count.applications",
-      header: ({ column }) => {
+      header: () => {
         return (
           <Button
             variant="sort"
@@ -188,7 +94,7 @@ const ListingsTable = ({ query, onSort }: ListingsTableProps) => {
     },
     {
       accessorKey: "employmentType",
-      header: ({ column }) => {
+      header: () => {
         return (
           <Button variant="sort" onClick={() => handleSort("employmentType")}>
             Employment Type
@@ -226,7 +132,7 @@ const ListingsTable = ({ query, onSort }: ListingsTableProps) => {
     },
     {
       accessorKey: "location",
-      header: ({ column }) => {
+      header: () => {
         return (
           <Button variant="sort" onClick={() => handleSort("location")}>
             Location
@@ -244,29 +150,10 @@ const ListingsTable = ({ query, onSort }: ListingsTableProps) => {
       },
       size: 150,
     },
-    // {
-    //   accessorKey: "salaryRange",
-    //   header: ({ column }) => {
-    //     return (
-    //       <Button variant="sort" onClick={() => handleSort("salaryRange")}>
-    //         Salary Range
-    //         {selectedColumn === "salaryRange" ? (
-    //           sortDirection === "asc" ? (
-    //             <ArrowUp className="ml-2 h-3 w-3" />
-    //           ) : (
-    //             <ArrowDown className="ml-2 h-3 w-3" />
-    //           )
-    //         ) : (
-    //           <ArrowUpDown className="ml-2 h-3 w-3" />
-    //         )}
-    //       </Button>
-    //     );
-    //   },
-    //   size: 200,
-    // },
+
     {
       accessorKey: "published",
-      header: ({ column }) => {
+      header: () => {
         return (
           <Button variant="sort" onClick={() => handleSort("published")}>
             Published?

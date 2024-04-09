@@ -52,7 +52,7 @@ const useUpdateOrganization = (
       if (showToast) {
         toast({
           title: "Updated Organization Details",
-          description: "nice work",
+          description: "Nice work!",
         });
       }
       if (invalidateQuery) {

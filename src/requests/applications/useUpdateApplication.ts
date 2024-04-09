@@ -31,7 +31,7 @@ const useUpdateApplication = () => {
     onSuccess: (response) => {
       toast({
         title: "Updated Application Status",
-        description: "nice work",
+        description: "Nice work!",
       });
       queryClient.invalidateQueries({
         queryKey: ApplicationQueryKeys.all,
