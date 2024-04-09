@@ -1,8 +1,7 @@
-import { Admin, Application, Listing } from "@/src/utilities/interfaces";
+import { Application } from "@/src/utilities/interfaces";
 import useEmpleoApi from "../useEmpleoApi";
 import { useQueryClient } from "@tanstack/react-query";
 import useCustomMutation from "../useCustomMutation";
-import ApplicationQueryKeys from ".";
 import ListingQueryKeys from "../listings";
 
 interface RemoveApplicationProps {
@@ -25,6 +24,9 @@ const useRemoveApplication = (listingId: string) => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ListingQueryKeys.applications(listingId),
+      });
+      queryClient.removeQueries({
+        queryKey: ListingQueryKeys.single(listingId),
       });
     },
   });
