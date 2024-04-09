@@ -16,6 +16,7 @@ import {
   DownloadIcon,
   ViewIcon,
   CopyIcon,
+  CircleDashedIcon,
 } from "lucide-react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
@@ -89,7 +90,7 @@ const SingleApplicationDetails = () => {
     }
   }, [application?.user?.email]);
 
-  const { mutate: updateApplication } = useUpdateApplication();
+  const { mutate: updateApplication, isPending } = useUpdateApplication();
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     updateApplication({
@@ -157,6 +158,9 @@ const SingleApplicationDetails = () => {
                     </SelectContent>
                   </Select>
                   <Button type="submit" disabled={isLoading}>
+                    {isPending && (
+                      <CircleDashedIcon className="mr-2 h-4 w-4 animate-spin" />
+                    )}
                     Update Status
                   </Button>
                 </div>
