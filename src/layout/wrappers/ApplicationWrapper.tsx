@@ -48,6 +48,9 @@ const ApplicationWrapper = ({ children }: ApplicationWrapperProps) => {
     );
   };
 
+  const isDetailsPage =
+    router.pathname === "/listings/[listingId]/applications/[applicationId]";
+
   return (
     <div>
       <Link
@@ -58,9 +61,8 @@ const ApplicationWrapper = ({ children }: ApplicationWrapperProps) => {
         <div>Back to Applicants</div>
       </Link>
 
-
-      <h4 className="flex items-center pb-0.5">
-        Application
+      <div className="flex items-center pb-0.5">
+        <h4>Applicant</h4>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger disabled className="cursor-default">
@@ -89,30 +91,56 @@ const ApplicationWrapper = ({ children }: ApplicationWrapperProps) => {
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-      </h4>
+      </div>
 
-      <div className="flex items-center gap-x-5 my-2">
-        <Link
-          href={`/listings/${listingId}/applications/${applicationId}`}
-          className={cn(
-            `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
-            pathname === `/listings/[listingId]/applications/[applicationId]` &&
-              "text-primary"
-          )}
-        >
-          Details
-        </Link>
-        <Link
-          href={`/listings/${listingId}/applications/${applicationId}/eeoc`}
-          className={cn(
-            `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
-            pathname ===
-              `/listings/[listingId]/applications/[applicationId]/eeoc` &&
-              "text-primary"
-          )}
-        >
-          EEOC
-        </Link>
+      <div className="flex  justify-between">
+        <div className="flex items-center gap-x-5 my-2">
+          <Link
+            href={`/listings/${listingId}/applications/${applicationId}`}
+            className={cn(
+              `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
+              pathname ===
+                `/listings/[listingId]/applications/[applicationId]` &&
+                "text-primary"
+            )}
+          >
+            Details
+          </Link>
+          <Link
+            href={`/listings/${listingId}/applications/${applicationId}/eeoc`}
+            className={cn(
+              `text-sm font-medium transition-colors text-gray-500 hover:text-primary`,
+              pathname ===
+                `/listings/[listingId]/applications/[applicationId]/eeoc` &&
+                "text-primary"
+            )}
+          >
+            EEOC
+          </Link>
+        </div>
+
+        {isDetailsPage && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <DotsHorizontalIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="bg-white border rounded shadow"
+            >
+              <DropdownMenuItem
+                disabled={isPending}
+                onClick={handleDeleteApplication}
+                className="!text-red-500 cursor-pointer"
+              >
+                Delete Application
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
       <Separator className="mb-2 mt-1" />
       {children}
