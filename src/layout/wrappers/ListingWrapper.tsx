@@ -20,16 +20,19 @@ import {
   TooltipTrigger,
 } from "@/src/components/shadcn/Tooltip";
 import { HelpCircleIcon } from "lucide-react";
+import SlideSearch from "@/src/components/other/SlideSearch";
 
 interface ListingWrapperProps {
   children: ReactNode;
 }
 
 const ListingWrapper = ({ children }: ListingWrapperProps) => {
-  const { pathname } = useRouter();
   const router = useRouter();
   const listingId = router.query.listingId;
-  const isDetailsPage = pathname === `/listings/[listingId]`;
+
+  const isDetailsPage = router.pathname === `/listings/[listingId]`;
+  const isApplicationsPage =
+    router.pathname === `/listings/[listingId]/applications`;
 
   const { mutate: deleteListing, isPending } = useRemoveListing();
   const handleDeleteListing = () => {
@@ -42,10 +45,11 @@ const ListingWrapper = ({ children }: ListingWrapperProps) => {
       }
     );
   };
+
   return (
     <div>
-      <h4 className="flex items-center pb-0.5">
-        Listing
+      <div className="flex items-center pb-0.5">
+        <h4>Listing</h4>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger disabled className="cursor-default">
@@ -68,14 +72,14 @@ const ListingWrapper = ({ children }: ListingWrapperProps) => {
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-      </h4>
+      </div>
       <div className="flex justify-between">
         <div className="flex items-center gap-x-5 my-2">
           <Link
             href={`/listings/${listingId}`}
             className={cn(
               `text-sm font-medium transition-colors text-gray-400 hover:text-primary`,
-              pathname === `/listings/[listingId]` && "text-primary"
+              router.pathname === `/listings/[listingId]` && "text-primary"
             )}
           >
             Details
@@ -84,7 +88,8 @@ const ListingWrapper = ({ children }: ListingWrapperProps) => {
             href={`/listings/${listingId}/fields`}
             className={cn(
               `text-sm font-medium transition-colors text-gray-400 hover:text-primary`,
-              pathname === `/listings/[listingId]/fields` && "text-primary"
+              router.pathname === `/listings/[listingId]/fields` &&
+                "text-primary"
             )}
           >
             Fields
@@ -93,7 +98,7 @@ const ListingWrapper = ({ children }: ListingWrapperProps) => {
             href={`/listings/${listingId}/applications`}
             className={cn(
               `text-sm font-medium transition-colors text-gray-400 hover:text-primary`,
-              pathname === `/listings/[listingId]/applications` &&
+              router.pathname === `/listings/[listingId]/applications` &&
                 "text-primary"
             )}
           >
@@ -118,6 +123,11 @@ const ListingWrapper = ({ children }: ListingWrapperProps) => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+        )}
+        {isApplicationsPage && (
+          <div>
+            <SlideSearch />
+          </div>
         )}
       </div>
       <Separator className="mb-2 mt-1" />

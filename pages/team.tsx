@@ -33,7 +33,7 @@ import {
   TooltipTrigger,
 } from "@/src/components/shadcn/Tooltip";
 import { useRouter } from "next/router";
-
+import SlideSearch from "@/src/components/other/SlideSearch";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -45,7 +45,7 @@ const TeamPage: PageComponent = () => {
   const query = useGetAdmins();
   const router = useRouter();
 
-  const handleSort = (columnName: string, direction: 'asc' | 'desc') => {
+  const handleSort = (columnName: string, direction: "asc" | "desc") => {
     router.push({
       pathname: router.pathname,
       query: { ...router.query, sort: columnName, direction },
@@ -105,7 +105,8 @@ const TeamPage: PageComponent = () => {
               </Tooltip>
             </TooltipProvider>
           </h4>
-          <div className="!font-sans">
+          <div className="flex items-center gap-x-2">
+            <SlideSearch />
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
                 <button className="p-1 rounded-full bg-indigo-500">

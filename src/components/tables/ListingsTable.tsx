@@ -244,26 +244,26 @@ const ListingsTable = ({ query, onSort }: ListingsTableProps) => {
       },
       size: 150,
     },
-    {
-      accessorKey: "salaryRange",
-      header: ({ column }) => {
-        return (
-          <Button variant="sort" onClick={() => handleSort("salaryRange")}>
-            Salary Range
-            {selectedColumn === "salaryRange" ? (
-              sortDirection === "asc" ? (
-                <ArrowUp className="ml-2 h-3 w-3" />
-              ) : (
-                <ArrowDown className="ml-2 h-3 w-3" />
-              )
-            ) : (
-              <ArrowUpDown className="ml-2 h-3 w-3" />
-            )}
-          </Button>
-        );
-      },
-      size: 200,
-    },
+    // {
+    //   accessorKey: "salaryRange",
+    //   header: ({ column }) => {
+    //     return (
+    //       <Button variant="sort" onClick={() => handleSort("salaryRange")}>
+    //         Salary Range
+    //         {selectedColumn === "salaryRange" ? (
+    //           sortDirection === "asc" ? (
+    //             <ArrowUp className="ml-2 h-3 w-3" />
+    //           ) : (
+    //             <ArrowDown className="ml-2 h-3 w-3" />
+    //           )
+    //         ) : (
+    //           <ArrowUpDown className="ml-2 h-3 w-3" />
+    //         )}
+    //       </Button>
+    //     );
+    //   },
+    //   size: 200,
+    // },
     {
       accessorKey: "published",
       header: ({ column }) => {

@@ -17,6 +17,7 @@ const GetListingApplications = async ({
   sort,
   direction,
   queryClient,
+  search,
 }: GetListingApplicationsProps): Promise<{
   data: Application[];
   count: number;
@@ -29,6 +30,7 @@ const GetListingApplications = async ({
       pageSize,
       sort,
       direction,
+      search,
     },
   });
 
