@@ -1,4 +1,4 @@
-Also see [Empleo Client Portal](https://github.com/joshuackeller/empleo-client-portal)
+Also see [Empleo Client Portal](https://github.com/joshuackeller/empleo-client-portal) and [Empleo API](https://github.com/joshuackeller/empleo-api)
 
 <img src="./public/sign_in.png">
 <img src="./public/organization.png">
