@@ -237,7 +237,7 @@ const OrgPage: PageComponent = () => {
               className="underline"
               target="_blank"
               rel="noreferrer"
-              href="https://www.eeoc.gov/data/eeo-data-collections#:~:text=The%20EEO%2D1%20Component%201%20report%20is%20a%20mandatory%20annual,race%20or%20ethnicity%2C%20to%20the"
+              href="https://www.eeoc.gov/data/eeo-data-collections"
             >
               eeoc.gov
             </a>{" "}
